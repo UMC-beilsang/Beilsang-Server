@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Challenge {
-    @Id @GeneratedValue
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")
     private Long id;
 
@@ -34,9 +34,9 @@ public class Challenge {
     private String details;
 
     @Enumerated(EnumType.STRING)
-    private ChallengeFrequency frequency;
+    private ChallengeCycle cycle;
 
-    private int interval;
+    private int frequency;
 
     private int totalGoal;
 }

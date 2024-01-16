@@ -1,5 +1,5 @@
 package com.BeilsangServer.domain.challenge.entity;
 
-public enum ChallengeFrequency {
+public enum ChallengeCycle {
     EVERYDAY, WEEK, MONTH
 }
