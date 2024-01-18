@@ -2,12 +2,12 @@
 name: Bug Template
 about: 버그 수정 시 사용해주세요.
 title: "[BUG]"
-labels: bug
+labels: ''
 assignees: ''
 
 ---
 
-# 🐞 Bug - <!—{ 작업 내용 }—>
+#  🐛 Bug - <!—{ 작업 내용 }—> 
 
 ### 🕵️‍♀️ Condition
 

@@ -2,12 +2,12 @@
 name: Feature Template
 about: 새로운 기능 작성 시 사용해주세요.
 title: "[FEAT]"
-labels: feature
+labels: ''
 assignees: ''
 
 ---
 
-# 🚀 Feature - <!--{ 작업 내용 }-->
+# ✨ Feature - <!--{ 작업 내용 }-->
 
 ### 📝 Description
 
