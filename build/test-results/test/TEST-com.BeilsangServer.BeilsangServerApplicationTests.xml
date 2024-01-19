@@ -1,0 +1,301 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.BeilsangServer.BeilsangServerApplicationTests" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-01-19T13:04:56" hostname="MacBook-Air-5.local" time="0.328">
+  <properties/>
+  <testcase name="contextLoads()" classname="com.BeilsangServer.BeilsangServerApplicationTests" time="0.328"/>
+  <system-out><![CDATA[22:04:51.803 [Test worker] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.BeilsangServer.BeilsangServerApplicationTests]: BeilsangServerApplicationTests does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+22:04:51.850 [Test worker] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.BeilsangServer.BeilsangServerApplication for test class com.BeilsangServer.BeilsangServerApplicationTests
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::                (v3.1.7)
+
+2024-01-19T22:04:52.040+09:00  INFO 57157 --- [    Test worker] c.B.BeilsangServerApplicationTests       : Starting BeilsangServerApplicationTests using Java 17.0.9 with PID 57157 (started by chanhee in /Users/chanhee/Desktop/project/Beilsang-Server)
+2024-01-19T22:04:52.040+09:00  INFO 57157 --- [    Test worker] c.B.BeilsangServerApplicationTests       : No active profile set, falling back to 1 default profile: "default"
+2024-01-19T22:04:52.309+09:00  INFO 57157 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-01-19T22:04:52.347+09:00  INFO 57157 --- [    Test worker] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 12 JPA repository interfaces.
+2024-01-19T22:04:52.571+09:00  INFO 57157 --- [    Test worker] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-01-19T22:04:52.591+09:00  INFO 57157 --- [    Test worker] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.2.17.Final
+2024-01-19T22:04:52.593+09:00  INFO 57157 --- [    Test worker] org.hibernate.cfg.Environment            : HHH000406: Using bytecode reflection optimizer
+2024-01-19T22:04:52.724+09:00  INFO 57157 --- [    Test worker] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2024-01-19T22:04:52.742+09:00  INFO 57157 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2024-01-19T22:04:53.104+09:00  INFO 57157 --- [    Test worker] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@53b7bf01
+2024-01-19T22:04:53.105+09:00  INFO 57157 --- [    Test worker] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2024-01-19T22:04:53.142+09:00  WARN 57157 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000025: MySQL57Dialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2024-01-19T22:04:53.142+09:00  WARN 57157 --- [    Test worker] org.hibernate.orm.deprecation            : HHH90000026: MySQL57Dialect has been deprecated; use org.hibernate.dialect.MySQLDialect instead
+2024-01-19T22:04:53.602+09:00  INFO 57157 --- [    Test worker] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2024-01-19T22:04:53.608+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table achievement 
+       drop 
+       foreign key FKkthgd2lkjbynh8ol5btqqyatg
+2024-01-19T22:04:53.693+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table achievement 
+       drop 
+       foreign key FK6q6bvyfywq6uitf4029hh7whi
+2024-01-19T22:04:53.716+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_category 
+       drop 
+       foreign key FK6xfl3lqwm12swljvqumut7h1b
+2024-01-19T22:04:53.739+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_category 
+       drop 
+       foreign key FKtp4cbhrlj1118sasxtoaw9t85
+2024-01-19T22:04:53.764+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_image 
+       drop 
+       foreign key FKjntph5766rd8eyrxg7fst7k2q
+2024-01-19T22:04:53.789+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_like 
+       drop 
+       foreign key FKj62k3nx428e77lfhv91g7hkjw
+2024-01-19T22:04:53.814+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_like 
+       drop 
+       foreign key FKruk0uw2n2hqexms7xbly0683l
+2024-01-19T22:04:53.839+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_member 
+       drop 
+       foreign key FKhvom68yt2aavdlxxxr84v7hrn
+2024-01-19T22:04:53.866+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_member 
+       drop 
+       foreign key FK2tqt5og2kj8ou9x9a8ysb6jch
+2024-01-19T22:04:53.893+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed 
+       drop 
+       foreign key FKdn8u6f3jeb51l39tk1ssxyv2k
+2024-01-19T22:04:53.927+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed 
+       drop 
+       foreign key FKr2x2t59vivjchneydp7g4qx13
+2024-01-19T22:04:53.954+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed_image 
+       drop 
+       foreign key FK6ucsld0tx762qhq8sp5khgv3n
+2024-01-19T22:04:53.975+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table notification 
+       drop 
+       foreign key FK1xep8o2ge7if6diclyyx53v4q
+2024-01-19T22:04:54.002+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table point_log 
+       drop 
+       foreign key FKpc5s54gy4e1gcvel1ymljexv
+2024-01-19T22:04:54.025+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists achievement
+2024-01-19T22:04:54.051+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists category
+2024-01-19T22:04:54.079+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists challenge
+2024-01-19T22:04:54.107+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists challenge_category
+2024-01-19T22:04:54.132+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists challenge_image
+2024-01-19T22:04:54.156+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists challenge_like
+2024-01-19T22:04:54.185+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists challenge_member
+2024-01-19T22:04:54.213+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists feed
+2024-01-19T22:04:54.239+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists feed_image
+2024-01-19T22:04:54.264+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists member
+2024-01-19T22:04:54.292+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists notification
+2024-01-19T22:04:54.316+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    drop table if exists point_log
+2024-01-19T22:04:54.356+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table achievement (
+        count integer not null,
+        achievement_id bigint not null auto_increment,
+        category_id bigint,
+        member_id bigint,
+        primary key (achievement_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.396+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table category (
+        category_id bigint not null auto_increment,
+        name varchar(255),
+        primary key (category_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.432+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table challenge (
+        finish_date date,
+        frequency integer not null,
+        is_private bit,
+        join_point integer not null,
+        start_date date,
+        total_goal integer not null,
+        challenge_id bigint not null auto_increment,
+        cert_image_url varchar(255),
+        cycle enum ('EVERYDAY','MONTH','WEEK'),
+        details varchar(255),
+        name varchar(255),
+        start_day varchar(255),
+        primary key (challenge_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.470+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table challenge_category (
+        category_id bigint,
+        challenge_category_id bigint not null auto_increment,
+        challenge_id bigint,
+        primary key (challenge_category_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.504+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table challenge_image (
+        challenge_id bigint,
+        challenge_image_id bigint not null auto_increment,
+        image_url varchar(255),
+        primary key (challenge_image_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.536+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table challenge_like (
+        challenge_id bigint,
+        challenge_like_id bigint not null auto_increment,
+        member_id bigint,
+        primary key (challenge_like_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.571+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table challenge_member (
+        goal integer not null,
+        is_host bit,
+        challenge_id bigint,
+        challenge_member_id bigint not null auto_increment,
+        member_id bigint,
+        primary key (challenge_member_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.609+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table feed (
+        challenge_id bigint,
+        challenge_member_id bigint,
+        feed_id bigint not null auto_increment,
+        review varchar(255),
+        primary key (feed_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.687+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table feed_image (
+        feed_id bigint,
+        feed_image_id bigint not null auto_increment,
+        image_url varchar(255),
+        primary key (feed_image_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.720+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table member (
+        birth date,
+        total_point integer not null,
+        member_id bigint not null auto_increment,
+        address varchar(255),
+        discovered_path varchar(255),
+        gender enum ('M','W'),
+        keyword varchar(255),
+        nick_name varchar(255),
+        phone_number varchar(255),
+        resolution varchar(255),
+        primary key (member_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.757+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table notification (
+        is_read bit,
+        member_id bigint,
+        notification_id bigint not null auto_increment,
+        contents varchar(255),
+        title varchar(255),
+        primary key (notification_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.796+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    create table point_log (
+        date date,
+        period integer not null,
+        value integer not null,
+        member_id bigint,
+        point_id bigint not null auto_increment,
+        name varchar(255),
+        status enum ('EARN','EXPIRE','USE'),
+        primary key (point_id)
+    ) engine=InnoDB
+2024-01-19T22:04:54.848+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table achievement 
+       add constraint FKkthgd2lkjbynh8ol5btqqyatg 
+       foreign key (category_id) 
+       references category (category_id)
+2024-01-19T22:04:54.977+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table achievement 
+       add constraint FK6q6bvyfywq6uitf4029hh7whi 
+       foreign key (member_id) 
+       references member (member_id)
+2024-01-19T22:04:55.046+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_category 
+       add constraint FK6xfl3lqwm12swljvqumut7h1b 
+       foreign key (category_id) 
+       references category (category_id)
+2024-01-19T22:04:55.106+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_category 
+       add constraint FKtp4cbhrlj1118sasxtoaw9t85 
+       foreign key (challenge_id) 
+       references challenge (challenge_id)
+2024-01-19T22:04:55.182+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_image 
+       add constraint FKjntph5766rd8eyrxg7fst7k2q 
+       foreign key (challenge_id) 
+       references challenge (challenge_id)
+2024-01-19T22:04:55.245+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_like 
+       add constraint FKj62k3nx428e77lfhv91g7hkjw 
+       foreign key (challenge_id) 
+       references challenge (challenge_id)
+2024-01-19T22:04:55.308+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_like 
+       add constraint FKruk0uw2n2hqexms7xbly0683l 
+       foreign key (member_id) 
+       references member (member_id)
+2024-01-19T22:04:55.376+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_member 
+       add constraint FKhvom68yt2aavdlxxxr84v7hrn 
+       foreign key (challenge_id) 
+       references challenge (challenge_id)
+2024-01-19T22:04:55.438+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table challenge_member 
+       add constraint FK2tqt5og2kj8ou9x9a8ysb6jch 
+       foreign key (member_id) 
+       references member (member_id)
+2024-01-19T22:04:55.522+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed 
+       add constraint FKdn8u6f3jeb51l39tk1ssxyv2k 
+       foreign key (challenge_id) 
+       references challenge (challenge_id)
+2024-01-19T22:04:55.593+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed 
+       add constraint FKr2x2t59vivjchneydp7g4qx13 
+       foreign key (challenge_member_id) 
+       references challenge_member (challenge_member_id)
+2024-01-19T22:04:55.665+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table feed_image 
+       add constraint FK6ucsld0tx762qhq8sp5khgv3n 
+       foreign key (feed_id) 
+       references feed (feed_id)
+2024-01-19T22:04:55.733+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table notification 
+       add constraint FK1xep8o2ge7if6diclyyx53v4q 
+       foreign key (member_id) 
+       references member (member_id)
+2024-01-19T22:04:55.795+09:00 DEBUG 57157 --- [    Test worker] org.hibernate.SQL                        : 
+    alter table point_log 
+       add constraint FKpc5s54gy4e1gcvel1ymljexv 
+       foreign key (member_id) 
+       references member (member_id)
+2024-01-19T22:04:55.867+09:00  INFO 57157 --- [    Test worker] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-01-19T22:04:55.956+09:00  WARN 57157 --- [    Test worker] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-01-19T22:04:56.351+09:00  WARN 57157 --- [    Test worker] .s.s.UserDetailsServiceAutoConfiguration : 
+
+Using generated security password: d52e2855-18c2-4f16-8a9a-4908a5a6be4a
+
+This generated password is for development use only. Your security configuration must be updated before running your application in production.
+
+2024-01-19T22:04:56.399+09:00  INFO 57157 --- [    Test worker] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@72e5206, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@4615bc00, org.springframework.security.web.context.SecurityContextHolderFilter@445d878c, org.springframework.security.web.header.HeaderWriterFilter@1ec98548, org.springframework.security.web.csrf.CsrfFilter@6418075c, org.springframework.security.web.authentication.logout.LogoutFilter@4e773b8a, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@65067d37, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@2bfe4df9, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@37f75ebf, org.springframework.security.web.authentication.www.BasicAuthenticationFilter@281d3ce7, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@119f035f, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7a79a5d6, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@569b3009, org.springframework.security.web.access.ExceptionTranslationFilter@66450129, org.springframework.security.web.access.intercept.AuthorizationFilter@55b5ce0f]
+2024-01-19T22:04:56.422+09:00  INFO 57157 --- [    Test worker] c.B.BeilsangServerApplicationTests       : Started BeilsangServerApplicationTests in 4.511 seconds (process running for 4.987)
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
