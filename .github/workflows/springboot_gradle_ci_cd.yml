@@ -11,7 +11,7 @@ on:
 jobs:
   build:
     # 실행 환경 지정
-    runs-on: self-hosted
+    runs-on: macOs
 
     steps:
       - uses: actions/checkout@v3
