@@ -6,7 +6,7 @@ name: Spring Boot & Gradle CI/CD
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -37,7 +37,7 @@ jobs:
 
         # ssh로 EC2 접속해서 도커 컨테이너를 모두 멈춘 후, 도커 파일을 새로 받아 다시 docker-compose로 이미지를 실행시킨다.
       - name: executing remote ssh commands using password
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@main
         with:
           host: ${{ secrets.HOST_ID }}
           username: ubuntu
