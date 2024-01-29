@@ -1,12 +1,13 @@
 package com.BeilsangServer.domain.feed.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
+import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -20,6 +21,10 @@ public class Feed {
 
     private String review;
 
+    private LocalDate uploadDate;
+
+    private String feedUrl;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
@@ -28,4 +33,9 @@ public class Feed {
     @JoinColumn(name = "challenge_member_id")
     private ChallengeMember challengeMember;
 
+//    public static Feed of(AddFeedRequestDTO addFeedRequestDTO, Challenge challenge){
+//        return Feed.builder()
+//                .challenge(challenge)
+//                .challengeMember(challenge.)
+//    }
 }
