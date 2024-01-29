@@ -17,7 +17,6 @@ public class FeedDTO {
 
     private String feedUrl;
 
-
     private String challengeTitle;
 
     private Long categoryId;
@@ -32,13 +31,5 @@ public class FeedDTO {
         this.categoryId = categoryId;
     }
 
-    public static FeedDTO entityToDto(Feed feed){
-        return FeedDTO.builder()
-                .id(feed.getId())
-                .review(feed.getReview())
-                .uploadDate(feed.getUploadDate())
-                .feedUrl(feed.getFeedUrl())
-                .challengeTitle(feed.getChallenge().getTitle())
-                .build();
-    }
+
 }

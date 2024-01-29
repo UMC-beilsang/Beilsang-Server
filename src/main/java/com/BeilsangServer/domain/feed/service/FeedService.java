@@ -35,7 +35,7 @@ public class FeedService {
         Feed feed = feedConverter.toEntity(addFeedRequestDTO, challenge);
 
         feedRepository.save(feed);
-        return FeedDTO.entityToDto(feed);
+        return feedConverter.entityToDto(feed);
     }
 
     /***
@@ -51,5 +51,17 @@ public class FeedService {
         return guide;
     }
 
+    /***
+     * 선택한 피드 정보 조회
+     * @param feedId
+     * @return feed dto
+     */
+    public FeedDTO getFeed(Long feedId) {
+        Feed feed = feedRepository.findById(feedId).orElseThrow(() -> {
+            throw new IllegalArgumentException("이런피드없다.");
+        });
+        FeedDTO feedDTO = feedConverter.entityToDto(feed);
 
+        return feedDTO;
+    }
 }

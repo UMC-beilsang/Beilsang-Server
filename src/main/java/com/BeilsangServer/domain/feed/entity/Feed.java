@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Builder
@@ -18,6 +20,10 @@ public class Feed {
     private Long id;
 
     private String review;
+
+    private LocalDate uploadDate;
+
+    private String feedUrl;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
