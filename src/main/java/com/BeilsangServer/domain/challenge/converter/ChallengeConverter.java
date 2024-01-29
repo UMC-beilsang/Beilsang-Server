@@ -43,4 +43,11 @@ public class ChallengeConverter {
                 .totalGoalDay(challenge.getTotalGoalDay())
                 .build();
     }
+
+    public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
+        return ChallengeResponseDTO.CreateResultDTO.builder()
+                .certImageUrl(challenge.getCertImageUrl())
+                .challengeNotes(challenge.getChallengeNotes())
+                .build();
+    }
 }
