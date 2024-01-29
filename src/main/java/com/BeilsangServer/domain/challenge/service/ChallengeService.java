@@ -1,6 +1,5 @@
 package com.BeilsangServer.domain.challenge.service;
 
-import com.BeilsangServer.domain.category.repository.CategoryRepository;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;

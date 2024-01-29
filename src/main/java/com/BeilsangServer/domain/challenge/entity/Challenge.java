@@ -48,4 +48,11 @@ public class Challenge {
     private Long totalGoalDay;
 
     private Integer attendeeCount;
+
+
+    // 연관관계 메서드
+    public void setChallengeNotes(ChallengeNote note) {
+        challengeNotes.add(note);
+        note.setChallenge(this);
+    }
 }
