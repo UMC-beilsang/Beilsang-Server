@@ -1,5 +1,7 @@
 package com.BeilsangServer.domain.challenge.entity;
 
+import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengePeriod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,6 +21,9 @@ public class Challenge {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
 
     private String title;
 

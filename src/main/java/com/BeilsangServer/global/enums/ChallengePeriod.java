@@ -1,4 +1,4 @@
-package com.BeilsangServer.domain.challenge.entity;
+package com.BeilsangServer.global.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

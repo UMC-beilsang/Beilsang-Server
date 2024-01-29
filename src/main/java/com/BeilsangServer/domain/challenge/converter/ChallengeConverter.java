@@ -3,10 +3,8 @@ package com.BeilsangServer.domain.challenge.converter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
-import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class ChallengeConverter {
 
@@ -18,6 +16,7 @@ public class ChallengeConverter {
 
         return Challenge.builder()
                 .title(request.getTitle())
+                .category(request.getCategory())
                 .startDate(request.getStartDate())
                 .finishDate(finishDate)
                 .joinPoint(request.getJoinPoint())
@@ -34,6 +33,7 @@ public class ChallengeConverter {
 
         return ChallengeResponseDTO.CreateResultDTO.builder()
                 .title(challenge.getTitle())
+                .category(challenge.getCategory())
                 .startDate(challenge.getStartDate())
                 .finishDate(challenge.getFinishDate())
                 .joinPoint(challenge.getJoinPoint())
