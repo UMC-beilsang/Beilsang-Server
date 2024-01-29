@@ -35,4 +35,9 @@ public class ChallengeService {
 
         return challengeRepository.save(challenge);
     }
+
+    public Challenge getChallenge(Long challengeId) {
+
+        return challengeRepository.findById(challengeId).get();
+    }
 }
