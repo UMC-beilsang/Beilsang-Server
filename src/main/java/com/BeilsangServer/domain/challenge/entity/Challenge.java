@@ -41,4 +41,6 @@ public class Challenge {
     private ChallengePeriod period;
 
     private Long totalGoalDay;
+
+    private Integer attendeeCount;
 }
