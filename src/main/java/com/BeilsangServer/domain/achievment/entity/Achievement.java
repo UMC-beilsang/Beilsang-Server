@@ -1,6 +1,5 @@
 package com.BeilsangServer.domain.achievment.entity;
 
-import com.BeilsangServer.domain.category.entity.Category;
 import com.BeilsangServer.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,9 +23,4 @@ public class Achievement {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
-
 }
