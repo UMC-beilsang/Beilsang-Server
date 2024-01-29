@@ -41,9 +41,6 @@ public class Challenge {
 
     @Enumerated(EnumType.STRING)
     private ChallengePeriod period;
-//    private ChallengeCycle cycle;
-
-//    private int frequency;
 
     private Integer totalGoal;
 }
