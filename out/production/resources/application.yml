@@ -1,0 +1,35 @@
+spring:
+  datasource:
+    url: jdbc:mysql://beilsang.clokkku2sofz.ap-northeast-2.rds.amazonaws.com:3306/BeilsangDB?serverTimezone=Asia/Seoul&characterEncoding=UTF-8
+    username: beilsang
+    password: beilsang1234
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      #hbm2ddl.auto: update
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+    database: mysql
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+cloud:
+  aws:
+    s3:
+      bucket: beilsang-bucket
+      path:
+        challenge-main: challenge-main
+        feed: feed
+        member-profile: member-profile
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    credentials:
+      accessKey: ${AWS_ACCESS_KEY_ID}
+      secretKey: ${AWS_SECRET_ACCESS_KEY}
