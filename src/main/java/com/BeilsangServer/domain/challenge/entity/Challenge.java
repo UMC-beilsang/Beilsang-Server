@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,25 +20,27 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Long id;
 
-    private String name;
+    private String title;
 
     private LocalDate startDate;
 
     private LocalDate finishDate;
-    private String startDay;
 
-    private int joinPoint;
+    private Long joinPoint;
 
-    private Boolean isPrivate;
+    private String imageUrl;
 
     private String certImageUrl;
 
     private String details;
 
+    @OneToMany(mappedBy = "challenge")
+    private List<ChallengeNote> challengeNotes = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
-    private ChallengeCycle cycle;
+    private ChallengePeriod period;
 
-    private int frequency;
+    private Long totalGoalDay;
 
-    private int totalGoal;
+    private Integer attendeeCount;
 }
