@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.challenge.dto;
 
-import com.BeilsangServer.domain.challenge.entity.ChallengePeriod;
+import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengePeriod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ChallengeRequestDTO {
         private LocalDate startDate; // 챌린지 시작 날짜
         private ChallengePeriod period; // 챌린지 기간(일주일/한달)
         private Long totalGoalDay; // 목표 실천 일수
-        private Long CategoryId; // 카테고리 ID
+        private Category category; // 카테고리
         private String details; // 챌린지 세부설명
         private List<String> notes; // 챌린지 유의사항
         private Long joinPoint; // 참여 포인트

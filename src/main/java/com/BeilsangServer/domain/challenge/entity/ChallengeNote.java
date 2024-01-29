@@ -23,4 +23,10 @@ public class ChallengeNote {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
+
+    // 연관관계 메서드
+    public void setChallenge(Challenge challenge) {
+        this.challenge = challenge;
+        challenge.getChallengeNotes().add(this);
+    }
 }
