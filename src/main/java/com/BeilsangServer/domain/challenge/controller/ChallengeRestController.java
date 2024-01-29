@@ -19,7 +19,7 @@ public class ChallengeRestController {
     private final ChallengeService challengeService;
 
     @GetMapping
-    public ApiResponse<ChallengeResponseDTO.CreateChallengeResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateChallengeDTO request) {
+    public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
 
         Challenge challenge = challengeService.createChallenge(request);
 

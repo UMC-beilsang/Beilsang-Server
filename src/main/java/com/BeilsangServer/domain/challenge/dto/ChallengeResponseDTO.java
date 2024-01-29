@@ -11,7 +11,7 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateChallengeResultDTO {
+    public static class CreateResultDTO {
 
     }
 }

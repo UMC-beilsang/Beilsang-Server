@@ -1,35 +1,38 @@
 package com.BeilsangServer.domain.challenge.service;
 
+import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
+import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
+import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class ChallengeService {
 
-    public Challenge createChallenge(ChallengeRequestDTO.CreateChallengeDTO request) {
+    private final ChallengeNoteRepository challengeNoteRepository;
+    private final ChallengeRepository challengeRepository;
 
-        // 시작일로부터 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
-        Integer period = request.getPeriod().getDays();
-        LocalDate finishDate = request.getStartDate().plusDays(period);
+    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
 
-        // 유의사항 매핑 필요
-        Challenge challenge = Challenge.builder()
-                .title(request.getTitle())
-                .startDate(request.getStartDate())
-                .finishDate(finishDate)
-                .joinPoint(request.getJoinPoint())
-                .imageUrl(request.getImageUrl())
-                .certImageUrl(request.getCertImageUrl())
-                .details(request.getDetails())
-                .build();
+        // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
+        Challenge challenge = ChallengeConverter.toChallenge(request);
 
-        return null;
+        // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
+        List<String> notes = request.getNotes();
+        for (String note : notes) {
+            ChallengeNote challengeNote = ChallengeNote.builder().note(note).challenge(challenge).build();
+            challengeNoteRepository.save(challengeNote);
+        }
+
+        return challengeRepository.save(challenge);
     }
 }

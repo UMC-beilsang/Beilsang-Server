@@ -26,8 +26,6 @@ public class Challenge {
 
     private LocalDate finishDate;
 
-    private String startDay;
-
     private Long joinPoint;
 
     private String imageUrl;
@@ -37,10 +35,10 @@ public class Challenge {
     private String details;
 
     @OneToMany(mappedBy = "challenge")
-    private List<ChallengeNotification> notifications = new ArrayList<>();
+    private List<ChallengeNote> challengeNotes = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ChallengePeriod period;
 
-    private Integer totalGoal;
+    private Long totalGoalDay;
 }
