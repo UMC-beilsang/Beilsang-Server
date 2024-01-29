@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.challenge.converter;
 
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
+import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
@@ -25,6 +26,20 @@ public class ChallengeConverter {
                 .details(request.getDetails())
                 .period(request.getPeriod())
                 .totalGoalDay(request.getTotalGoalDay())
+                .build();
+    }
+
+    public static ChallengeResponseDTO.CreateResultDTO toCreateResultDTO(Challenge challenge) {
+
+        return ChallengeResponseDTO.CreateResultDTO.builder()
+                .title(challenge.getTitle())
+                .startDate(challenge.getStartDate())
+                .finishDate(challenge.getFinishDate())
+                .joinPoint(challenge.getJoinPoint())
+                .details(challenge.getDetails())
+                .challengeNotes(challenge.getChallengeNotes())
+                .period(challenge.getPeriod())
+                .totalGoalDay(challenge.getTotalGoalDay())
                 .build();
     }
 }
