@@ -64,4 +64,15 @@ public class FeedService {
 
         return feedDTO;
     }
+
+    /***
+     * 챌린지 이름 혹은 카테고리로 피드 검색하기
+     * @param name
+     * @return feedList dto
+     */
+//    public List<FeedDTO> searchFeed(String name){
+//        List<Feed> feedList = feedRepository.findByTitleContaining(name);
+//
+//        return feedConverter.toDtoList(feedList);
+//    }
 }

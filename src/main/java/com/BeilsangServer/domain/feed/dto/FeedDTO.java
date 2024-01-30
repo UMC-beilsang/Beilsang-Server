@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.feed.dto;
 
 import com.BeilsangServer.domain.feed.entity.Feed;
+import com.BeilsangServer.global.enums.Category;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -19,16 +20,16 @@ public class FeedDTO {
 
     private String challengeTitle;
 
-    private Long categoryId;
+    private Category category;
 
     @Builder
-    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Long categoryId){
+    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category){
         this.id = id;
         this.review = review;
         this.uploadDate = uploadDate;
         this.feedUrl = feedUrl;
         this.challengeTitle = challengeTitle;
-        this.categoryId = categoryId;
+        this.category = category;
     }
 
 

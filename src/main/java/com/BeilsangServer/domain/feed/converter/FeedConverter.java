@@ -6,7 +6,8 @@ import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class FeedConverter {
@@ -27,8 +28,16 @@ public class FeedConverter {
                 .uploadDate(feed.getUploadDate())
                 .feedUrl(feed.getFeedUrl())
                 .challengeTitle(feed.getChallenge().getTitle())
+                .category(feed.getChallenge().getCategory())
                 .build();
     }
 
-//    public Feed toEntity()
+    public List<FeedDTO> toDtoList(List<Feed> feedList){
+        List<FeedDTO> dtoList = new ArrayList<>();
+
+        for (Feed f : feedList){
+            dtoList.add(entityToDto(f));
+        }
+        return dtoList;
+    }
 }
