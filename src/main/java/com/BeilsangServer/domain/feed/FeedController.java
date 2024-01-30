@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -35,11 +37,20 @@ public class FeedController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,guide);
     }
 
-    @GetMapping("/feed/{feedId}")
+    @GetMapping("/feeds/{feedId}")
     public ApiResponse<FeedDTO> getFeed(
             @PathVariable(name = "feedId") Long feedId
     ){
         FeedDTO feedDTO = feedService.getFeed(feedId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
     }
+
+//    @GetMapping("/feeds/search")
+//    public ApiResponse<List<FeedDTO>> searchFeed(
+//            @RequestParam("name") String name
+//    ){
+//        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
+//
+//        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+//    }
 }
