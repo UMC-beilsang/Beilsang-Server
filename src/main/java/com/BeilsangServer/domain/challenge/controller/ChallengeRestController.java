@@ -10,6 +10,7 @@ import com.BeilsangServer.global.common.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/challenges")
