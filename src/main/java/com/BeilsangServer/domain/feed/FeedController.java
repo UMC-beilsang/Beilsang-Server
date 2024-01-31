@@ -9,6 +9,7 @@ import com.BeilsangServer.global.common.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -22,10 +23,11 @@ public class FeedController {
 
     @PostMapping("/feeds/{challengeId}")
     public ApiResponse<FeedDTO> createFeed(
-            @RequestBody AddFeedRequestDTO requestDTO,
+            @RequestPart MultipartFile file,
+            @RequestPart String review,
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        FeedDTO newFeed = feedService.createFeed(requestDTO,challengeId);
+        FeedDTO newFeed = feedService.createFeed(file,review,challengeId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,newFeed);
     }
 
@@ -53,4 +55,21 @@ public class FeedController {
 //
 //        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
 //    }
+
+    @PostMapping("/feeds/{feedId}/likes")
+    public ApiResponse<Long> feedLike(
+            @PathVariable(name = "feedId") Long feedId
+    ){
+        Long feedLikeId = feedService.feedLike(feedId);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedLikeId);
+    }
+
+    @DeleteMapping("/feeds/{feedId}/likes")
+    public ApiResponse<Long> feedUnLike(
+            @PathVariable(name = "feedId") Long feedId
+    ){
+        Long feedUnLikeId = feedService.feedUnLike(feedId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedUnLikeId);
+    }
 }

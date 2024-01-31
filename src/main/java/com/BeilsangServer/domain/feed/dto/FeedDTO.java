@@ -32,5 +32,4 @@ public class FeedDTO {
         this.category = category;
     }
 
-
 }
