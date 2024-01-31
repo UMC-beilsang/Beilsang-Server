@@ -17,7 +17,7 @@ public class ChallengeRestController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("/")
+    @PostMapping("")
     public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
 
         Challenge challenge = challengeService.createChallenge(request);

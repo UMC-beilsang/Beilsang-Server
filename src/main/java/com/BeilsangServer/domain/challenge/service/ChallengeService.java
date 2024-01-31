@@ -21,6 +21,7 @@ public class ChallengeService {
     private final ChallengeNoteRepository challengeNoteRepository;
     private final ChallengeRepository challengeRepository;
 
+    @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
 
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
