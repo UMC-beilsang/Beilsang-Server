@@ -1,5 +1,7 @@
 package com.BeilsangServer.domain.challenge.entity;
 
+import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengePeriod;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -18,25 +22,37 @@ public class Challenge {
     @Column(name = "challenge_id")
     private Long id;
 
-    private String name;
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    private String title;
 
     private LocalDate startDate;
 
     private LocalDate finishDate;
-    private String startDay;
 
-    private int joinPoint;
+    private Long joinPoint;
 
-    private Boolean isPrivate;
+    private String imageUrl;
 
     private String certImageUrl;
 
     private String details;
 
+    @OneToMany(mappedBy = "challenge")
+    private List<ChallengeNote> challengeNotes = new ArrayList<>();
+
     @Enumerated(EnumType.STRING)
-    private ChallengeCycle cycle;
+    private ChallengePeriod period;
 
-    private int frequency;
+    private Long totalGoalDay;
 
-    private int totalGoal;
+    private Integer attendeeCount;
+
+
+    // 연관관계 메서드
+    public void setChallengeNotes(ChallengeNote note) {
+        challengeNotes.add(note);
+        note.setChallenge(this);
+    }
 }

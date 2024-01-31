@@ -1,5 +1,6 @@
-package com.BeilsangServer.domain.achievment.entity;
+package com.BeilsangServer.domain.feed.entity;
 
+import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -12,13 +13,15 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Achievement {
+public class FeedLike {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "achievement_id")
+    @Column(name = "feed_like_id")
     private Long id;
 
-    private int count;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
