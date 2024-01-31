@@ -8,10 +8,13 @@ import com.BeilsangServer.global.common.ApiResponse;
 import com.BeilsangServer.global.common.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+
+import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
 @RestController
 @Slf4j
@@ -21,7 +24,7 @@ public class FeedController {
 
     private final FeedService feedService;
 
-    @PostMapping("/feeds/{challengeId}")
+    @PostMapping(value = "/feeds/{challengeId}",consumes = MULTIPART_FORM_DATA, produces = MediaType.APPLICATION_JSON_VALUE)
     public ApiResponse<FeedDTO> createFeed(
             @RequestPart MultipartFile file,
             @RequestPart String review,
