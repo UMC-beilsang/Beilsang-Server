@@ -136,6 +136,11 @@ public class FeedService {
         return feedLike.getId();
     }
 
+    /***
+     * 카테고리로 피드 조회하기
+     * @param category
+     * @return 주어진 카테고리에 해당하는 feedDtoList
+     */
     public List<FeedDTO> getFeedByCategory(String category){
         Category categoryByEnum = Category.valueOf(category);
 
