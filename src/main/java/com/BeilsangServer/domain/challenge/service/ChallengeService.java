@@ -51,4 +51,5 @@ public class ChallengeService {
 
         return ChallengeConverter.toGetChallengeDTO(challenge, dDay, recommendChallengeDTOList);
     }
+
 }
