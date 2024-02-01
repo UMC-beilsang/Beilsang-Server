@@ -11,6 +11,7 @@ import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
+import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -95,7 +96,6 @@ public class FeedService {
         for(Challenge c : challengeList){
             challengeIds.add(c.getId());
         }
-        log.info(challengeIds.toString());
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
@@ -134,5 +134,18 @@ public class FeedService {
         feedLikeRepository.delete(feedLike);
 
         return feedLike.getId();
+    }
+
+    public List<FeedDTO> getFeedByCategory(String category){
+        Category categoryByEnum = Category.valueOf(category);
+
+        List<Feed> feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
+
+        List<FeedDTO> feedDTOList = new ArrayList<>();
+        for (Feed f : feedList){
+            feedDTOList.add(feedConverter.entityToDto(f));
+        }
+
+        return feedDTOList;
     }
 }

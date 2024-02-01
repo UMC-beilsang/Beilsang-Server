@@ -74,4 +74,13 @@ public class FeedController {
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedUnLikeId);
     }
+
+    @GetMapping("/feeds/category/{category}")
+    public ApiResponse<List<FeedDTO>> getFeedByCategory(
+            @PathVariable String category
+    ){
+        List<FeedDTO> feedDTOList = feedService.getFeedByCategory(category);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+    }
 }
