@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
 @RestController
@@ -47,14 +49,14 @@ public class FeedController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
     }
 
-//    @GetMapping("/feeds/search")
-//    public ApiResponse<List<FeedDTO>> searchFeed(
-//            @RequestParam("name") String name
-//    ){
-//        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
-//
-//        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
-//    }
+    @GetMapping("/feeds/search")
+    public ApiResponse<List<FeedDTO>> searchFeed(
+            @RequestParam("name") String name
+    ){
+        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+    }
 
     @PostMapping("/feeds/{feedId}/likes")
     public ApiResponse<Long> feedLike(

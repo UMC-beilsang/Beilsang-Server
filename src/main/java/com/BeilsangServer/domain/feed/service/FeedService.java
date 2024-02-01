@@ -18,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
@@ -81,16 +83,29 @@ public class FeedService {
         return feedDTO;
     }
 
-//    /***
-//     * 챌린지 이름 혹은 카테고리로 피드 검색하기
-//     * @param name
-//     * @return feedList dto
-//     */
-//    public List<FeedDTO> searchFeed(String name){
-//        List<Feed> feedList = feedRepository.findByTitleContaining(name);
-//
-//        return feedConverter.toDtoList(feedList);
-//    }
+    /***
+     * 챌린지 이름으로 피드 검색하기
+     * @param name
+     * @return feedList dto
+     */
+    public List<FeedDTO> searchFeed(String name){
+        List<Challenge> challengeList = challengeRepository.findByTitleContaining(name);
+
+        List<Long> challengeIds = new ArrayList<>();
+        for(Challenge c : challengeList){
+            challengeIds.add(c.getId());
+        }
+        log.info(challengeIds.toString());
+
+        List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
+
+        List<FeedDTO> feedDTOList = new ArrayList<>();
+        for (Feed f : feedList){
+            feedDTOList.add(feedConverter.entityToDto(f));
+        }
+
+        return feedDTOList;
+    }
 
     /***
      * 피드 좋아요 하기
