@@ -1,6 +1,7 @@
-package com.BeilsangServer.domain.category.entity;
+package com.BeilsangServer.domain.feed.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.member.entity.Member;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,16 +13,17 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChallengeCategory {
+public class FeedLike {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "challenge_category_id")
+    @Column(name = "feed_like_id")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
+    @JoinColumn(name = "feed_id")
+    private Feed feed;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private Category category;
+    @JoinColumn(name = "member_id")
+    private Member member;
 }

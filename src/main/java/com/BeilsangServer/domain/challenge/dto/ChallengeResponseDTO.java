@@ -2,7 +2,8 @@ package com.BeilsangServer.domain.challenge.dto;
 
 import com.BeilsangServer.domain.category.entity.Category;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
-import com.BeilsangServer.domain.challenge.entity.ChallengePeriod;
+import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengePeriod;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -22,6 +23,11 @@ public class ChallengeResponseDTO {
 
         private Long id;
         private String title;
+
+
+        private Category category;
+
+
         private LocalDate startDate;
         private LocalDate finishDate;
         private Long joinPoint;
