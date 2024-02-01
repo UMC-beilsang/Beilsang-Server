@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.member.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChallengeMember {
+public class ChallengeMember extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_member_id")
     private Long id;

@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.achievment.entity;
 
 import com.BeilsangServer.domain.member.entity.Member;
+import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Achievement {
+public class Achievement extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "achievement_id")

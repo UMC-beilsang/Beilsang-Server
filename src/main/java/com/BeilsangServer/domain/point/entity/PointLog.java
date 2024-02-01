@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.point.entity;
 
 import com.BeilsangServer.domain.member.entity.Member;
+import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PointLog {
+public class PointLog extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "point_id")
     private Long id;

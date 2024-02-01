@@ -1,4 +1,4 @@
-package com.BeilsangServer.global.common;
+package com.BeilsangServer.global.common.apiResponse;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
