@@ -1,6 +1,4 @@
 package com.BeilsangServer.domain.challenge.dto;
-
-import com.BeilsangServer.domain.category.entity.Category;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
@@ -30,13 +28,13 @@ public class ChallengeResponseDTO {
 
         private LocalDate startDate;
         private LocalDate finishDate;
-        private Long joinPoint;
+        private Integer joinPoint;
         private String imageUrl;
         private String certImageUrl;
         private String details;
         private List<ChallengeNote> challengeNotes = new ArrayList<>();
         private ChallengePeriod period;
-        private Long totalGoalDay;
+        private Integer totalGoalDay;
     }
 
     @Builder
@@ -56,6 +54,8 @@ public class ChallengeResponseDTO {
         private String details;
         private List<String> challengeNotes;
         private Integer joinPoint;
+
+        private Integer dDay;
 
         // 추천 챌린지 목록
         private List<RecommendChallengeDTO> recommendChallengeDTOList;

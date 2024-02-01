@@ -31,7 +31,7 @@ public class Challenge {
 
     private LocalDate finishDate;
 
-    private Long joinPoint;
+    private Integer joinPoint;
 
     private String imageUrl;
 
@@ -45,7 +45,7 @@ public class Challenge {
     @Enumerated(EnumType.STRING)
     private ChallengePeriod period;
 
-    private Long totalGoalDay;
+    private Integer totalGoalDay;
 
     private Integer attendeeCount;
 

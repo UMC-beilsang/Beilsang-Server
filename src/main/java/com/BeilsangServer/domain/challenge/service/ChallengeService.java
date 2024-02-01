@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.challenge.service;
 
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
+import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
@@ -11,6 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,8 +41,14 @@ public class ChallengeService {
         return challengeRepository.save(challenge);
     }
 
-    public Challenge getChallenge(Long challengeId) {
+    public ChallengeResponseDTO.GetChallengeDTO getChallenge(Long challengeId) {
 
-        return challengeRepository.findById(challengeId).get();
+        Challenge challenge = challengeRepository.findById(challengeId).get();
+
+        Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
+
+        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList = new ArrayList<>();
+
+        return ChallengeConverter.toGetChallengeDTO(challenge, dDay, recommendChallengeDTOList);
     }
 }
