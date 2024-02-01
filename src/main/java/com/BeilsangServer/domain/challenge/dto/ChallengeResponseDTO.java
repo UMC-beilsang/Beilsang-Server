@@ -21,11 +21,7 @@ public class ChallengeResponseDTO {
 
         private Long id;
         private String title;
-
-
         private Category category;
-
-
         private LocalDate startDate;
         private LocalDate finishDate;
         private Integer joinPoint;

@@ -67,6 +67,7 @@ public class ChallengeConverter {
                 .dDay(dDay)
                 .recommendChallengeDTOList(recommendChallengeDTOList)
                 .build();
+
     }
 
     public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
@@ -74,6 +75,5 @@ public class ChallengeConverter {
                 .certImageUrl(challenge.getCertImageUrl())
                 .challengeNotes(challenge.getChallengeNotes())
                 .build();
-
     }
 }
