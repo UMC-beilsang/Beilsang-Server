@@ -58,4 +58,5 @@ public class Challenge extends BaseEntity {
         challengeNotes.add(note);
         note.setChallenge(this);
     }
+
 }
