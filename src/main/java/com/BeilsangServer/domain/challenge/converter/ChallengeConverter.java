@@ -44,10 +44,19 @@ public class ChallengeConverter {
                 .build();
     }
 
+
+    public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge) {
+
+        ChallengeResponseDTO.GetChallengeDTO response = ChallengeResponseDTO.GetChallengeDTO.builder()
+                .build();
+
+        return null;
+
     public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
         return ChallengeResponseDTO.CreateResultDTO.builder()
                 .certImageUrl(challenge.getCertImageUrl())
                 .challengeNotes(challenge.getChallengeNotes())
                 .build();
+
     }
 }
