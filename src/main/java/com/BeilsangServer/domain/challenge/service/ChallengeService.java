@@ -12,10 +12,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +46,21 @@ public class ChallengeService {
 
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList = new ArrayList<>();
+        return ChallengeConverter.toGetChallengeDTO(challenge, dDay, getRecommendChallenges());
+    }
 
-        return ChallengeConverter.toGetChallengeDTO(challenge, dDay, recommendChallengeDTOList);
+    public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
+
+        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환한다
+        List<Challenge> recommendChallenges = challengeRepository.findTop2ByStartDateAfterOrderByCountLikesDesc(LocalDate.now());
+
+        return recommendChallenges.stream()
+                .map(challenge -> ChallengeResponseDTO.RecommendChallengeDTO.builder()
+                        .challengeId(challenge.getId())
+                        .imageUrl(challenge.getImageUrl())
+                        .title(challenge.getTitle())
+                        .category(challenge.getCategory())
+                        .build())
+                .collect(Collectors.toList());
     }
 }

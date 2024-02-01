@@ -50,6 +50,8 @@ public class Challenge extends BaseEntity {
 
     private Integer attendeeCount;
 
+    private Integer countLikes;
+
 
     // 연관관계 메서드
     public void setChallengeNotes(ChallengeNote note) {

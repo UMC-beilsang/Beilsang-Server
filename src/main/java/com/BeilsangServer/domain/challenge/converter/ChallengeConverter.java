@@ -47,15 +47,12 @@ public class ChallengeConverter {
 
     public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
 
-        List<String> challengeNotes = challenge.getChallengeNotes()
-                .stream()
-                .map(ChallengeNote::getNote)
-                .toList();
+        List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
         return ChallengeResponseDTO.GetChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
                 .createdMember(null)
-                .createdDate(null)
+                .createdDate(challenge.getCreatedAt().toLocalDate())
                 .imageUrl(challenge.getImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
                 .title(challenge.getTitle())
@@ -75,5 +72,13 @@ public class ChallengeConverter {
                 .certImageUrl(challenge.getCertImageUrl())
                 .challengeNotes(challenge.getChallengeNotes())
                 .build();
+    }
+
+    public static List<String> toStringChallengeNotes(List<ChallengeNote> challengeNotes) {
+
+        return challengeNotes
+                .stream()
+                .map(ChallengeNote::getNote)
+                .toList();
     }
 }

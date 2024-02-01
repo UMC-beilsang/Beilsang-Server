@@ -48,16 +48,23 @@ public class ChallengeResponseDTO {
         private LocalDate startDate;
         private Category category;
         private String details;
-        private List<String> challengeNotes;
         private Integer joinPoint;
-
         private Integer dDay;
-
+        // 챌린지 유의사항
+        private List<String> challengeNotes;
         // 추천 챌린지 목록
         private List<RecommendChallengeDTO> recommendChallengeDTOList;
     }
 
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class RecommendChallengeDTO {
 
+        private Long challengeId;
+        private String imageUrl;
+        private String title;
+        private Category category;
     }
 }
