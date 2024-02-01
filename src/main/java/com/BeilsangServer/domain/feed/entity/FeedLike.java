@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.feed.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.member.entity.Member;
+import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FeedLike {
+public class FeedLike extends BaseEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_like_id")

@@ -1,18 +1,15 @@
 package com.BeilsangServer.domain.feed;
 
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
-import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.service.FeedService;
-import com.BeilsangServer.global.common.ApiResponse;
-import com.BeilsangServer.global.common.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiResponse.ApiResponse;
+import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 

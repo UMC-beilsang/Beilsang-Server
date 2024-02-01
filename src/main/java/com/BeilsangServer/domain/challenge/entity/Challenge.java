@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.entity;
 
+import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Challenge {
+public class Challenge extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")
     private Long id;

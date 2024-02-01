@@ -5,9 +5,8 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
-import com.BeilsangServer.domain.member.entity.Member;
-import com.BeilsangServer.global.common.ApiResponse;
-import com.BeilsangServer.global.common.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiResponse.ApiResponse;
+import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
