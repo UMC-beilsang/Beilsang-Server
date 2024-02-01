@@ -3,9 +3,10 @@ package com.BeilsangServer.domain.challenge.converter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
-
+import java.util.List;
 public class ChallengeConverter {
 
     public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request) {
@@ -44,13 +45,29 @@ public class ChallengeConverter {
                 .build();
     }
 
+    public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
 
-    public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge) {
+        List<String> challengeNotes = challenge.getChallengeNotes()
+                .stream()
+                .map(ChallengeNote::getNote)
+                .toList();
 
-        ChallengeResponseDTO.GetChallengeDTO response = ChallengeResponseDTO.GetChallengeDTO.builder()
+        return ChallengeResponseDTO.GetChallengeDTO.builder()
+                .attendeeCount(challenge.getAttendeeCount())
+                .createdMember(null)
+                .createdDate(null)
+                .imageUrl(challenge.getImageUrl())
+                .certImageUrl(challenge.getCertImageUrl())
+                .title(challenge.getTitle())
+                .startDate(challenge.getStartDate())
+                .category(challenge.getCategory())
+                .details(challenge.getDetails())
+                .challengeNotes(challengeNotes)
+                .joinPoint(challenge.getJoinPoint())
+                .dDay(dDay)
+                .recommendChallengeDTOList(recommendChallengeDTOList)
                 .build();
 
-        return null;
     }
 
     public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){

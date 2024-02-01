@@ -30,8 +30,8 @@ public class ChallengeRestController {
     @GetMapping("/{challengeId}")
     public ApiResponse<ChallengeResponseDTO.GetChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
-        Challenge challenge = challengeService.getChallenge(challengeId);
+        ChallengeResponseDTO.GetChallengeDTO response = challengeService.getChallenge(challengeId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, ChallengeConverter.toGetChallengeDTO(challenge));
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 }
