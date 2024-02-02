@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/challenges")
@@ -47,11 +45,12 @@ public class ChallengeRestController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<List<ChallengeResponseDTO.GetChallengeByCategoryDTO>> getChallengeByCategory(@PathVariable(name = "category") String category) {
+    public ApiResponse<ChallengeResponseDTO.ChallengeCategoryDTO> getChallengeByCategory(@PathVariable(name = "category") String category) {
 
-        List<ChallengeResponseDTO.GetChallengeByCategoryDTO> response = challengeService.getChallengeByCategory(category);
+        ChallengeResponseDTO.ChallengeCategoryDTO response = challengeService.getChallengeByCategory(category);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
+
 
 }

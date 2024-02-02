@@ -7,7 +7,6 @@ import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ChallengeConverter {
 
@@ -84,14 +83,17 @@ public class ChallengeConverter {
                 .toList();
     }
 
-    public static List<ChallengeResponseDTO.GetChallengeByCategoryDTO> toChallengeByCategoryDTO(List<Challenge> challenges) {
+    public static ChallengeResponseDTO.ChallengeCategoryDTO toChallengeCategoryDTO(List<Challenge> challenges) {
 
-        return challenges.stream().map(challenge -> ChallengeResponseDTO.GetChallengeByCategoryDTO.builder()
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
+                .categoryId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getImageUrl())
                 .createdMember(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build()
-        ).collect(Collectors.toList());
+        ).toList();
+
+        return ChallengeResponseDTO.ChallengeCategoryDTO.builder().challenges(challengePreviews).build();
     }
 }

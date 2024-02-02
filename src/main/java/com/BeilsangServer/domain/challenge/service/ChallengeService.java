@@ -65,11 +65,10 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    public List<ChallengeResponseDTO.GetChallengeByCategoryDTO> getChallengeByCategory(String stringCategory) {
+    public ChallengeResponseDTO.ChallengeCategoryDTO getChallengeByCategory(String stringCategory) {
 
         Category category = Category.from(stringCategory);
         List<Challenge> challenges = challengeRepository.findAllByCategory(category);
-
-        return ChallengeConverter.toChallengeByCategoryDTO(challenges);
+        return ChallengeConverter.toChallengeCategoryDTO(challenges);
     }
 }
