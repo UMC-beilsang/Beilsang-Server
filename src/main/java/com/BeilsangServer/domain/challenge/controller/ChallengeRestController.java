@@ -1,5 +1,4 @@
 package com.BeilsangServer.domain.challenge.controller;
-
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
@@ -9,6 +8,7 @@ import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +20,10 @@ public class ChallengeRestController {
     private final ChallengeService challengeService;
 
     @PostMapping("/")
+    @Operation(summary = "챌린지 생성 API", description = "필요한 정보를 받아 챌린지를 생성하는 API입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
     public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
 
         Challenge challenge = challengeService.createChallenge(request);
@@ -29,6 +33,11 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/{challengeId}")
+    @Operation(summary = "카테고리 상세 조회 API", description = "챌린지ID를 PathVariable로 입력 받아 해당하는 챌린지의 상세 내용을 조회하는 API입니다.")
+    @Parameter(name = "challengeId", description = "챌린지 ID")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
     public ApiResponse<ChallengeResponseDTO.ChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
         ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId);
@@ -38,10 +47,12 @@ public class ChallengeRestController {
 
     @GetMapping("/{category}")
     @Operation(summary = "카테고리별 챌린지 조회 API", description = "해당하는 카테고리를 PathVariable로 입력 받아 해당하는 챌린지 목록을 조회하는 API입니다.")
-    @Parameter(name = "category", description = """
+    @Parameters({
+            @Parameter(name = "category", description = """
             카테고리 이름입니다. 영어와 한글 대소문자 상관없이 가능합니다.
             [TUMBLER(다회용컵), REFILL_STATION(리필스테이션), MULTIPLE_CONTAINERS(다회용기), ECO_PRODUCT(친환경제품),
             PLOGGING(플로깅), VEGAN(비건), PUBLIC_TRANSPORT(대중교통), BIKE(자전거), RECYCLE(재활용)]""")
+    })
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
