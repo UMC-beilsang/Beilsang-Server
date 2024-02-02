@@ -46,11 +46,11 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
-        return ChallengeResponseDTO.GetChallengeDTO.builder()
+        return ChallengeResponseDTO.ChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
                 .createdMember(null)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
@@ -83,7 +83,12 @@ public class ChallengeConverter {
                 .toList();
     }
 
-    public static ChallengeResponseDTO.ChallengeCategoryDTO toChallengeCategoryDTO(List<Challenge> challenges) {
+    /***
+     * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
+     * @param challenges 챌린지 목록
+     * @return ChallengePreviewListDTO
+     */
+    public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .categoryId(challenge.getId())
@@ -94,6 +99,6 @@ public class ChallengeConverter {
                 .build()
         ).toList();
 
-        return ChallengeResponseDTO.ChallengeCategoryDTO.builder().challenges(challengePreviews).build();
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
     }
 }

@@ -37,7 +37,7 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class GetChallengeDTO {
+    public static class ChallengeDTO {
 
         private Integer attendeeCount;
         private String createdMember;
@@ -72,14 +72,6 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class ChallengeCategoryDTO { // 챌린지 카테고리별 조회 응답 DTO
-
-        private List<ChallengePreviewDTO> challenges;
-    }
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ChallengePreviewDTO { // 챌린지 미리보기 DTO
 
         private Long categoryId;
@@ -87,5 +79,13 @@ public class ChallengeResponseDTO {
         private String imageUrl;
         private String createdMember;
         private Integer attendeeCount;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChallengePreviewListDTO {
+
+        private List<ChallengePreviewDTO> challenges;
     }
 }
