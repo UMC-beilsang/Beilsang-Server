@@ -7,6 +7,8 @@ import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
+
 public class ChallengeConverter {
 
     public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request) {
@@ -80,5 +82,16 @@ public class ChallengeConverter {
                 .stream()
                 .map(ChallengeNote::getNote)
                 .toList();
+    }
+
+    public static List<ChallengeResponseDTO.GetChallengeByCategoryDTO> toChallengeByCategoryDTO(List<Challenge> challenges) {
+
+        return challenges.stream().map(challenge -> ChallengeResponseDTO.GetChallengeByCategoryDTO.builder()
+                .title(challenge.getTitle())
+                .imageUrl(challenge.getImageUrl())
+                .createdMember(null)
+                .attendeeCount(challenge.getAttendeeCount())
+                .build()
+        ).collect(Collectors.toList());
     }
 }

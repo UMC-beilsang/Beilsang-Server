@@ -67,4 +67,17 @@ public class ChallengeResponseDTO {
         private String title;
         private Category category;
     }
+
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class GetChallengeByCategoryDTO {
+
+        private String title;
+        private String imageUrl;
+        private String createdMember;
+        private Integer attendeeCount;
+    }
 }
