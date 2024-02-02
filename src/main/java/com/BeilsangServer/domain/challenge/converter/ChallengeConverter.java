@@ -7,7 +7,6 @@ import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ChallengeConverter {
 
@@ -47,11 +46,11 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.GetChallengeDTO toGetChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
-        return ChallengeResponseDTO.GetChallengeDTO.builder()
+        return ChallengeResponseDTO.ChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
                 .createdMember(null)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
@@ -84,14 +83,22 @@ public class ChallengeConverter {
                 .toList();
     }
 
-    public static List<ChallengeResponseDTO.GetChallengeByCategoryDTO> toChallengeByCategoryDTO(List<Challenge> challenges) {
+    /***
+     * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
+     * @param challenges 챌린지 목록
+     * @return ChallengePreviewListDTO
+     */
+    public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
 
-        return challenges.stream().map(challenge -> ChallengeResponseDTO.GetChallengeByCategoryDTO.builder()
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
+                .categoryId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getImageUrl())
                 .createdMember(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build()
-        ).collect(Collectors.toList());
+        ).toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
     }
 }

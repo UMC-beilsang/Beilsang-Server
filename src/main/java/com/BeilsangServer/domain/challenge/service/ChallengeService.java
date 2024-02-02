@@ -41,13 +41,13 @@ public class ChallengeService {
         return challengeRepository.save(challenge);
     }
 
-    public ChallengeResponseDTO.GetChallengeDTO getChallenge(Long challengeId) {
+    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
 
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toGetChallengeDTO(challenge, dDay, getRecommendChallenges());
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
     }
 
     public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
@@ -65,11 +65,27 @@ public class ChallengeService {
                 .collect(Collectors.toList());
     }
 
-    public List<ChallengeResponseDTO.GetChallengeByCategoryDTO> getChallengeByCategory(String stringCategory) {
+    /***
+     * 해당하는 카테고리의 챌린지 목록 조회하기
+     * @param stringCategory 문자열 타입의 Category
+     * @return ChallengePreviewListDTO
+     * 시작된 챌린지는 뺄지, 정렬 순서 어떻게 할지 등 논의 필요
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList(String stringCategory) {
 
         Category category = Category.from(stringCategory);
         List<Challenge> challenges = challengeRepository.findAllByCategory(category);
+        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+    }
 
-        return ChallengeConverter.toChallengeByCategoryDTO(challenges);
+    /***
+     * 전체 챌린지 목록 조회하기
+     * @return ChallengePreviewListDTO
+     * 시작된 챌린지는 뺄지, 정렬 순서 어떻게 할지 등 논의 필요
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
+
+        List<Challenge> challenges = challengeRepository.findAll();
+        return ChallengeConverter.toChallengePreviewListDTO(challenges);
     }
 }

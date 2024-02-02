@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/challenges")
@@ -21,7 +19,7 @@ public class ChallengeRestController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("")
+    @PostMapping("/")
     public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
 
         Challenge challenge = challengeService.createChallenge(request);
@@ -31,9 +29,9 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/{challengeId}")
-    public ApiResponse<ChallengeResponseDTO.GetChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
+    public ApiResponse<ChallengeResponseDTO.ChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
-        ChallengeResponseDTO.GetChallengeDTO response = challengeService.getChallenge(challengeId);
+        ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
@@ -47,11 +45,22 @@ public class ChallengeRestController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<List<ChallengeResponseDTO.GetChallengeByCategoryDTO>> getChallengeByCategory(@PathVariable(name = "category") String category) {
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getChallengeByCategory(@PathVariable(name = "category") String category) {
 
-        List<ChallengeResponseDTO.GetChallengeByCategoryDTO> response = challengeService.getChallengeByCategory(category);
+        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getChallengePreviewList(category);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
+    @GetMapping("/")
+    @Operation(summary = "챌린지 전체 조회 API", description = "전체 챌린지 목록을 조회하는 API입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getTotalChallenge() {
+
+        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getChallengePreviewList();
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+    }
 }
