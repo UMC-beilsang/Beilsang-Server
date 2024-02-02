@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.challenge.repository;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.domain.feed.entity.Feed;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,4 +17,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
 
     // 카테고리에 해당하는 모든 챌린지 리스트 형태로 반환
     List<Challenge> findAllByCategory(Category category);
+
+    List<Challenge> findByTitleContaining(String name);
 }
