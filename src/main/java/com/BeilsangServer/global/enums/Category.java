@@ -1,5 +1,6 @@
 package com.BeilsangServer.global.enums;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -18,4 +19,9 @@ public enum Category {
     RECYCLE("재활용");
 
     private final String descriptions;
+
+    @JsonCreator
+    public static Category from(String stringCategory) {
+        return Category.valueOf(stringCategory.toUpperCase());
+    }
 }

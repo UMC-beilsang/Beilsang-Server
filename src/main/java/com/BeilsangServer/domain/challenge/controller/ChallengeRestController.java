@@ -10,6 +10,8 @@ import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/challenges")
@@ -33,4 +35,14 @@ public class ChallengeRestController {
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
+
+    @GetMapping("/{category}")
+    public ApiResponse<List<ChallengeResponseDTO.GetChallengeByCategoryDTO>> getChallengeByCategory(@PathVariable(name = "category") String category) {
+
+        List<ChallengeResponseDTO.GetChallengeByCategoryDTO> response = challengeService.getChallengeByCategory(category);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+    }
+
+
 }

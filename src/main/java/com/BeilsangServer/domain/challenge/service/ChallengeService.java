@@ -7,6 +7,7 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
+import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -62,5 +63,13 @@ public class ChallengeService {
                         .category(challenge.getCategory())
                         .build())
                 .collect(Collectors.toList());
+    }
+
+    public List<ChallengeResponseDTO.GetChallengeByCategoryDTO> getChallengeByCategory(String stringCategory) {
+
+        Category category = Category.from(stringCategory);
+        List<Challenge> challenges = challengeRepository.findAllByCategory(category);
+
+        return ChallengeConverter.toChallengeByCategoryDTO(challenges);
     }
 }
