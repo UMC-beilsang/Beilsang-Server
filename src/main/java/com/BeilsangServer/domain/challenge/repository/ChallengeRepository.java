@@ -19,4 +19,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findAllByCategory(Category category);
 
     List<Challenge> findByTitleContaining(String name);
+
+    List<Challenge> findTop10ByCategoryOrderByCountLikesDesc(Category category);
 }
