@@ -38,8 +38,7 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
 
 	//Firebase
-	implementation platform('com.google.firebase:firebase-bom:latest-version')
-	implementation 'com.google.firebase:firebase-admin'
+	implementation 'com.google.firebase:firebase-admin:9.2.0'
 	implementation 'com.google.firebase:firebase-messaging'
 }
 
