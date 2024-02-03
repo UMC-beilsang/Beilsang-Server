@@ -26,6 +26,7 @@ import java.util.UUID;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FeedService {
 
     private final FeedRepository feedRepository;
@@ -33,6 +34,7 @@ public class FeedService {
     private final ChallengeRepository challengeRepository;
     private final AmazonS3Manager amazonS3Manager;
     private final FeedLikeRepository feedLikeRepository;
+
 
     /***
      * 피드 인증하기
@@ -62,7 +64,6 @@ public class FeedService {
      * @param challengeId
      * @return guide dto
      */
-    @Transactional(readOnly = true)
     public ChallengeResponseDTO.CreateResultDTO getGuide(Long challengeId){
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없는챌린지다.");});
         ChallengeResponseDTO.CreateResultDTO guide = ChallengeConverter.toGuideResultDto(challenge);
@@ -79,7 +80,9 @@ public class FeedService {
         Feed feed = feedRepository.findById(feedId).orElseThrow(() -> {
             throw new IllegalArgumentException("이런피드없다.");
         });
-        FeedDTO feedDTO = feedConverter.entityToDto(feed);
+        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId);
+
+        FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes);
 
         return feedDTO;
     }
@@ -112,6 +115,7 @@ public class FeedService {
      * @param feedId
      * @return 좋아요한 feedId
      */
+    @Transactional
     public Long feedLike(Long feedId){
         Feed feed = feedRepository.findById(feedId).orElseThrow(()-> {throw new IllegalArgumentException("없다");});
 
@@ -127,7 +131,9 @@ public class FeedService {
      * 피드 좋아요 취소하기
      * @param feedId
      * @return 좋아요 취소한 feedId
+     * findByIdAndMember_id(id,memberId)
      */
+    @Transactional
     public Long feedUnLike(Long feedId){
         FeedLike feedLike = feedLikeRepository.findById(feedId).orElseThrow(()->{throw new IllegalArgumentException("좋아요없다");});
 
