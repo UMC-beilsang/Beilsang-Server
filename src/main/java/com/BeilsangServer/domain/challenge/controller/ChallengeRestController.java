@@ -63,4 +63,13 @@ public class ChallengeRestController {
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
+
+    @GetMapping("/famous/{category}")
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getFamousChallengeList(
+            @PathVariable(name = "category") String category
+    ){
+        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getFamousChallengeList(category);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
+    }
 }

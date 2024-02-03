@@ -88,4 +88,19 @@ public class ChallengeService {
         List<Challenge> challenges = challengeRepository.findAll();
         return ChallengeConverter.toChallengePreviewListDTO(challenges);
     }
+
+
+    /***
+     * 명예의 전당 조회 (카테고리별 찜수 기준 상위 10개 챌린지)
+     * @param category
+     * @return 상의 10개 챌린지를 담은 challengePreviewListDto
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category){
+
+        Category categoryByEnum = Category.valueOf(category);
+        List<Challenge> challenges = challengeRepository.findTop10ByCategoryOrderByCountLikesDesc(categoryByEnum);
+
+        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+
+    }
 }
