@@ -27,6 +27,7 @@ public class Feed extends BaseEntity {
 
     private String feedUrl;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
