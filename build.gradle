@@ -39,6 +39,8 @@ dependencies {
 
 	//Firebase
 	implementation platform('com.google.firebase:firebase-bom:latest-version')
+	implementation 'com.google.firebase:firebase-admin'
+	implementation 'com.google.firebase:firebase-messaging'
 }
 
 tasks.named('bootBuildImage') {
