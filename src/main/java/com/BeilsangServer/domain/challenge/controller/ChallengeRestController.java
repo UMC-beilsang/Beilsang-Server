@@ -5,12 +5,15 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
+import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -74,11 +77,23 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/likes")
-    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLiksList(
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
             @PathVariable(name = "memberId") Long memberId
     ){
         ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+    }
+
+    @GetMapping("/{status}/{category}")
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getChallengeByStatusAndCategory(
+            @PathVariable(name = "status") String status,
+            @PathVariable(name = "category") String category
+    ){
+        Long memberId = 1L;
+
+        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getChallengeByStatusAndCategory(status,category,memberId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
     }
 }

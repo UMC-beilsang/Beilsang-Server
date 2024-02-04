@@ -77,9 +77,21 @@ public class FeedController {
 
     @GetMapping("/feeds/category/{category}")
     public ApiResponse<List<FeedDTO>> getFeedByCategory(
-            @PathVariable String category
+            @PathVariable(name = "category") String category
     ){
         List<FeedDTO> feedDTOList = feedService.getFeedByCategory(category);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+    }
+
+    @GetMapping("/feeds/{status}/{category}")
+    public ApiResponse<List<FeedDTO>> getFeedByStatusAndCategory(
+            @PathVariable(name = "status") String status,
+            @PathVariable(name = "category") String category
+    ){
+        Long memberId = 1L;
+
+        List<FeedDTO> feedDTOList = feedService.getFeedByStatusAndCategory(status,category,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
     }
