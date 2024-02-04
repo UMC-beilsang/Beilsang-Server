@@ -7,6 +7,9 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
+import com.BeilsangServer.domain.feed.entity.FeedLike;
+import com.BeilsangServer.domain.like.entity.ChallengeLike;
+import com.BeilsangServer.domain.like.repository.ChallengeLikeRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +28,7 @@ public class ChallengeService {
 
     private final ChallengeNoteRepository challengeNoteRepository;
     private final ChallengeRepository challengeRepository;
+    private final ChallengeLikeRepository challengeLikeRepository;
 
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
@@ -101,6 +106,24 @@ public class ChallengeService {
         List<Challenge> challenges = challengeRepository.findTop10ByCategoryOrderByCountLikesDesc(categoryByEnum);
 
         return ChallengeConverter.toChallengePreviewListDTO(challenges);
+    }
 
+    /***
+     * 회원 별 찜 목록 조회
+     * @param memberId
+     * @return 찜 목록을 담은 challengePreviewListDto
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId) {
+        List<ChallengeLike> challengeLikes = challengeLikeRepository.findAllByMember_Id(memberId); // ChallengeLike 테이블에서 memberId 와 관련된 challengeId 추출
+
+        List<Long> challengeIds = new ArrayList<>();
+        for (ChallengeLike c : challengeLikes) {
+            challengeIds.add(c.getChallenge().getId());
+        }
+
+        // 챌린지 찾기
+        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+
+        return ChallengeConverter.toChallengePreviewListDTO(challengeList);
     }
 }
