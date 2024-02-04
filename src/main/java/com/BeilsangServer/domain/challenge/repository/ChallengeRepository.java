@@ -16,7 +16,9 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findTop2ByStartDateAfterOrderByCountLikesDesc(LocalDate localDate);
 
     // 카테고리에 해당하는 모든 챌린지 리스트 형태로 반환
-    List<Challenge> findAllByCategory(Category category);
+    List<Challenge> findAllByStartDateAfterAndCategoryOrderByAttendeeCountDesc(LocalDate localDate, Category category);
+
+    List<Challenge> findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate localDate);
 
     List<Challenge> findByTitleContaining(String name);
 

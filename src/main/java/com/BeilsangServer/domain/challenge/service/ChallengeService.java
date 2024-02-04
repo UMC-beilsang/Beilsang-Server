@@ -16,6 +16,7 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -100,7 +101,7 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList(String stringCategory) {
 
         Category category = Category.from(stringCategory);
-        List<Challenge> challenges = challengeRepository.findAllByCategory(category);
+        List<Challenge> challenges = challengeRepository.findAllByStartDateAfterAndCategoryOrderByAttendeeCountDesc(LocalDate.now(), category);
         return ChallengeConverter.toChallengePreviewListDTO(challenges);
     }
 
@@ -111,7 +112,7 @@ public class ChallengeService {
      */
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
 
-        List<Challenge> challenges = challengeRepository.findAll();
+        List<Challenge> challenges = challengeRepository.findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate.now());
         return ChallengeConverter.toChallengePreviewListDTO(challenges);
     }
 
