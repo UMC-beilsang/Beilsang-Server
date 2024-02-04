@@ -101,4 +101,6 @@ public class ChallengeConverter {
 
         return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
     }
+
+
 }

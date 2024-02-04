@@ -86,13 +86,13 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/{status}/{category}")
-    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getChallengeByStatusAndCategory(
+    public ApiResponse<ChallengeResponseDTO.ChallengeListWithCountDTO> getChallengeByStatusAndCategory(
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
     ){
         Long memberId = 1L;
 
-        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getChallengeByStatusAndCategory(status,category,memberId);
+        ChallengeResponseDTO.ChallengeListWithCountDTO challenges = challengeService.getChallengeByStatusAndCategory(status,category,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
     }

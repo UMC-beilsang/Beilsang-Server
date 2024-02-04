@@ -1,5 +1,7 @@
 package com.BeilsangServer.domain.challenge.service;
 
+import com.BeilsangServer.domain.achievment.entity.Achievement;
+import com.BeilsangServer.domain.achievment.repository.AchievementRepository;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
@@ -32,6 +34,7 @@ public class ChallengeService {
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final AchievementRepository achievementRepository;
 
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
@@ -130,10 +133,21 @@ public class ChallengeService {
         return ChallengeConverter.toChallengePreviewListDTO(challengeList);
     }
 
-    public ChallengeResponseDTO.ChallengePreviewListDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
+    public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.valueOf(category);
 
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+
+        List<Achievement> achievements = achievementRepository.findAllByMember_Id(memberId);
+
+        Integer count = 0;
+
+        for (Achievement a : achievements){
+            if(categoryByEnum.equals(a.getCategory())){
+                count = a.getCount();
+            }
+        }
+
         LocalDate now = LocalDate.now();
 
         List<Long> challengeIds = new ArrayList<>();
@@ -150,6 +164,13 @@ public class ChallengeService {
 
         List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
 
-        return ChallengeConverter.toChallengePreviewListDTO(challengeList);
+        ChallengeResponseDTO.ChallengePreviewListDTO challengePreviewList = ChallengeConverter.toChallengePreviewListDTO(challengeList);
+
+        ChallengeResponseDTO.ChallengeListWithCountDTO challengeListWithCount = ChallengeResponseDTO.ChallengeListWithCountDTO.builder()
+                .challenges(challengePreviewList)
+                .count(count)
+                .build();
+
+        return challengeListWithCount;
     }
 }
