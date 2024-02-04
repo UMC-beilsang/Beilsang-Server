@@ -36,6 +36,12 @@ public class ChallengeService {
     private final ChallengeMemberRepository challengeMemberRepository;
     private final AchievementRepository achievementRepository;
 
+    /***
+     * 챌린지 생성하기
+     * @param request 챌린지 생성에 필요한 정보
+     * @return CreateDTO
+     * 이미지 업로드, 호스트 추가 필요
+     */
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
 
@@ -52,6 +58,11 @@ public class ChallengeService {
         return challengeRepository.save(challenge);
     }
 
+    /***
+     * 해당하는 챌린지 세부 내용 조회하기
+     * @param challengeId 챌린지 ID
+     * @return ChallengeDTO
+     */
     public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
@@ -61,6 +72,10 @@ public class ChallengeService {
         return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
     }
 
+    /***
+     * 추천 챌린지 미리보기 조회하기
+     * @return ChallengeResponseDTO.RecommendChallengeDTO 2개를 리스트로 반환
+     */
     public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
 
         // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환한다
