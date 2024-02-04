@@ -72,4 +72,13 @@ public class ChallengeRestController {
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
     }
+
+    @GetMapping("/likes")
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLiksList(
+            @PathVariable(name = "memberId") Long memberId
+    ){
+        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+    }
 }
