@@ -10,6 +10,8 @@ import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.like.entity.ChallengeLike;
 import com.BeilsangServer.domain.like.repository.ChallengeLikeRepository;
+import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,6 +31,7 @@ public class ChallengeService {
     private final ChallengeNoteRepository challengeNoteRepository;
     private final ChallengeRepository challengeRepository;
     private final ChallengeLikeRepository challengeLikeRepository;
+    private final ChallengeMemberRepository challengeMemberRepository;
 
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
@@ -122,6 +125,29 @@ public class ChallengeService {
         }
 
         // 챌린지 찾기
+        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+
+        return ChallengeConverter.toChallengePreviewListDTO(challengeList);
+    }
+
+    public ChallengeResponseDTO.ChallengePreviewListDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
+        Category categoryByEnum = Category.valueOf(category);
+
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        LocalDate now = LocalDate.now();
+
+        List<Long> challengeIds = new ArrayList<>();
+
+        for (ChallengeMember c : challengeMembers) {
+            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+                challengeIds.add(c.getChallenge().getId());
+            } else if ("등록한".equals(status) && c.getIsHost() && categoryByEnum.equals(c.getChallenge().getCategory())) {
+                challengeIds.add(c.getChallenge().getId());
+            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+                challengeIds.add(c.getChallenge().getId());
+            }
+        }
+
         List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
 
         return ChallengeConverter.toChallengePreviewListDTO(challengeList);

@@ -16,4 +16,6 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     List<Feed> findAllByChallenge_IdIn(List<Long> ChallengeId);
 
     List<Feed> findAllByChallenge_Category(Category category);
+
+
 }
