@@ -88,4 +88,13 @@ public class ChallengeResponseDTO {
 
         private List<ChallengePreviewDTO> challenges;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChallengeListWithCountDTO{
+        private ChallengePreviewListDTO challenges;
+        private Integer count;
+    }
 }
