@@ -40,6 +40,7 @@ dependencies {
 
 	//Firebase
 	implementation 'com.google.firebase:firebase-admin:9.2.0'
+	implementation 'com.google.code.gson:gson:2.8.8'
 
 	//jwt
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
