@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 public class RefreshToken {
 
     @Id
-    private String key;
+    private String keyId;
 
     private String value;
 
     @Builder
-    public RefreshToken(String key, String value) {
-        this.key = key;
+    public RefreshToken(String keyId, String value) {
+        this.keyId = keyId;
         this.value = value;
     }
 

@@ -69,7 +69,7 @@ public class JwtTokenProvider {
                 .compact();
 
         RefreshToken refreshToken = RefreshToken.builder()
-                .key(authentication.getName())
+                .keyId(authentication.getName())
                 .value(refreshTokenValue)
                 .build();
 
