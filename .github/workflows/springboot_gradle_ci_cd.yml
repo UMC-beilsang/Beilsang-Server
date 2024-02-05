@@ -19,6 +19,17 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      # Firebase json파일 만들기
+      - name: make Firebase.json
+        if: contains(github.ref, 'main')
+        run: |
+           cd ./src/main/resources
+          
+           touch ./beilsang-d4e6d-firebase-adminsdk-i3izy-860a771b1b.json
+          
+           echo "${{ secrets.PROPERTIES_DEV }}" > ./beilsang-d4e6d-firebase-adminsdk-i3izy-860a771b1b.json
+        shell: bash
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
