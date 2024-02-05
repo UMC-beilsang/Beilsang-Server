@@ -9,7 +9,6 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
 @DiscriminatorValue("D")
