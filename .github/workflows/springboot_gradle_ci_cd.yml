@@ -19,8 +19,8 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      # create application-dev.properties
-      - name: make application-dev.properties
+      # Firebase json파일 만들기
+      - name: make Firebase.json
         if: contains(github.ref, 'main')
         run: |
            cd ./src/main/resources
