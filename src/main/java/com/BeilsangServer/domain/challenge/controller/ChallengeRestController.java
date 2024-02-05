@@ -4,7 +4,6 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
-import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
@@ -22,7 +21,7 @@ public class ChallengeRestController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("/")
+    @PostMapping("")
     @Operation(summary = "챌린지 생성 API", description = "필요한 정보를 받아 챌린지를 생성하는 API입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
@@ -48,7 +47,7 @@ public class ChallengeRestController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
-    @GetMapping("/{category}")
+    @GetMapping("/categories/{category}")
     @Operation(summary = "카테고리별 챌린지 조회 API", description = "해당하는 카테고리를 PathVariable로 입력 받아 해당하는 챌린지 목록을 조회하는 API입니다.")
     @Parameters({
             @Parameter(name = "category", description = """
@@ -66,7 +65,7 @@ public class ChallengeRestController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     @Operation(summary = "챌린지 전체 조회 API", description = "전체 챌린지 목록을 조회하는 API입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
