@@ -88,4 +88,22 @@ public class ChallengeResponseDTO {
 
         private List<ChallengePreviewDTO> challenges;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChallengeListWithCountDTO{
+        private ChallengePreviewListDTO challenges;
+        private Integer count;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChallengeGuide{
+        private String certImage;
+        private List<String> challengeNoteList;
+    }
 }
