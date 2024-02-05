@@ -14,16 +14,14 @@ import java.io.InputStream;
 
 @Configuration
 public class FirebaseConfig {
+    private final ClassPathResource firebaseResource = new ClassPathResource(
+            "beilsang-d4e6d-firebase-adminsdk-i3izy-860a771b1b.json");
 
     @Bean
-    //Firebase앱 초기화
     FirebaseApp firebaseApp() throws IOException {
-
-        String firebaseCredentials = System.getenv("FIREBASE_CREDENTIALS");
-        InputStream serviceAccount = new ByteArrayInputStream(firebaseCredentials.getBytes());
-
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setCredentials(GoogleCredentials.fromStream(
+                        firebaseResource.getInputStream()))
                 .build();
 
         return FirebaseApp.initializeApp(options);

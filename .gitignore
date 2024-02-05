@@ -1,4 +1,4 @@
 .DS_Store
 .gradle/
 out/
-src/main/resources/firebase/*.json
+src/main/resources/*.json
