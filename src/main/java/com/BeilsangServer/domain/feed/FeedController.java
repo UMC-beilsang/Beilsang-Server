@@ -34,10 +34,10 @@ public class FeedController {
     }
 
     @GetMapping("/feeds/guide/{challengeId}")
-    public ApiResponse<ChallengeResponseDTO.CreateResultDTO> getGuide(
+    public ApiResponse<ChallengeResponseDTO.ChallengeGuide> getGuide(
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        ChallengeResponseDTO.CreateResultDTO guide = feedService.getGuide(challengeId);
+        ChallengeResponseDTO.ChallengeGuide guide = feedService.getGuide(challengeId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,guide);
     }
 
