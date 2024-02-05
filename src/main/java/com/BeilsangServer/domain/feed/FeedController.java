@@ -1,11 +1,10 @@
 package com.BeilsangServer.domain.feed;
 
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
-import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.service.FeedService;
-import com.BeilsangServer.global.common.ApiResponse;
-import com.BeilsangServer.global.common.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiResponse.ApiResponse;
+import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -50,14 +49,14 @@ public class FeedController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
     }
 
-//    @GetMapping("/feeds/search")
-//    public ApiResponse<List<FeedDTO>> searchFeed(
-//            @RequestParam("name") String name
-//    ){
-//        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
-//
-//        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
-//    }
+    @GetMapping("/feeds/search")
+    public ApiResponse<List<FeedDTO>> searchFeed(
+            @RequestParam("name") String name
+    ){
+        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+    }
 
     @PostMapping("/feeds/{feedId}/likes")
     public ApiResponse<Long> feedLike(
@@ -74,5 +73,26 @@ public class FeedController {
         Long feedUnLikeId = feedService.feedUnLike(feedId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedUnLikeId);
+    }
+
+    @GetMapping("/feeds/category/{category}")
+    public ApiResponse<List<FeedDTO>> getFeedByCategory(
+            @PathVariable(name = "category") String category
+    ){
+        List<FeedDTO> feedDTOList = feedService.getFeedByCategory(category);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+    }
+
+    @GetMapping("/feeds/{status}/{category}")
+    public ApiResponse<List<FeedDTO>> getFeedByStatusAndCategory(
+            @PathVariable(name = "status") String status,
+            @PathVariable(name = "category") String category
+    ){
+        Long memberId = 1L;
+
+        List<FeedDTO> feedDTOList = feedService.getFeedByStatusAndCategory(status,category,memberId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
     }
 }

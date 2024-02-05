@@ -22,14 +22,17 @@ public class FeedDTO {
 
     private Category category;
 
+    private Long likes;
+
     @Builder
-    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category){
+    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes){
         this.id = id;
         this.review = review;
         this.uploadDate = uploadDate;
         this.feedUrl = feedUrl;
         this.challengeTitle = challengeTitle;
         this.category = category;
+        this.likes = likes;
     }
 
 }

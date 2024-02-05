@@ -3,8 +3,10 @@ package com.BeilsangServer.domain.challenge.converter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class ChallengeConverter {
 
@@ -44,10 +46,61 @@ public class ChallengeConverter {
                 .build();
     }
 
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
+
+        List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
+
+        return ChallengeResponseDTO.ChallengeDTO.builder()
+                .attendeeCount(challenge.getAttendeeCount())
+                .createdMember(null)
+                .createdDate(challenge.getCreatedAt().toLocalDate())
+                .imageUrl(challenge.getImageUrl())
+                .certImageUrl(challenge.getCertImageUrl())
+                .title(challenge.getTitle())
+                .startDate(challenge.getStartDate())
+                .category(challenge.getCategory())
+                .details(challenge.getDetails())
+                .challengeNotes(challengeNotes)
+                .joinPoint(challenge.getJoinPoint())
+                .dDay(dDay)
+                .recommendChallengeDTOList(recommendChallengeDTOList)
+                .build();
+
+    }
+
     public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
         return ChallengeResponseDTO.CreateResultDTO.builder()
                 .certImageUrl(challenge.getCertImageUrl())
                 .challengeNotes(challenge.getChallengeNotes())
                 .build();
     }
+
+    public static List<String> toStringChallengeNotes(List<ChallengeNote> challengeNotes) {
+
+        return challengeNotes
+                .stream()
+                .map(ChallengeNote::getNote)
+                .toList();
+    }
+
+    /***
+     * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
+     * @param challenges 챌린지 목록
+     * @return ChallengePreviewListDTO
+     */
+    public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
+                .categoryId(challenge.getId())
+                .title(challenge.getTitle())
+                .imageUrl(challenge.getImageUrl())
+                .createdMember(null)
+                .attendeeCount(challenge.getAttendeeCount())
+                .build()
+        ).toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
+    }
+
+
 }

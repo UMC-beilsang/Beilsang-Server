@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.entity;
 
+import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
 import jakarta.persistence.*;
@@ -17,7 +18,7 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Challenge {
+public class Challenge extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "challenge_id")
     private Long id;
@@ -31,7 +32,7 @@ public class Challenge {
 
     private LocalDate finishDate;
 
-    private Long joinPoint;
+    private Integer joinPoint;
 
     private String imageUrl;
 
@@ -45,9 +46,11 @@ public class Challenge {
     @Enumerated(EnumType.STRING)
     private ChallengePeriod period;
 
-    private Long totalGoalDay;
+    private Integer totalGoalDay;
 
     private Integer attendeeCount;
+
+    private Integer countLikes;
 
 
     // 연관관계 메서드
@@ -55,4 +58,5 @@ public class Challenge {
         challengeNotes.add(note);
         note.setChallenge(this);
     }
+
 }

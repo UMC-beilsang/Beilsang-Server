@@ -1,4 +1,4 @@
-package com.BeilsangServer.global.common;
+package com.BeilsangServer.global.common.apiResponse;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

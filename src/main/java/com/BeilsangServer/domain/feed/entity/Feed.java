@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.feed.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,7 +16,7 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Feed {
+public class Feed extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "feed_id")
     private Long id;
@@ -25,6 +26,7 @@ public class Feed {
     private LocalDate uploadDate;
 
     private String feedUrl;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "challenge_id")
