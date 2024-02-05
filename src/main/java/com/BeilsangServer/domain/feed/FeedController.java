@@ -50,10 +50,10 @@ public class FeedController {
     }
 
     @GetMapping("/feeds/search")
-    public ApiResponse<List<FeedDTO>> searchFeed(
+    public ApiResponse<FeedDTO.previewFeedListDto> searchFeed(
             @RequestParam("name") String name
     ){
-        List<FeedDTO> feedDTOList = feedService.searchFeed(name);
+        FeedDTO.previewFeedListDto feedDTOList = feedService.searchFeed(name);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
     }
@@ -76,10 +76,10 @@ public class FeedController {
     }
 
     @GetMapping("/feeds/category/{category}")
-    public ApiResponse<List<FeedDTO>> getFeedByCategory(
+    public ApiResponse<FeedDTO.previewFeedListDto> getFeedByCategory(
             @PathVariable(name = "category") String category
     ){
-        List<FeedDTO> feedDTOList = feedService.getFeedByCategory(category);
+        FeedDTO.previewFeedListDto feedDTOList = feedService.getFeedByCategory(category);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
     }

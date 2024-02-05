@@ -10,4 +10,6 @@ import java.util.List;
 public interface AchievementRepository extends JpaRepository<Achievement, Long> {
 
     List<Achievement> findAllByMember_Id(Long memberId);
+
+    Integer findCountByMemberId(Long memberId);
 }
