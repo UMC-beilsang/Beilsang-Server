@@ -97,4 +97,13 @@ public class ChallengeResponseDTO {
         private ChallengePreviewListDTO challenges;
         private Integer count;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ChallengeGuide{
+        private String certImage;
+        private List<String> challengeNoteList;
+    }
 }

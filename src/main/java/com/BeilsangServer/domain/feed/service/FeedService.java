@@ -4,6 +4,8 @@ import com.BeilsangServer.aws.s3.AmazonS3Manager;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
+import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.feed.converter.FeedConverter;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
@@ -37,6 +39,7 @@ public class FeedService {
     private final AmazonS3Manager amazonS3Manager;
     private final FeedLikeRepository feedLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final ChallengeNoteRepository challengeNoteRepository;
 
 
     /***
@@ -67,11 +70,17 @@ public class FeedService {
      * @param challengeId
      * @return guide dto
      */
-    public ChallengeResponseDTO.CreateResultDTO getGuide(Long challengeId){
+    public ChallengeResponseDTO.ChallengeGuide getGuide(Long challengeId){
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없는챌린지다.");});
-        ChallengeResponseDTO.CreateResultDTO guide = ChallengeConverter.toGuideResultDto(challenge);
+        List<ChallengeNote> challengeNotes = challengeNoteRepository.findAllByChallenge_Id(challenge.getId());
 
-        return guide;
+        List<String> challengeNoteList = ChallengeConverter.toStringChallengeNotes(challengeNotes);
+        ChallengeResponseDTO.ChallengeGuide challengeGuide = ChallengeResponseDTO.ChallengeGuide.builder()
+                .certImage(challenge.getCertImageUrl())
+                .challengeNoteList(challengeNoteList)
+                .build();
+
+        return challengeGuide;
     }
 
     /***
