@@ -10,4 +10,9 @@ import java.util.List;
 public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember, Long> {
 
     List<ChallengeMember> findAllByMember_id(Long memberId);
+
+
+    Long countByMember_Id(Long memberId);
+
+
 }

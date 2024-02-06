@@ -104,7 +104,7 @@ public class FeedService {
      * @param name
      * @return feedList dto
      */
-    public List<FeedDTO> searchFeed(String name){
+    public FeedDTO.previewFeedListDto searchFeed(String name){
         List<Challenge> challengeList = challengeRepository.findByTitleContaining(name);
 
         List<Long> challengeIds = new ArrayList<>();
@@ -114,10 +114,7 @@ public class FeedService {
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
         return feedDTOList;
     }
@@ -159,15 +156,12 @@ public class FeedService {
      * @param category
      * @return 주어진 카테고리에 해당하는 feedDtoList
      */
-    public List<FeedDTO> getFeedByCategory(String category){
+    public FeedDTO.previewFeedListDto getFeedByCategory(String category){
         Category categoryByEnum = Category.valueOf(category);
 
         List<Feed> feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
         return feedDTOList;
     }
@@ -220,11 +214,7 @@ public class FeedService {
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
-
+        List<FeedDTO> feedDTOList = feedConverter.toDtoList(feedList);
         return feedDTOList;
     }
 }

@@ -154,6 +154,13 @@ public class ChallengeService {
         return ChallengeConverter.toChallengePreviewListDTO(challengeList);
     }
 
+    /***
+     * 카테고리와 상태로 나의 챌린지 조회
+     * @param status
+     * @param category
+     * @param memberId
+     * @return
+     */
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.valueOf(category);
 
