@@ -1,144 +1,200 @@
 package com.BeilsangServer.global.jwt;
 
-import com.BeilsangServer.domain.auth.entity.RefreshToken;
-import com.BeilsangServer.domain.auth.repository.RefreshTokenRepository;
-import com.BeilsangServer.global.common.exception.CustomRuntimeException;
-import com.BeilsangServer.global.jwt.dto.TokenDto;
-import com.BeilsangServer.global.jwt.dto.TokenResDto;
+import com.BeilsangServer.domain.auth.entity.token.Token;
+import com.BeilsangServer.domain.auth.entity.token.TokenRepository;
+import com.BeilsangServer.domain.member.entity.Member;
+import com.BeilsangServer.global.jwt.dto.MemberResponseDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.util.StringUtils;
 
 import java.security.Key;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Date;
-import java.util.stream.Collectors;
-
 @Slf4j
 @Component
 public class JwtTokenProvider {
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final Key key;
+    private final TokenRepository tokenRepository;
+    private final UserDetailsService userDetailsService;
 
+    private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String AUTHORITIES_KEY = "auth";
     private static final String BEARER_TYPE = "Bearer";
+    private static final String TYPE_ACCESS = "access";
+    private static final String TYPE_REFRESH = "refresh";
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 60;            // 1시간
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;  // 14일
 
-    private final Key key;
 
-    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey,
-                         RefreshTokenRepository refreshTokenRepository) {
+    public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey, TokenRepository tokenRepository, UserDetailsService userDetailsService) {
+        this.tokenRepository = tokenRepository;
+        this.userDetailsService = userDetailsService;
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         this.key = Keys.hmacShaKeyFor(keyBytes);
-        this.refreshTokenRepository = refreshTokenRepository;
     }
 
-    public TokenDto generateTokenDto(Authentication authentication) {
-        // 권한들 가져오기
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
+    // Kakao OAuth2 토큰 생성
+    public MemberResponseDto.TokenInfo generateKakaoToken(Member kakaoInfo) {
+        Claims claims = Jwts.claims().setSubject(kakaoInfo.getSocialId());
 
-        long now = (new Date()).getTime();
+        // 추가적인 사용자 정보를 토큰에 추가할 경우
+        claims.put("email", kakaoInfo.getEmail());
 
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
+        long now = System.currentTimeMillis();
+        long accessTokenExpirationTime = now + ACCESS_TOKEN_EXPIRE_TIME;
+        long refreshTokenExpirationTime = now + REFRESH_TOKEN_EXPIRE_TIME;
+
+        Token tokens = tokenRepository.findById(kakaoInfo.getId()).orElse(null);
+
+        String accessToken;
+        String refreshToken;
+
+        accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(now))
+                .claim("type", TYPE_ACCESS)
+                .setExpiration(new Date(accessTokenExpirationTime))
+                .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
-
-        // Refresh Token 생성
-        String refreshTokenValue = Jwts.builder()
-                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-                .signWith(key, SignatureAlgorithm.HS512)
+        refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(now))
+                .claim("type", TYPE_REFRESH)
+                .setExpiration(new Date(refreshTokenExpirationTime))
+                .signWith(SignatureAlgorithm.HS256, key)
                 .compact();
+        if (tokens != null) {
+            // 이미 가입된 사용자인 경우, 기존의 토큰을 업데이트합니다.
 
-        RefreshToken refreshToken = RefreshToken.builder()
-                .keyId(authentication.getName())
-                .value(refreshTokenValue)
-                .build();
+            tokens.setAccessToken(accessToken);
+            tokens.setAccessTokenExpirationTime(accessTokenExpirationTime);
+            tokens.setRefreshToken(refreshToken);
+            tokens.setRefreshTokenExpirationTime(refreshTokenExpirationTime);
 
-        return TokenDto.builder()
-                .tokenResDto(TokenResDto.builder()
-                        .grantType(BEARER_TYPE)
-                        .accessToken(accessToken)
-                        .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-                        .build())
-                .refreshToken(refreshToken)
-                .build();
-    }
+        } else {
+            // 새로운 사용자인 경우, 새로운 토큰을 생성합니다.
 
-    public TokenResDto generateNewAccessToken(Authentication authentication) {
+            tokens = Token.builder()
+                    .accessToken(accessToken)
+                    .accessTokenExpirationTime(accessTokenExpirationTime)
+                    .refreshToken(refreshToken)
+                    .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                    .member(kakaoInfo)
+                    .build();
 
-        String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(","));
-
-        long now = (new Date()).getTime();
-
-        // Access Token 생성
-        Date accessTokenExpiresIn = new Date(now + ACCESS_TOKEN_EXPIRE_TIME);
-        String accessToken = Jwts.builder()
-                .setSubject(authentication.getName())       // payload "sub": "name"
-                .claim(AUTHORITIES_KEY, authorities)        // payload "auth": "ROLE_USER"
-                .setExpiration(accessTokenExpiresIn)        // payload "exp": 1516239022 (예시)
-                .signWith(key, SignatureAlgorithm.HS512)    // header "alg": "HS512"
-                .compact();
-
-        return TokenResDto.builder()
-                .grantType(BEARER_TYPE)
-                .accessToken(accessToken)
-                .accessTokenExpiresIn(accessTokenExpiresIn.getTime())
-                .build();
-    }
-    public Authentication getAuthentication(String accessToken) {
-        accessToken = accessToken.replace("Bearer ", "").trim();
-        // 토큰 복호화
-        Claims claims = parseClaims(accessToken);
-
-        if (claims.get(AUTHORITIES_KEY) == null) {
-            throw new CustomRuntimeException("권한 정보가 없는 토큰입니다.", HttpStatus.BAD_REQUEST);
         }
 
-        // 클레임에서 권한 정보 가져오기
-        Collection<? extends GrantedAuthority> authorities =
-                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-                        .map(SimpleGrantedAuthority::new)
-                        .collect(Collectors.toList());
+        // 토큰 저장
+        tokenRepository.save(tokens);
 
-        // UserDetails 객체를 만들어서 Authentication 리턴
-        UserDetails principal = new User(claims.getSubject(), "", authorities);
-
-        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
+        return MemberResponseDto.TokenInfo.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpirationTime(accessTokenExpirationTime)
+                .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                .build();
     }
 
+    public MemberResponseDto.TokenInfo generateAppleToken(Member appleInfo) {
+        Claims claims = Jwts.claims().setSubject(appleInfo.getSocialId());
+
+        // 추가적인 사용자 정보를 토큰에 추가할 경우
+        claims.put("email", appleInfo.getEmail());
+
+        long now = System.currentTimeMillis();
+        long accessTokenExpirationTime = now + ACCESS_TOKEN_EXPIRE_TIME;
+        long refreshTokenExpirationTime = now + REFRESH_TOKEN_EXPIRE_TIME;
+
+        Token tokens = tokenRepository.findById(appleInfo.getId()).orElse(null);
+        String accessToken, refreshToken;
+
+        accessToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(now))
+                .claim("type", TYPE_ACCESS)
+                .setExpiration(new Date(accessTokenExpirationTime))
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
+        refreshToken = Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(new Date(now))
+                .claim("type", TYPE_REFRESH)
+                .setExpiration(new Date(refreshTokenExpirationTime))
+                .signWith(SignatureAlgorithm.HS256, key)
+                .compact();
+        if (tokens != null) {
+            // 이미 가입된 사용자인 경우, 기존의 토큰을 업데이트합니다.
+
+            tokens.setAccessToken(accessToken);
+            tokens.setAccessTokenExpirationTime(accessTokenExpirationTime);
+            tokens.setRefreshToken(refreshToken);
+            tokens.setRefreshTokenExpirationTime(refreshTokenExpirationTime);
+
+        } else {
+            // 새로운 사용자인 경우, 새로운 토큰을 생성합니다.
+
+            tokens = Token.builder()
+                    .accessToken(accessToken)
+                    .accessTokenExpirationTime(accessTokenExpirationTime)
+                    .refreshToken(refreshToken)
+                    .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                    .member(appleInfo)
+                    .build();
+
+        }
+
+        // 토큰 저장
+        tokenRepository.save(tokens);
+
+        return MemberResponseDto.TokenInfo.builder()
+                .grantType(BEARER_TYPE)
+                .accessToken(accessToken)
+                .accessTokenExpirationTime(accessTokenExpirationTime)
+                .refreshToken(refreshToken)
+                .refreshTokenExpirationTime(refreshTokenExpirationTime)
+                .build();
+    }
+
+    public String extractEmail(String token) {
+        return Jwts.parser()
+                .setSigningKey(key)
+                .parseClaimsJws(token)
+                .getBody()
+                .get("email", String.class); // 토큰 payload에서 email 값을 추출
+    }
+
+    // 토큰의 유효성을 검사하고 Authentication 객체를 리턴하는 메서드
+    public Authentication getAuthentication(String token) {
+        String email = extractEmail(token); // 토큰에서 email 추출
+        UserDetails userDetails = userDetailsService.loadUserByUsername(email); // email을 사용하여 UserDetails 가져옴
+        return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
+    }
+
+
+
+    //토큰 정보를 검증하는 메서드
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
-        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
-            log.info("잘못된 JWT 서명입니다.");
+        } catch (SecurityException | MalformedJwtException e) {
+            log.info("Invalid JWT Token", e);
         } catch (ExpiredJwtException e) {
-            log.info("토큰이 만료되었습니다.");
+            log.info("Expired JWT Token", e);
         } catch (UnsupportedJwtException e) {
-            log.info("지원되지 않는 JWT 토큰입니다.");
+            log.info("Unsupported JWT Token", e);
         } catch (IllegalArgumentException e) {
-            log.info("JWT 토큰이 잘못되었습니다.");
+            log.info("JWT claims string is empty.", e);
         }
         return false;
     }
@@ -147,7 +203,18 @@ public class JwtTokenProvider {
         try {
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(accessToken).getBody();
         } catch (ExpiredJwtException e) {
+            // ???
             return e.getClaims();
         }
     }
+
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 }
+
+

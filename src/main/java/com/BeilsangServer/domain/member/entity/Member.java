@@ -22,6 +22,10 @@ public class Member extends BaseEntity {
     @Column(name = "member_id", nullable = false)
     private Long id;
 
+    private String email;
+
+    private Role role;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Gender gender;
@@ -29,6 +33,8 @@ public class Member extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, APPLE
+
+    private String socialId;
 
     @Column(nullable = false)
     private String nickName;
@@ -52,8 +58,11 @@ public class Member extends BaseEntity {
 
     @Builder
     public Member(
+            String email,
+            Role role,
             Gender gender,
             Provider provider,
+            String socialId,
             String nickName,
             LocalDate birth,
             String address,
@@ -63,8 +72,11 @@ public class Member extends BaseEntity {
             int totalPoint,
             String recommendNickname,
             String profileUrl) {
+        this.email = email;
+        this.role = role;
         this.gender = gender;
         this.provider = provider;
+        this.socialId = socialId;
         this.nickName = nickName;
         this.birth = birth;
         this.address = address;
