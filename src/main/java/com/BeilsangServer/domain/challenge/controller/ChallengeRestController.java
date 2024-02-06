@@ -28,7 +28,9 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
 
-        Challenge challenge = challengeService.createChallenge(request);
+        Long memberId = 1L;
+
+        Challenge challenge = challengeService.createChallenge(request, memberId);
 
         // 컨버터를 사용해 response DTO로 변환하여 응답
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, ChallengeConverter.toCreateResultDTO(challenge));

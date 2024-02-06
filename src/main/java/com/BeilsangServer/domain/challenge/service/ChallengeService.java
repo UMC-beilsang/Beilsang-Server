@@ -42,20 +42,24 @@ public class ChallengeService {
      * 챌린지 생성하기
      * @param request 챌린지 생성에 필요한 정보
      * @return CreateDTO
-     * 이미지 업로드, 호스트 추가 필요
+     * 이미지 업로드
      */
     @Transactional
-    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
+    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
+
+        Member member = memberRepository.findById(memberId).get();
 
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
         Challenge challenge = ChallengeConverter.toChallenge(request);
 
         // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
-        for (String note : notes) {
-            ChallengeNote challengeNote = ChallengeNote.builder().note(note).challenge(challenge).build();
-            challengeNoteRepository.save(challengeNote);
-        }
+
+        notes.stream()
+                .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
+                .forEach(challengeNoteRepository::save);
+
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
 
         return challengeRepository.save(challenge);
     }
@@ -206,7 +210,7 @@ public class ChallengeService {
 
         // isHost 판별해줘야 함
 
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(null).build());
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge);
     }
