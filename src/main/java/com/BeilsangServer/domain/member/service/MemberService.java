@@ -56,6 +56,7 @@ public class MemberService {
 
         // 피드 개수 : 챌린지멤버 id를 얻고,,,, 그 아이디들에 해당하는 피드 개수 구하기
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+
         List<Long> challengeMemberIds = new ArrayList<>();
 
         for(ChallengeMember c : challengeMembers){

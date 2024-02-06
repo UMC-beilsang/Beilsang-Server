@@ -8,9 +8,5 @@ import java.util.Optional;
 
 @Repository
 public interface MemberRepository extends JpaRepository<Member, Long> {
-
-    String findResolutionById(Long memberId);
-
-    Integer findTotalPointById(Long memberId);
 }
 
