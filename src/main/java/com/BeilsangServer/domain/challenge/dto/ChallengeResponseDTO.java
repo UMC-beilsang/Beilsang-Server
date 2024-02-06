@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.dto;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
+import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
 import lombok.AllArgsConstructor;
@@ -74,7 +75,7 @@ public class ChallengeResponseDTO {
     @AllArgsConstructor
     public static class ChallengePreviewDTO { // 챌린지 미리보기 DTO
 
-        private Long categoryId;
+        private Long challengeId;
         private String title;
         private String imageUrl;
         private String createdMember;
@@ -105,5 +106,14 @@ public class ChallengeResponseDTO {
     public static class ChallengeGuide{
         private String certImage;
         private List<String> challengeNoteList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinChallengeDTO {
+        private ChallengePreviewDTO challengePreviewDTO;
+        private MemberResponseDTO.MemberDTO memberDTO;
     }
 }

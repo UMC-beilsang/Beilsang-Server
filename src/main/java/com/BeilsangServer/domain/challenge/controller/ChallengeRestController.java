@@ -51,9 +51,9 @@ public class ChallengeRestController {
     @Operation(summary = "카테고리별 챌린지 조회 API", description = "해당하는 카테고리를 PathVariable로 입력 받아 해당하는 챌린지 목록을 조회하는 API입니다.")
     @Parameters({
             @Parameter(name = "category", description = """
-            카테고리 이름입니다. 영어와 한글 대소문자 상관없이 가능합니다.
-            [TUMBLER(다회용컵), REFILL_STATION(리필스테이션), MULTIPLE_CONTAINERS(다회용기), ECO_PRODUCT(친환경제품),
-            PLOGGING(플로깅), VEGAN(비건), PUBLIC_TRANSPORT(대중교통), BIKE(자전거), RECYCLE(재활용)]""")
+                    카테고리 이름입니다. 영어와 한글 대소문자 상관없이 가능합니다.
+                    [TUMBLER(다회용컵), REFILL_STATION(리필스테이션), MULTIPLE_CONTAINERS(다회용기), ECO_PRODUCT(친환경제품),
+                    PLOGGING(플로깅), VEGAN(비건), PUBLIC_TRANSPORT(대중교통), BIKE(자전거), RECYCLE(재활용)]""")
     })
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
@@ -80,16 +80,16 @@ public class ChallengeRestController {
     @GetMapping("/famous/{category}")
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getFamousChallengeList(
             @PathVariable(name = "category") String category
-    ){
+    ) {
         ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getFamousChallengeList(category);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
     }
 
     @GetMapping("/likes")
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
             @PathVariable(name = "memberId") Long memberId
-    ){
+    ) {
         ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
@@ -99,11 +99,26 @@ public class ChallengeRestController {
     public ApiResponse<ChallengeResponseDTO.ChallengeListWithCountDTO> getChallengeByStatusAndCategory(
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
-    ){
+    ) {
         Long memberId = 1L;
 
-        ChallengeResponseDTO.ChallengeListWithCountDTO challenges = challengeService.getChallengeByStatusAndCategory(status,category,memberId);
+        ChallengeResponseDTO.ChallengeListWithCountDTO challenges = challengeService.getChallengeByStatusAndCategory(status, category, memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challenges);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+    }
+
+    @Operation(summary = "챌린지 참여 API", description = "참여하는 챌린지 ID를 받아 참여하는 API입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    @Parameter(name = "challengeId", description = "챌린지 ID")
+    @PostMapping("/{challengeId}")
+    public ApiResponse<ChallengeResponseDTO.JoinChallengeDTO> joinChallenge(@PathVariable(name = "challengeId") Long challengeId) {
+
+        Long memberId = 1L;
+
+        ChallengeResponseDTO.JoinChallengeDTO response = challengeService.joinChallenge(challengeId, memberId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 }
