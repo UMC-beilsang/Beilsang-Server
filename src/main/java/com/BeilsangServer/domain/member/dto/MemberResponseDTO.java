@@ -13,5 +13,8 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class MemberDTO {
 
+        private Long memberId;
+        private String nickName;
+        private Integer totalPoint;
     }
 }

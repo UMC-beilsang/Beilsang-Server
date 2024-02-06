@@ -4,7 +4,7 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
-import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.converter.MemberConverter;
 import com.BeilsangServer.domain.member.entity.Member;
 
 import java.time.LocalDate;
@@ -85,6 +85,17 @@ public class ChallengeConverter {
                 .toList();
     }
 
+    public static ChallengeResponseDTO.ChallengePreviewDTO toChallengePreviewDTO(Challenge challenge) {
+
+        return ChallengeResponseDTO.ChallengePreviewDTO.builder()
+                .challengeId(challenge.getId())
+                .title(challenge.getTitle())
+                .imageUrl(challenge.getImageUrl())
+                .createdMember(null)
+                .attendeeCount(challenge.getAttendeeCount())
+                .build();
+    }
+
     /***
      * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
      * @param challenges 챌린지 목록
@@ -93,7 +104,7 @@ public class ChallengeConverter {
     public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
-                .categoryId(challenge.getId())
+                .challengeId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getImageUrl())
                 .createdMember(null)
@@ -112,6 +123,9 @@ public class ChallengeConverter {
      */
     public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge) {
 
-        return null;
+        return ChallengeResponseDTO.JoinChallengeDTO.builder()
+                .memberDTO(MemberConverter.toMemberDTO(member))
+                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge))
+                .build();
     }
 }

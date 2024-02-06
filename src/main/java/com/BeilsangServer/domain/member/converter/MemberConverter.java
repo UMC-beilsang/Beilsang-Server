@@ -7,6 +7,10 @@ public class MemberConverter {
 
     public static MemberResponseDTO.MemberDTO toMemberDTO(Member member) {
 
-        return null;
+        return MemberResponseDTO.MemberDTO.builder()
+                .memberId(member.getId())
+                .nickName(member.getNickName())
+                .totalPoint(member.getTotalPoint())
+                .build();
     }
 }
