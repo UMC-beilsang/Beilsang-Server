@@ -42,7 +42,7 @@ public class ChallengeService {
      * 챌린지 생성하기
      * @param request 챌린지 생성에 필요한 정보
      * @return CreateDTO
-     * 이미지 업로드, 호스트 추가 필요
+     * 이미지 업로드
      */
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
@@ -210,7 +210,7 @@ public class ChallengeService {
 
         // isHost 판별해줘야 함
 
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(null).build());
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge);
     }
