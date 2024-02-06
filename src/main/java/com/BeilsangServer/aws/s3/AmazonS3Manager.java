@@ -1,6 +1,7 @@
 package com.BeilsangServer.aws.s3;
 
 import com.BeilsangServer.config.AmazonConfig;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
@@ -32,5 +33,13 @@ public class AmazonS3Manager {
         }
 
         return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+    }
+
+    public String generateMainKeyName(Uuid uuid) {
+        return amazonConfig.getMainPath() + '/' + uuid.getUuid();
+    }
+
+    public String generateCertKeyName(Uuid uuid) {
+        return amazonConfig.getCertPath() + '/' + uuid.getUuid();
     }
 }

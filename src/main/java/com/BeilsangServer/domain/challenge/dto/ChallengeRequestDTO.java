@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -18,8 +19,10 @@ public class ChallengeRequestDTO {
     @AllArgsConstructor
     public static class CreateDTO {
 
-        private String imageUrl; // 대표 사진 URL
-        private String certImageUrl; // 모범 인증 사진 URL
+        private MultipartFile mainImage; // 대표 사진
+        private MultipartFile certImage; // 인증 사진
+//        private String imageUrl; // 대표 사진 URL
+//        private String certImageUrl; // 모범 인증 사진 URL
         private String title; // 챌린지 제목
         private LocalDate startDate; // 챌린지 시작 날짜
         private ChallengePeriod period; // 챌린지 기간(일주일/한달)

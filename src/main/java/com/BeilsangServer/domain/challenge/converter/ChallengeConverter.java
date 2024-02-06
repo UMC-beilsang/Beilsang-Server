@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ChallengeConverter {
 
-    public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request) {
+    public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request, String mainImageUrl, String certImageUrl) {
 
         // 시작일로부터 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
         Integer period = request.getPeriod().getDays();
@@ -24,8 +24,8 @@ public class ChallengeConverter {
                 .startDate(request.getStartDate())
                 .finishDate(finishDate)
                 .joinPoint(request.getJoinPoint())
-                .imageUrl(request.getImageUrl())
-                .certImageUrl(request.getCertImageUrl())
+                .mainImageUrl(mainImageUrl)
+                .certImageUrl(certImageUrl)
                 .details(request.getDetails())
                 .period(request.getPeriod())
                 .totalGoalDay(request.getTotalGoalDay())
@@ -56,7 +56,7 @@ public class ChallengeConverter {
                 .attendeeCount(challenge.getAttendeeCount())
                 .createdMember(null)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
-                .imageUrl(challenge.getImageUrl())
+                .imageUrl(challenge.getMainImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
                 .title(challenge.getTitle())
                 .startDate(challenge.getStartDate())
@@ -90,7 +90,7 @@ public class ChallengeConverter {
         return ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
-                .imageUrl(challenge.getImageUrl())
+                .imageUrl(challenge.getMainImageUrl())
                 .createdMember(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build();
@@ -106,7 +106,7 @@ public class ChallengeConverter {
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
-                .imageUrl(challenge.getImageUrl())
+                .imageUrl(challenge.getMainImageUrl())
                 .createdMember(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build()

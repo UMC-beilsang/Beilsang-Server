@@ -26,6 +26,14 @@ public class AmazonConfig {
     private String region;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
+    @Value("${cloud.aws.s3.path.challenge-main}")
+    private String mainPath;
+    @Value("${cloud.aws.s3.path.challenge-cert}")
+    private String certPath;
+    @Value("${cloud.aws.s3.path.feed}")
+    private String feedPath;
+    @Value("${cloud.aws.s3.path.member-profile}")
+    private String profilePath;
 
     @PostConstruct
     public void init() {
