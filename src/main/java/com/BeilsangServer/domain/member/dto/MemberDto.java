@@ -15,17 +15,4 @@ public class MemberDto {
     private Long id;
     private String platform;
     private String refreshToken;
-
-    @Builder
-    @Getter
-    public static class myPageDTO{
-        Long feedNum;
-        Integer achieve;
-        Integer fail;
-        String resolution;
-        Long challenges;
-        Long likes;
-        Integer points;
-        FeedDTO.previewFeedListDto feedDTOs;
-    }
 }

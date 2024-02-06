@@ -13,4 +13,14 @@ public class MemberConverter {
                 .totalPoint(member.getTotalPoint())
                 .build();
     }
+
+    public static MemberResponseDTO.profileDTO toProfileDTO(Member member){
+
+        return MemberResponseDTO.profileDTO.builder()
+                .nickName(member.getNickName())
+                .birth(member.getBirth())
+                .gender(member.getGender())
+                .address(member.getAddress())
+                .build();
+    }
 }

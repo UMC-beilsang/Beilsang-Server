@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.member.entity;
 
+import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -81,7 +82,20 @@ public class Member extends BaseEntity {
         this.profileUrl = profileUrl;
     }
 
-
+    public void update(MemberUpdateDto memberUpdateDto){
+        if(memberUpdateDto.getNickName() != null){
+            this.nickName = memberUpdateDto.getNickName();
+        }
+        if(memberUpdateDto.getBirth() != null){
+            this.birth = memberUpdateDto.getBirth();
+        }
+        if(memberUpdateDto.getGender() != null){
+            this.gender = memberUpdateDto.getGender();
+        }
+        if(memberUpdateDto.getAddress() != null){
+            this.address = memberUpdateDto.getAddress();
+        }
+    }
 }
 
 

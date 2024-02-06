@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.member.service;
 
 
+import com.BeilsangServer.domain.achievment.entity.Achievement;
 import com.BeilsangServer.domain.achievment.repository.AchievementRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.feed.converter.FeedConverter;
@@ -8,16 +9,24 @@ import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
+import com.BeilsangServer.domain.member.converter.MemberConverter;
 import com.BeilsangServer.domain.member.dto.MemberDto;
+import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
+import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.point.converter.PointConverter;
+import com.BeilsangServer.domain.point.dto.PointResponseDTO;
+import com.BeilsangServer.domain.point.entity.PointLog;
+import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,6 +40,7 @@ public class MemberService {
     private final AchievementRepository achievementRepository;
     private final FeedLikeRepository feedLikeRepository;
     private final FeedConverter feedConverter;
+    private final PointLogRepository pointLogRepository;
 
     public Optional<Member> findById(Long memberId) {
         return memberRepository.findById(memberId);
@@ -40,26 +50,36 @@ public class MemberService {
      * 마이페이지 조회
      * @return
      */
-    public MemberDto.myPageDTO getMyPage(){
-        Long memberId = 1L;
+    public MemberResponseDTO.myPageDTO getMyPage(Long memberId){
 
         Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
 
         // 피드 개수 : 챌린지멤버 id를 얻고,,,, 그 아이디들에 해당하는 피드 개수 구하기
-        List<Long> challengeMemberIds = challengeMemberRepository.findAllChallengeMemberIdByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<Long> challengeMemberIds = new ArrayList<>();
+
+        for(ChallengeMember c : challengeMembers){
+            challengeMemberIds.add(c.getId());
+        }
 
         Long feedNum = feedRepository.countByChallengeMember_IdIn(challengeMemberIds);
 
         // 달성한 챌린지 : achievement 테이블에서 개수 가져오기,,, 카테고리로 필터링 안하고 그냥 회원id 같은거 모두 카운트
-        Integer achievementNum = achievementRepository.findCountByMemberId(memberId);
+        List<Achievement> achievements = achievementRepository.findByMember_Id(memberId);
+        Integer totalAchievements = 0;
 
-        // 실패한 챌린지 : ,, 이건 우짜지?
+        for(Achievement a : achievements){
+            totalAchievements+=a.getCount();
+        }
 
         // 다짐 : 회원 테이블에서 가져오기
         String resolution = member.getResolution();
 
         // 챌린지 개수 : 멤버 아이디로 챌린지멤버 테이블 카운트
-        Long challengeNum = challengeMemberRepository.countByMember_Id(memberId);
+        Integer challengeNum = challengeMemberRepository.countByMember_Id(memberId).intValue();
+
+        // 실패한 챌린지 : ,, 이건 우짜지?
+        Integer fail = challengeNum- totalAchievements;
 
         // 찜 개수 : 회원 아이디로 챌린지라이크 테이블 접근해서 카운트
         Long likes = feedLikeRepository.countByMember_Id(memberId);
@@ -71,16 +91,45 @@ public class MemberService {
         List<Feed> feeds = feedRepository.findTop4ByChallengeMember_IdInOrderByCreatedAtDesc(challengeMemberIds);
         FeedDTO.previewFeedListDto feedDto = feedConverter.toPreviewFeedListDto(feeds);
 
-        return MemberDto.myPageDTO.builder()
-                .achieve(achievementNum)
+        return MemberResponseDTO.myPageDTO.builder()
+                .achieve(totalAchievements)
                 .likes(likes)
                 .points(points)
                 .feedNum(feedNum)
                 .resolution(resolution)
                 .challenges(challengeNum)
-                .fail(0)
+                .fail(fail)
                 .feedDTOs(feedDto)
                 .build();
     }
 
+    /***
+     * 마이페이지에서 포인트 로그 조회
+     * @return
+     */
+    public PointResponseDTO.pointLogListDTO getPointLog(Long memberId){
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
+
+        List<PointLog> pointLogs = pointLogRepository.findAllByMember_Id(memberId);
+
+        PointResponseDTO.pointLogListDTO pointTotalLogs = PointConverter.pointLogListDTO(pointLogs,member);
+
+        return pointTotalLogs;
+    }
+
+    /***
+     * 프로필 수정
+     * @param memberUpdateDto
+     * @return
+     */
+    public MemberResponseDTO.profileDTO updateProfile(MemberUpdateDto memberUpdateDto,Long memberId){
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+
+        member.update(memberUpdateDto);
+
+
+        return MemberConverter.toProfileDTO(member);
+    }
 }
