@@ -9,14 +9,14 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
-import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.like.entity.ChallengeLike;
 import com.BeilsangServer.domain.like.repository.ChallengeLikeRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
+import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +36,7 @@ public class ChallengeService {
     private final ChallengeLikeRepository challengeLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
     private final AchievementRepository achievementRepository;
+    private final MemberRepository memberRepository;
 
     /***
      * 챌린지 생성하기
@@ -188,5 +189,25 @@ public class ChallengeService {
                 .build();
 
         return challengeListWithCount;
+    }
+
+    /***
+     * 챌린지 참여하기
+     * @return CreateDTO
+     * isHost 판별(호스트가 무조건 챌린지 참여면 필요x)
+     * 달성 목표 갯수 필요 없을 거 같음
+     */
+    @Transactional
+    public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
+
+        Member member = memberRepository.findById(memberId).get();
+
+        Challenge challenge = challengeRepository.findById(challengeId).get();
+
+        // isHost 판별해줘야 함
+
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(null).build());
+
+        return ChallengeConverter.toJoinChallengeDTO(member, challenge);
     }
 }

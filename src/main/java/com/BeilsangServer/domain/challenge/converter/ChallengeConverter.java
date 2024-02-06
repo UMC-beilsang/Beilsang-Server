@@ -4,6 +4,8 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
+import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -102,5 +104,14 @@ public class ChallengeConverter {
         return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
     }
 
+    /***
+     * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
+     * @param member 참여하는 멤버
+     * @param challenge 참여하는 챌린지
+     * @return JoinChallengeDTO
+     */
+    public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge) {
 
+        return null;
+    }
 }
