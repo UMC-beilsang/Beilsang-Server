@@ -42,7 +42,7 @@ public class ChallengeService {
     private final AchievementRepository achievementRepository;
     private final MemberRepository memberRepository;
     private final AmazonS3Manager s3Manager;
-    private UuidRepository uuidRepository;
+    private final UuidRepository uuidRepository;
 
     /***
      * 챌린지 생성하기
@@ -53,11 +53,15 @@ public class ChallengeService {
     @Transactional
     public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
 
+        System.out.println("request = " + request);
+        System.out.println(request.getTitle());
+        String s = request.getMainImage().toString();
+        System.out.println("s = " + s);
         // 이미지 업로드
-        String uuid = UUID.randomUUID().toString();
-        Uuid savedUuid = uuidRepository.save(Uuid.builder().uuid(uuid).build());
-        String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(savedUuid), request.getMainImage());
-        String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(savedUuid), request.getCertImage());
+        Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
+        Uuid certUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(certUuid), request.getCertImage());
 
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
         Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
