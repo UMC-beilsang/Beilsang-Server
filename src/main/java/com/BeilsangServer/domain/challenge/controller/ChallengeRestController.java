@@ -152,6 +152,7 @@ public class ChallengeRestController {
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+    }
 
     @PostMapping("/{challengeId}/likes")
     public ApiResponse<Long> challengeLike(
