@@ -10,9 +10,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
+import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -21,19 +24,19 @@ public class ChallengeRestController {
 
     private final ChallengeService challengeService;
 
-    @PostMapping("")
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "챌린지 생성 API", description = "필요한 정보를 받아 챌린지를 생성하는 API입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@RequestBody ChallengeRequestDTO.CreateDTO request) {
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewDTO> createChallenge(@ModelAttribute ChallengeRequestDTO.CreateDTO request) {
 
         Long memberId = 1L;
 
-        Challenge challenge = challengeService.createChallenge(request, memberId);
+        ChallengeResponseDTO.ChallengePreviewDTO response = challengeService.createChallenge(request, memberId);
 
         // 컨버터를 사용해 response DTO로 변환하여 응답
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, ChallengeConverter.toCreateResultDTO(challenge));
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
     @GetMapping("/{challengeId}")

@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ChallengeConverter {
 
-    public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request) {
+    public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request, String mainImageUrl, String certImageUrl) {
 
         // 시작일로부터 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
         Integer period = request.getPeriod().getDays();
@@ -24,8 +24,8 @@ public class ChallengeConverter {
                 .startDate(request.getStartDate())
                 .finishDate(finishDate)
                 .joinPoint(request.getJoinPoint())
-                .imageUrl(request.getImageUrl())
-                .certImageUrl(request.getCertImageUrl())
+                .mainImageUrl(mainImageUrl)
+                .certImageUrl(certImageUrl)
                 .details(request.getDetails())
                 .period(request.getPeriod())
                 .totalGoalDay(request.getTotalGoalDay())
@@ -56,7 +56,7 @@ public class ChallengeConverter {
                 .attendeeCount(challenge.getAttendeeCount())
                 .createdMember(null)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
-                .imageUrl(challenge.getImageUrl())
+                .imageUrl(challenge.getMainImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
                 .title(challenge.getTitle())
                 .startDate(challenge.getStartDate())
@@ -85,13 +85,13 @@ public class ChallengeConverter {
                 .toList();
     }
 
-    public static ChallengeResponseDTO.ChallengePreviewDTO toChallengePreviewDTO(Challenge challenge) {
+    public static ChallengeResponseDTO.ChallengePreviewDTO toChallengePreviewDTO(Challenge challenge, String hostName) {
 
         return ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
-                .imageUrl(challenge.getImageUrl())
-                .createdMember(null)
+                .imageUrl(challenge.getMainImageUrl())
+                .hostName(hostName)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build();
     }
@@ -106,8 +106,8 @@ public class ChallengeConverter {
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
-                .imageUrl(challenge.getImageUrl())
-                .createdMember(null)
+                .imageUrl(challenge.getMainImageUrl())
+                .hostName(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build()
         ).toList();
@@ -120,12 +120,13 @@ public class ChallengeConverter {
      * @param member 참여하는 멤버
      * @param challenge 참여하는 챌린지
      * @return JoinChallengeDTO
+     * hostName 설정해줘야 함 -> 서비스에서 host 찾아서 넣어주기
      */
     public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge) {
 
         return ChallengeResponseDTO.JoinChallengeDTO.builder()
                 .memberDTO(MemberConverter.toMemberDTO(member))
-                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge))
+                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, null))
                 .build();
     }
 }

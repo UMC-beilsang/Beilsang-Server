@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.service;
 
+import com.BeilsangServer.aws.s3.AmazonS3Manager;
 import com.BeilsangServer.domain.achievment.entity.Achievement;
 import com.BeilsangServer.domain.achievment.repository.AchievementRepository;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
@@ -15,6 +16,8 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
+import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,6 +41,8 @@ public class ChallengeService {
     private final ChallengeMemberRepository challengeMemberRepository;
     private final AchievementRepository achievementRepository;
     private final MemberRepository memberRepository;
+    private final AmazonS3Manager s3Manager;
+    private final UuidRepository uuidRepository;
 
     /***
      * 챌린지 생성하기
@@ -45,12 +51,19 @@ public class ChallengeService {
      * 이미지 업로드
      */
     @Transactional
-    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
+    public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
+
+        // 이미지 업로드
+        Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
+        Uuid certUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(certUuid), request.getCertImage());
 
         Member member = memberRepository.findById(memberId).get();
 
+
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
-        Challenge challenge = ChallengeConverter.toChallenge(request);
+        Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
 
         // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
@@ -61,7 +74,13 @@ public class ChallengeService {
 
         challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
 
-        return challengeRepository.save(challenge);
+        challengeRepository.save(challenge);
+
+        // ChallengeMember 생성
+        Member member = memberRepository.findById(memberId).get();
+        challengeMemberRepository.save(ChallengeMember.builder().member(member).isHost(true).build());
+
+        return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
     }
 
     /***
@@ -90,7 +109,7 @@ public class ChallengeService {
         return recommendChallenges.stream()
                 .map(challenge -> ChallengeResponseDTO.RecommendChallengeDTO.builder()
                         .challengeId(challenge.getId())
-                        .imageUrl(challenge.getImageUrl())
+                        .imageUrl(challenge.getMainImageUrl())
                         .title(challenge.getTitle())
                         .category(challenge.getCategory())
                         .build())
