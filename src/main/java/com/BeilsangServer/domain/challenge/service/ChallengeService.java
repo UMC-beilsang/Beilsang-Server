@@ -88,7 +88,7 @@ public class ChallengeService {
 
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
+        return ChallengeConverter.toChallengeDTO(challenge, dDay);
     }
 
     /***
@@ -218,7 +218,6 @@ public class ChallengeService {
     /***
      * 챌린지 참여하기
      * @return CreateDTO
-     * isHost 판별(호스트가 무조건 챌린지 참여면 필요x)
      * 달성 목표 갯수 필요 없을 거 같음
      */
     @Transactional
@@ -227,8 +226,6 @@ public class ChallengeService {
         Member member = memberRepository.findById(memberId).get();
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
-
-        // isHost 판별해줘야 함
 
         challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
 
