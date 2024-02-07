@@ -123,6 +123,7 @@ public class FeedService {
      * 피드 좋아요 하기
      * @param feedId
      * @return 좋아요한 feedId
+     * 멤버 추가 필요
      */
     @Transactional
     public Long feedLike(Long feedId){
@@ -144,7 +145,7 @@ public class FeedService {
      */
     @Transactional
     public Long feedUnLike(Long feedId){
-        FeedLike feedLike = feedLikeRepository.findById(feedId).orElseThrow(()->{throw new IllegalArgumentException("좋아요없다");});
+        FeedLike feedLike = feedLikeRepository.findByFeed_Id(feedId);
 
         feedLikeRepository.delete(feedLike);
 
