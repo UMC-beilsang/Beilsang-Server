@@ -73,6 +73,15 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class RecommendChallengeListDTO {
+
+        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChallengePreviewDTO { // 챌린지 미리보기 DTO
 
         private Long challengeId;
@@ -116,4 +125,5 @@ public class ChallengeResponseDTO {
         private ChallengePreviewDTO challengePreviewDTO;
         private MemberResponseDTO.MemberDTO memberDTO;
     }
+
 }

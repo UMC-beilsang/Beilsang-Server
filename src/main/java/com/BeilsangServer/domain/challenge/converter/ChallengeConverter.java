@@ -129,4 +129,15 @@ public class ChallengeConverter {
                 .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, null))
                 .build();
     }
+
+    /***
+     * 추천 챌린지 리스트를 DTO에 담아주기
+     * @param recommendChallengeList 추천 챌린지 리스트
+     * RecommendChallengeListDTO
+     */
+    public static ChallengeResponseDTO.RecommendChallengeListDTO toRecommendChallengeListDTO(List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList) {
+        return ChallengeResponseDTO.RecommendChallengeListDTO.builder()
+                .recommendChallengeDTOList(recommendChallengeList)
+                .build();
+    }
 }
