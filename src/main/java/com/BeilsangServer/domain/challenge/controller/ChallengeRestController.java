@@ -141,6 +141,10 @@ public class ChallengeRestController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
+    @Operation(summary = "추천 챌린지 조회 API", description = "아직 시작 안한 챌린지들 중 참여인원이 가장 많은 2개의 챌린지를 미리보기로 보여주는 API입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
     @GetMapping("/recommends")
     public ApiResponse<ChallengeResponseDTO.RecommendChallengeListDTO> getRecommendChallenges() {
 
