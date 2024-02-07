@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class FeedDTO {
@@ -33,6 +34,19 @@ public class FeedDTO {
         this.challengeTitle = challengeTitle;
         this.category = category;
         this.likes = likes;
+    }
+
+    @Builder
+    @Getter
+    public static class previewFeedDto{
+        private Long feedId;
+        private String feedUrl;
+    }
+
+    @Builder
+    @Getter
+    public static class previewFeedListDto{
+        private List<previewFeedDto> feeds;
     }
 
 }

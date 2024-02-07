@@ -48,7 +48,7 @@ public class ChallengeService {
      * 챌린지 생성하기
      * @param request 챌린지 생성에 필요한 정보
      * @return CreateDTO
-     * 이미지 업로드, 호스트 추가 필요
+     * 이미지 업로드
      */
     @Transactional
     public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
@@ -59,15 +59,20 @@ public class ChallengeService {
         Uuid certUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(certUuid), request.getCertImage());
 
+        Member member = memberRepository.findById(memberId).get();
+
+
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
         Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
 
         // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
-        for (String note : notes) {
-            ChallengeNote challengeNote = ChallengeNote.builder().note(note).challenge(challenge).build();
-            challengeNoteRepository.save(challengeNote);
-        }
+
+        notes.stream()
+                .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
+                .forEach(challengeNoteRepository::save);
+
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
 
         challengeRepository.save(challenge);
 
@@ -168,6 +173,13 @@ public class ChallengeService {
         return ChallengeConverter.toChallengePreviewListDTO(challengeList);
     }
 
+    /***
+     * 카테고리와 상태로 나의 챌린지 조회
+     * @param status
+     * @param category
+     * @param memberId
+     * @return
+     */
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.valueOf(category);
 
@@ -224,7 +236,7 @@ public class ChallengeService {
 
         // isHost 판별해줘야 함
 
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(null).build());
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge);
     }

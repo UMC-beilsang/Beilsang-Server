@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface FeedLikeRepository extends JpaRepository<FeedLike,Long> {
     Long countByFeed_Id(Long feedId);
+
+    Long countByMember_Id(Long memberId);
 }

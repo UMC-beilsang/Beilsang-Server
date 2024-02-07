@@ -83,6 +83,10 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/famous/{category}")
+    @Operation(summary = "명예의 전당 조회 API", description = "카테고리별로 찜 수가 가장 많은 상의 10개의 챌린지를 조회하는 API 입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getFamousChallengeList(
             @PathVariable(name = "category") String category
     ) {
@@ -92,6 +96,10 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/likes")
+    @Operation(summary = "사용자의 찜한 챌린지 목록 조회 API", description = "사용자가 찜한 챌린지의 정보를 조회하는 API 입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
             @PathVariable(name = "memberId") Long memberId
     ) {
@@ -101,6 +109,10 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/{status}/{category}")
+    @Operation(summary = "카테고리와 상태로 필터링한 사용자가 참여중인 챌린지 조회 API", description = "나의 피드에 대해 카테고리와 챌린지 상태로 필터링하여 사용자가 참여중인 챌린지 목록을 조회하는 API 입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
     public ApiResponse<ChallengeResponseDTO.ChallengeListWithCountDTO> getChallengeByStatusAndCategory(
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
