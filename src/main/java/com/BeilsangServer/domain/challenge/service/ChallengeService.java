@@ -217,9 +217,9 @@ public class ChallengeService {
 
     /***
      * 챌린지 참여하기
-     * @return CreateDTO
-     * isHost 판별(호스트가 무조건 챌린지 참여면 필요x)
-     * 달성 목표 갯수 필요 없을 거 같음
+     * @param challengeId 참여하는 챌린지 ID
+     * @param memberId 참여하는 멤버 ID
+     * @return JoinChallengeDTO
      */
     @Transactional
     public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
@@ -227,10 +227,14 @@ public class ChallengeService {
         Member member = memberRepository.findById(memberId).get();
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
+        challenge.increaseAttendeeCount();
+        challengeRepository.save(challenge);
 
-        // isHost 판별해줘야 함
-
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
+        challengeMemberRepository.save(ChallengeMember.builder()
+                .challenge(challenge)
+                .member(member)
+                .isHost(false)
+                .build());
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge);
     }

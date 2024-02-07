@@ -59,4 +59,8 @@ public class Challenge extends BaseEntity {
         note.setChallenge(this);
     }
 
+    // 참여 인원 증가
+    public void increaseAttendeeCount() {
+        this.attendeeCount++;
+    }
 }
