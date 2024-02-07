@@ -51,12 +51,8 @@ public class ChallengeService {
      * 이미지 업로드, 호스트 추가 필요
      */
     @Transactional
-    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
+    public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
 
-        System.out.println("request = " + request);
-        System.out.println(request.getTitle());
-        String s = request.getMainImage().toString();
-        System.out.println("s = " + s);
         // 이미지 업로드
         Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
@@ -73,7 +69,13 @@ public class ChallengeService {
             challengeNoteRepository.save(challengeNote);
         }
 
-        return challengeRepository.save(challenge);
+        challengeRepository.save(challenge);
+
+        // ChallengeMember 생성
+        Member member = memberRepository.findById(memberId).get();
+        challengeMemberRepository.save(ChallengeMember.builder().member(member).isHost(true).build());
+
+        return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
     }
 
     /***

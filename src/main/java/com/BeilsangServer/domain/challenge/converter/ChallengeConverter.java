@@ -29,7 +29,7 @@ public class ChallengeConverter {
                 .details(request.getDetails())
                 .period(request.getPeriod())
                 .totalGoalDay(request.getTotalGoalDay())
-                .attendeeCount(0)
+                .attendeeCount(1)
                 .build();
     }
 
@@ -85,13 +85,13 @@ public class ChallengeConverter {
                 .toList();
     }
 
-    public static ChallengeResponseDTO.ChallengePreviewDTO toChallengePreviewDTO(Challenge challenge) {
+    public static ChallengeResponseDTO.ChallengePreviewDTO toChallengePreviewDTO(Challenge challenge, String hostName) {
 
         return ChallengeResponseDTO.ChallengePreviewDTO.builder()
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getMainImageUrl())
-                .createdMember(null)
+                .hostName(hostName)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build();
     }
@@ -107,7 +107,7 @@ public class ChallengeConverter {
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getMainImageUrl())
-                .createdMember(null)
+                .hostName(null)
                 .attendeeCount(challenge.getAttendeeCount())
                 .build()
         ).toList();
@@ -120,12 +120,13 @@ public class ChallengeConverter {
      * @param member 참여하는 멤버
      * @param challenge 참여하는 챌린지
      * @return JoinChallengeDTO
+     * hostName 설정해줘야 함 -> 서비스에서 host 찾아서 넣어주기
      */
     public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge) {
 
         return ChallengeResponseDTO.JoinChallengeDTO.builder()
                 .memberDTO(MemberConverter.toMemberDTO(member))
-                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge))
+                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, null))
                 .build();
     }
 }

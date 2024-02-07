@@ -78,7 +78,7 @@ public class ChallengeResponseDTO {
         private Long challengeId;
         private String title;
         private String imageUrl;
-        private String createdMember;
+        private String hostName;
         private Integer attendeeCount;
     }
     @Builder

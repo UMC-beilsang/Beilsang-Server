@@ -29,12 +29,14 @@ public class ChallengeRestController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<ChallengeResponseDTO.CreateResultDTO> createChallenge(@ModelAttribute ChallengeRequestDTO.CreateDTO request) {
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewDTO> createChallenge(@ModelAttribute ChallengeRequestDTO.CreateDTO request) {
 
-        Challenge challenge = challengeService.createChallenge(request);
+        Long memberId = 1L;
+
+        ChallengeResponseDTO.ChallengePreviewDTO response = challengeService.createChallenge(request, memberId);
 
         // 컨버터를 사용해 response DTO로 변환하여 응답
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, ChallengeConverter.toCreateResultDTO(challenge));
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
     @GetMapping("/{challengeId}")
