@@ -89,7 +89,7 @@ public class ChallengeService {
 
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
+        return ChallengeConverter.toChallengeDTO(challenge, dDay);
     }
 
     /***
@@ -245,5 +245,39 @@ public class ChallengeService {
         );
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge, hostName);
+    }
+
+    /***
+     * 챌린지 찜하기
+     * @param challengeId
+     * @return
+     * 멤버 추가 필요
+     */
+    @Transactional
+    public Long challengeLike(Long challengeId){
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("챌린지없다.");});
+
+
+        ChallengeLike challengeLike = ChallengeLike.builder()
+                .challenge(challenge)
+                .build();
+
+        challengeLikeRepository.save(challengeLike);
+
+        return challengeLike.getId();
+    }
+
+    /***
+     * 챌린지 찜 취소하기
+     * @param challengeId
+     * @return
+     */
+    @Transactional
+    public Long challengeUnLike(Long challengeId){
+        ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_Id(challengeId);
+
+        challengeLikeRepository.delete(challengeLike);
+
+        return challengeLike.getId();
     }
 }

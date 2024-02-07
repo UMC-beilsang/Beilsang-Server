@@ -53,8 +53,9 @@ public class ChallengeResponseDTO {
         private Integer dDay;
         // 챌린지 유의사항
         private List<String> challengeNotes;
-        // 추천 챌린지 목록
-        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+
+//        // 추천 챌린지 목록
+//        private List<RecommendChallengeDTO> recommendChallengeDTOList;
     }
 
     @Builder
@@ -67,6 +68,15 @@ public class ChallengeResponseDTO {
         private String imageUrl;
         private String title;
         private Category category;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RecommendChallengeListDTO {
+
+        private List<RecommendChallengeDTO> recommendChallengeDTOList;
     }
 
     @Builder
@@ -116,4 +126,5 @@ public class ChallengeResponseDTO {
         private ChallengePreviewDTO challengePreviewDTO;
         private MemberResponseDTO.MemberDTO memberDTO;
     }
+
 }

@@ -48,7 +48,7 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
@@ -65,7 +65,6 @@ public class ChallengeConverter {
                 .challengeNotes(challengeNotes)
                 .joinPoint(challenge.getJoinPoint())
                 .dDay(dDay)
-                .recommendChallengeDTOList(recommendChallengeDTOList)
                 .build();
 
     }
@@ -128,6 +127,17 @@ public class ChallengeConverter {
         return ChallengeResponseDTO.JoinChallengeDTO.builder()
                 .memberDTO(MemberConverter.toMemberDTO(member))
                 .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, hostName))
+                .build();
+    }
+
+    /***
+     * 추천 챌린지 리스트를 DTO에 담아주기
+     * @param recommendChallengeList 추천 챌린지 리스트
+     * RecommendChallengeListDTO
+     */
+    public static ChallengeResponseDTO.RecommendChallengeListDTO toRecommendChallengeListDTO(List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList) {
+        return ChallengeResponseDTO.RecommendChallengeListDTO.builder()
+                .recommendChallengeDTOList(recommendChallengeList)
                 .build();
     }
 }
