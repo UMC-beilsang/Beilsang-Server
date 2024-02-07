@@ -53,32 +53,26 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
 
+        Member member = memberRepository.findById(memberId).get();
+
         // 이미지 업로드
         Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
         Uuid certUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(certUuid), request.getCertImage());
 
-        Member member = memberRepository.findById(memberId).get();
-
-
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
         Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
 
         // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
-
         notes.stream()
                 .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
                 .forEach(challengeNoteRepository::save);
 
+        // ChallengeMember, Challenge 저장
         challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
-
         challengeRepository.save(challenge);
-
-        // ChallengeMember 생성
-        Member member = memberRepository.findById(memberId).get();
-        challengeMemberRepository.save(ChallengeMember.builder().member(member).isHost(true).build());
 
         return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
     }
