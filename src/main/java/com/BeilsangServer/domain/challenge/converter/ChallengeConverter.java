@@ -54,7 +54,7 @@ public class ChallengeConverter {
 
         return ChallengeResponseDTO.ChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
-                .createdMember(null)
+                .hostName(null)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
                 .imageUrl(challenge.getMainImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
@@ -103,14 +103,15 @@ public class ChallengeConverter {
      */
     public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
 
-        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream().map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
-                .challengeId(challenge.getId())
-                .title(challenge.getTitle())
-                .imageUrl(challenge.getMainImageUrl())
-                .hostName(null)
-                .attendeeCount(challenge.getAttendeeCount())
-                .build()
-        ).toList();
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream()
+                .map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
+                                .challengeId(challenge.getId())
+                                .title(challenge.getTitle())
+                                .imageUrl(challenge.getMainImageUrl())
+                                .hostName(null)
+                                .attendeeCount(challenge.getAttendeeCount())
+                                .build())
+                .toList();
 
         return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
     }
@@ -119,14 +120,14 @@ public class ChallengeConverter {
      * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
      * @param member 참여하는 멤버
      * @param challenge 참여하는 챌린지
+     * @param hostName 챌린지 호스트 이름
      * @return JoinChallengeDTO
-     * hostName 설정해줘야 함 -> 서비스에서 host 찾아서 넣어주기
      */
-    public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge) {
+    public static ChallengeResponseDTO.JoinChallengeDTO toJoinChallengeDTO(Member member, Challenge challenge, String hostName) {
 
         return ChallengeResponseDTO.JoinChallengeDTO.builder()
                 .memberDTO(MemberConverter.toMemberDTO(member))
-                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, null))
+                .challengePreviewDTO(ChallengeConverter.toChallengePreviewDTO(challenge, hostName))
                 .build();
     }
 }

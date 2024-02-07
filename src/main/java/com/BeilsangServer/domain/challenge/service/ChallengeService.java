@@ -19,6 +19,7 @@ import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -230,12 +231,19 @@ public class ChallengeService {
         challenge.increaseAttendeeCount();
         challengeRepository.save(challenge);
 
-        challengeMemberRepository.save(ChallengeMember.builder()
+        // 챌린지 호스트 찾기
+        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
+
+        challengeMemberRepository.save(
+                ChallengeMember.builder()
                 .challenge(challenge)
                 .member(member)
+                .successDays(0)
+                .challengeStatus(ChallengeStatus.ONGOING)
                 .isHost(false)
-                .build());
+                .build()
+        );
 
-        return ChallengeConverter.toJoinChallengeDTO(member, challenge);
+        return ChallengeConverter.toJoinChallengeDTO(member, challenge, hostName);
     }
 }

@@ -41,7 +41,7 @@ public class ChallengeResponseDTO {
     public static class ChallengeDTO {
 
         private Integer attendeeCount;
-        private String createdMember;
+        private String hostName;
         private LocalDate createdDate;
         private String imageUrl;
         private String certImageUrl;
