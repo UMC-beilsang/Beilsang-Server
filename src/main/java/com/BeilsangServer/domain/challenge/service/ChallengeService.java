@@ -19,6 +19,7 @@ import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -217,8 +218,9 @@ public class ChallengeService {
 
     /***
      * 챌린지 참여하기
-     * @return CreateDTO
-     * 달성 목표 갯수 필요 없을 거 같음
+     * @param challengeId 참여하는 챌린지 ID
+     * @param memberId 참여하는 멤버 ID
+     * @return JoinChallengeDTO
      */
     @Transactional
     public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
@@ -226,10 +228,23 @@ public class ChallengeService {
         Member member = memberRepository.findById(memberId).get();
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
+        challenge.increaseAttendeeCount();
+        challengeRepository.save(challenge);
 
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(false).build());
+        // 챌린지 호스트 찾기
+        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
 
-        return ChallengeConverter.toJoinChallengeDTO(member, challenge);
+        challengeMemberRepository.save(
+                ChallengeMember.builder()
+                .challenge(challenge)
+                .member(member)
+                .successDays(0)
+                .challengeStatus(ChallengeStatus.ONGOING)
+                .isHost(false)
+                .build()
+        );
+
+        return ChallengeConverter.toJoinChallengeDTO(member, challenge, hostName);
     }
 
     /***

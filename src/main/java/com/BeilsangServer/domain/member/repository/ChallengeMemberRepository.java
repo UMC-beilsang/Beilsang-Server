@@ -12,8 +12,8 @@ public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember
 
     List<ChallengeMember> findAllByMember_id(Long memberId);
 
-
-    ChallengeMember findByChallenge_Id(Long challengeId);
+    // 챌린지의 호스트 찾기
+    ChallengeMember findByChallenge_IdAndIsHostIsTrue(Long challengeId);
 
     Long countByMember_Id(Long memberId);
 

@@ -2,11 +2,13 @@ package com.BeilsangServer.domain.member.entity;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.global.common.BaseEntity;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.http.auth.ChallengeState;
 
 @Entity
 @Getter
@@ -20,7 +22,9 @@ public class ChallengeMember extends BaseEntity {
 
     private Boolean isHost;
 
-    private int goal;
+    private Integer successDays;
+
+    private ChallengeStatus challengeStatus;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
