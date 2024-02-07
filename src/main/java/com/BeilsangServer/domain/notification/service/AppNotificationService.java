@@ -3,7 +3,6 @@ package com.BeilsangServer.domain.notification.service;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.domain.notification.convertor.NotificationConvertor;
-import com.BeilsangServer.domain.notification.dto.NotificationResponseDto;
 import com.BeilsangServer.domain.notification.entity.AppNotification;
 import com.BeilsangServer.domain.notification.repository.AppNotificationRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,5 +36,13 @@ public class AppNotificationService {
             response.add(notificationDto);
         }
         return response;
+    }
+
+    @Transactional
+    public void readNotification(Long notificationId){
+        AppNotification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> new RuntimeException("존재하지 않는 알림"));
+
+        notification.setIsRead();
     }
 }
