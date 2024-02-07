@@ -42,7 +42,7 @@ public class ChallengeRestController {
     }
 
     @GetMapping("/{challengeId}")
-    @Operation(summary = "카테고리 상세 조회 API", description = "챌린지ID를 PathVariable로 입력 받아 해당하는 챌린지의 상세 내용을 조회하는 API입니다.")
+    @Operation(summary = "챌린지 상세 조회 API", description = "챌린지ID를 PathVariable로 입력 받아 해당하는 챌린지의 상세 내용을 조회하는 API입니다.")
     @Parameter(name = "challengeId", description = "챌린지 ID")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")

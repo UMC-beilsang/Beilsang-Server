@@ -48,7 +48,7 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeDTOList) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
@@ -65,7 +65,6 @@ public class ChallengeConverter {
                 .challengeNotes(challengeNotes)
                 .joinPoint(challenge.getJoinPoint())
                 .dDay(dDay)
-                .recommendChallengeDTOList(recommendChallengeDTOList)
                 .build();
 
     }

@@ -88,7 +88,7 @@ public class ChallengeService {
 
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
+        return ChallengeConverter.toChallengeDTO(challenge, dDay);
     }
 
     /***

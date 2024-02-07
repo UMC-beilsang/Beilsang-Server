@@ -53,8 +53,9 @@ public class ChallengeResponseDTO {
         private Integer dDay;
         // 챌린지 유의사항
         private List<String> challengeNotes;
-        // 추천 챌린지 목록
-        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+
+//        // 추천 챌린지 목록
+//        private List<RecommendChallengeDTO> recommendChallengeDTOList;
     }
 
     @Builder
