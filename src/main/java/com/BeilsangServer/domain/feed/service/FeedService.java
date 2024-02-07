@@ -15,6 +15,8 @@ import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
+import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,15 +38,17 @@ public class FeedService {
     private final FeedRepository feedRepository;
     private final FeedConverter feedConverter;
     private final ChallengeRepository challengeRepository;
-    private final AmazonS3Manager amazonS3Manager;
+    private final AmazonS3Manager s3Manager;
     private final FeedLikeRepository feedLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
     private final ChallengeNoteRepository challengeNoteRepository;
+    private final UuidRepository uuidRepository;
 
 
     /***
      * 피드 인증하기
-     * @param file, review, challengeId
+     * @param file,
+     * @param review
      * @param challengeId
      * @return 새로 추가된 feedDto
      * challengeMember 추가 필요
@@ -53,8 +57,9 @@ public class FeedService {
     public FeedDTO createFeed(MultipartFile file, String review, Long challengeId){
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
 
-        String uuid = UUID.randomUUID().toString();
-        String feedUrl = amazonS3Manager.uploadFile(uuid,file);
+        Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), file);
+
         Feed feed = Feed.builder()
                 .feedUrl(feedUrl)
                 .review(review)
