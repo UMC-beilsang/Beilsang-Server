@@ -152,5 +152,22 @@ public class ChallengeRestController {
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+
+    @PostMapping("/{challengeId}/likes")
+    public ApiResponse<Long> challengeLike(
+            @PathVariable(name = "challengeId") Long challengeId
+    ){
+        Long challengeLikeId = challengeService.challengeLike(challengeId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeLikeId);
+    }
+
+    @DeleteMapping("/{challengeId}/likes")
+    public ApiResponse<Long> challengeUnLike(
+            @PathVariable(name = "challengeId") Long challengeId
+    ){
+        Long challengeUnLikeId = challengeService.challengeUnLike(challengeId);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeUnLikeId);
     }
 }
