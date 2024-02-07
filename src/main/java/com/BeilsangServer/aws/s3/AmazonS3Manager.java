@@ -49,4 +49,8 @@ public class AmazonS3Manager {
     public String generateCertKeyName(Uuid uuid) {
         return amazonConfig.getCertPath() + '/' + uuid.getUuid();
     }
+
+    public String generateFeedKeyName(Uuid uuid) {
+        return amazonConfig.getFeedPath() + '/' + uuid.getUuid();
+    }
 }
