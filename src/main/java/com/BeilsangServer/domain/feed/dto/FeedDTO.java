@@ -25,9 +25,10 @@ public class FeedDTO {
     private Category category;
 
     private Long likes;
+    private boolean like;
 
     @Builder
-    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes){
+    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes, boolean like){
         this.id = id;
         this.review = review;
         this.uploadDate = uploadDate;
@@ -35,6 +36,7 @@ public class FeedDTO {
         this.challengeTitle = challengeTitle;
         this.category = category;
         this.likes = likes;
+        this.like = like;
     }
 
     @Builder
