@@ -46,11 +46,27 @@ public class AuthController {
 
     @PostMapping("/singup")
     @Operation(summary = "소셜 로그인 후 로그인 폼 받아서 자체 회원가입 API")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
     public ApiResponse<Object> signup(@RequestBody MemberLoginDto memberLoginDto)
     {
       authService.signup(memberLoginDto);
 
       return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
+    }
+
+    @DeleteMapping("/{provider}/revoke")
+    @Operation(summary = "회원 탈퇴")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<Object> revoke(@PathVariable String provider, @RequestBody String accessToken) {
+        switch (provider) {
+            case "KAKAO":
+                // 구현예정
+        }
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
     }
 
     // 리프레시 토큰으로 액세스토큰 재발급 받는 로직
