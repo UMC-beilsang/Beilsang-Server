@@ -54,6 +54,13 @@ public class FeedConverter {
         return dtoList;
     }
 
+    public FeedDTO.previewFeedDto toPreviewFeedDto(Feed feed){
+        return FeedDTO.previewFeedDto.builder()
+                .feedId(feed.getId())
+                .feedUrl(feed.getFeedUrl())
+                .build();
+    }
+
     public FeedDTO.previewFeedListDto toPreviewFeedListDto(List<Feed> feedList){
 
         List<FeedDTO.previewFeedDto> feedDtos = feedList.stream().map(feed -> FeedDTO.previewFeedDto.builder()

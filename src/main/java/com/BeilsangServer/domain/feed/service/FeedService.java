@@ -14,6 +14,7 @@ import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
@@ -109,7 +110,7 @@ public class FeedService {
      * @param name
      * @return feedList dto
      */
-    public FeedDTO.previewFeedListDto searchFeed(String name){
+    public FeedDTO.previewChallengeAndFeed searchChallengeAndFeed(String name){
         List<Challenge> challengeList = challengeRepository.findByTitleContaining(name);
 
         List<Long> challengeIds = new ArrayList<>();
@@ -119,9 +120,18 @@ public class FeedService {
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
-        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengeDTOList = challengeList.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge,getHostName(challenge.getId())))
+                .toList();
 
-        return feedDTOList;
+        List<FeedDTO.previewFeedDto> feedDTOList = feedList.stream()
+                .map(feed -> feedConverter.toPreviewFeedDto(feed))
+                .toList();
+
+        return FeedDTO.previewChallengeAndFeed.builder()
+                .challenges(challengeDTOList)
+                .feeds(feedDTOList)
+                .build();
     }
 
     /***
@@ -222,5 +232,11 @@ public class FeedService {
 
         List<FeedDTO> feedDTOList = feedConverter.toDtoList(feedList);
         return feedDTOList;
+    }
+
+    public String getHostName(Long challengeId) {
+
+        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        return host.getNickName();
     }
 }
