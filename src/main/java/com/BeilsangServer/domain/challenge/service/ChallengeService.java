@@ -125,7 +125,12 @@ public class ChallengeService {
 
         Category category = Category.from(stringCategory);
         List<Challenge> challenges = challengeRepository.findAllByStartDateAfterAndCategoryOrderByAttendeeCountDesc(LocalDate.now(), category);
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewListDTO = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewListDTO).build();
     }
 
     /***
@@ -235,9 +240,6 @@ public class ChallengeService {
         challenge.increaseAttendeeCount();
         challengeRepository.save(challenge);
 
-        // 챌린지 호스트 찾기
-        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
-
         challengeMemberRepository.save(
                 ChallengeMember.builder()
                 .challenge(challenge)
@@ -247,6 +249,9 @@ public class ChallengeService {
                 .isHost(false)
                 .build()
         );
+
+        // 챌린지 호스트 찾기
+        String hostName = getHostName(challengeId);
 
         return ChallengeConverter.toJoinChallengeDTO(member, challenge, hostName);
     }
