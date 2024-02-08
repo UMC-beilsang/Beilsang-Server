@@ -63,4 +63,7 @@ public class Challenge extends BaseEntity {
     public void increaseAttendeeCount() {
         this.attendeeCount++;
     }
+
+    public void increaseCountLikes(){this.countLikes++;}
+    public void decreaseCountLikes(){this.countLikes--;}
 }
