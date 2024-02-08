@@ -126,11 +126,11 @@ public class ChallengeService {
         Category category = Category.from(stringCategory);
         List<Challenge> challenges = challengeRepository.findAllByStartDateAfterAndCategoryOrderByAttendeeCountDesc(LocalDate.now(), category);
 
-        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewListDTO = challenges.stream()
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
                 .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
                 .toList();
 
-        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewListDTO).build();
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
     /***
@@ -141,7 +141,12 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
 
         List<Challenge> challenges = challengeRepository.findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate.now());
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
 
@@ -155,7 +160,11 @@ public class ChallengeService {
         Category categoryByEnum = Category.valueOf(category);
         List<Challenge> challenges = challengeRepository.findTop10ByCategoryOrderByCountLikesDesc(categoryByEnum);
 
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
     /***
@@ -172,9 +181,13 @@ public class ChallengeService {
         }
 
         // 챌린지 찾기
-        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
 
-        return ChallengeConverter.toChallengePreviewListDTO(challengeList);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
     /***
@@ -191,7 +204,7 @@ public class ChallengeService {
 
         List<Achievement> achievements = achievementRepository.findAllByMember_Id(memberId);
 
-        Integer count = 0;
+        int count = 0;
 
         for (Achievement a : achievements){
             if(categoryByEnum.equals(a.getCategory())){
@@ -213,16 +226,16 @@ public class ChallengeService {
             }
         }
 
-        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
 
-        ChallengeResponseDTO.ChallengePreviewListDTO challengePreviewList = ChallengeConverter.toChallengePreviewListDTO(challengeList);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
 
-        ChallengeResponseDTO.ChallengeListWithCountDTO challengeListWithCount = ChallengeResponseDTO.ChallengeListWithCountDTO.builder()
-                .challenges(challengePreviewList)
+        return ChallengeResponseDTO.ChallengeListWithCountDTO.builder()
+                .challenges(ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build())
                 .count(count)
                 .build();
-
-        return challengeListWithCount;
     }
 
     /***
