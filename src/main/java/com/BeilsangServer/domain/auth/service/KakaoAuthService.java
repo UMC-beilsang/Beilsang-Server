@@ -1,13 +1,17 @@
 package com.BeilsangServer.domain.auth.service;
 
 import com.BeilsangServer.domain.auth.dto.KakaoInfoDto;
+import com.BeilsangServer.domain.auth.dto.KakaoMemberAndExistDto;
+import com.BeilsangServer.domain.auth.dto.KakaoResponseDto;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -27,7 +31,8 @@ public class KakaoAuthService {
     }
 
     // 카카오API에서 가져온 유저정보를 DB에 저장
-    public Member getUserProfileByToken(String accessToken){
+    @Transactional
+    public KakaoMemberAndExistDto getUserProfileByToken(String accessToken){
         Map<String, Object> userAttributesByToken = getUserAttributesByToken(accessToken);
         KakaoInfoDto kakaoInfoDto = new KakaoInfoDto(userAttributesByToken);
         Member member = Member.builder()
@@ -35,12 +40,17 @@ public class KakaoAuthService {
                 .email(kakaoInfoDto.getEmail())
                 .build();
 
+        boolean existMember = false;
         if(memberRepository.findBySocialId(member.getSocialId()) != null) //DB에 회원정보 있으면 그냥 넘김
         {
+           existMember = true;
+
         } else {
             memberRepository.save(member); //DB에 회원정보 없으면 저장
         }
-        return member;
-
+        return KakaoMemberAndExistDto.builder()
+                .member(member)
+                .existMember(existMember)
+                .build();
     }
 }
