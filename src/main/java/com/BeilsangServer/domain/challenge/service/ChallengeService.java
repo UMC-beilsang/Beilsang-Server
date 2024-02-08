@@ -87,9 +87,13 @@ public class ChallengeService {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
 
+        // 챌린지 시작 D-day 계산
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay);
+        // 챌린지 호스트 이름 찾기
+        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
+
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName);
     }
 
     /***

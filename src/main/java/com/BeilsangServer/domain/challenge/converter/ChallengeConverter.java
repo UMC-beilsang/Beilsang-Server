@@ -48,13 +48,13 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
         return ChallengeResponseDTO.ChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
-                .hostName(null)
+                .hostName(hostName)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
                 .imageUrl(challenge.getMainImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
