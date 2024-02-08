@@ -139,7 +139,12 @@ public class ChallengeRestController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
 
+
     @PostMapping("/{challengeId}/likes")
+    @Operation(summary = "챌린지 찜하기 API", description = "사용자가 원하는 챌린지를 찜할 수 있는 API 입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
     public ApiResponse<Long> challengeLike(
             @PathVariable(name = "challengeId") Long challengeId
     ){
@@ -149,6 +154,10 @@ public class ChallengeRestController {
     }
 
     @DeleteMapping("/{challengeId}/likes")
+    @Operation(summary = "챌린지 찜하기 취소 API", description = "찜한 챌린지를 취소하는 API 입니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
     public ApiResponse<Long> challengeUnLike(
             @PathVariable(name = "challengeId") Long challengeId
     ){

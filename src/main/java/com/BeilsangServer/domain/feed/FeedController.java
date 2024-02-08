@@ -6,6 +6,8 @@ import com.BeilsangServer.domain.feed.service.FeedService;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +32,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "challengeId", description = "챌린지 ID")
     public ApiResponse<FeedDTO> createFeed(
             @RequestPart MultipartFile file,
             @RequestPart String review,
@@ -44,6 +47,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "challengeId", description = "챌린지 ID")
     public ApiResponse<ChallengeResponseDTO.ChallengeGuide> getGuide(
             @PathVariable(name = "challengeId") Long challengeId
     ){
@@ -56,6 +60,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "feedId", description = "피드 ID")
     public ApiResponse<FeedDTO> getFeed(
             @PathVariable(name = "feedId") Long feedId
     ){
@@ -68,6 +73,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "name", description = "검색어")
     public ApiResponse<FeedDTO.previewFeedListDto> searchFeed(
             @RequestParam("name") String name
     ){
@@ -81,6 +87,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "feedId", description = "피드 ID")
     public ApiResponse<Long> feedLike(
             @PathVariable(name = "feedId") Long feedId
     ){
@@ -93,6 +100,7 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameter(name = "feedId", description = "피드 ID")
     public ApiResponse<Long> feedUnLike(
             @PathVariable(name = "feedId") Long feedId
     ){
@@ -106,6 +114,12 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
+    @Parameters({
+            @Parameter(name = "category", description = """
+                    카테고리 이름입니다. 영어와 한글 대소문자 상관없이 가능합니다.
+                    [TUMBLER(다회용컵), REFILL_STATION(리필스테이션), MULTIPLE_CONTAINERS(다회용기), ECO_PRODUCT(친환경제품),
+                    PLOGGING(플로깅), VEGAN(비건), PUBLIC_TRANSPORT(대중교통), BIKE(자전거), RECYCLE(재활용)]""")
+    })
     public ApiResponse<FeedDTO.previewFeedListDto> getFeedByCategory(
             @PathVariable(name = "category") String category
     ){
@@ -118,6 +132,14 @@ public class FeedController {
     @Operation(summary = "카테고리와 상태로 필터링한 내 피드 조회 API", description = "나의 피드에 대해 카테고리와 챌린지 상태로 필터링하여 피드를 조회하는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+    })
+    @Parameters({
+            @Parameter(name = "status", description = """
+                    현재 상태입니다. "참여중", "완료된", "등록한" 중 하나를 선택하여 String 타입으로 보내주시면 됩니다."""),
+            @Parameter(name = "category", description = """
+                    카테고리 이름입니다. 영어와 한글 대소문자 상관없이 가능합니다.
+                    [TUMBLER(다회용컵), REFILL_STATION(리필스테이션), MULTIPLE_CONTAINERS(다회용기), ECO_PRODUCT(친환경제품),
+                    PLOGGING(플로깅), VEGAN(비건), PUBLIC_TRANSPORT(대중교통), BIKE(자전거), RECYCLE(재활용)]""")
     })
     public ApiResponse<List<FeedDTO>> getFeedByStatusAndCategory(
             @PathVariable(name = "status") String status,
