@@ -30,6 +30,7 @@ public class ChallengeConverter {
                 .period(request.getPeriod())
                 .totalGoalDay(request.getTotalGoalDay())
                 .attendeeCount(1)
+                .countLikes(0)
                 .build();
     }
 

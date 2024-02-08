@@ -158,7 +158,7 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category){
 
         Category categoryByEnum = Category.valueOf(category);
-        List<Challenge> challenges = challengeRepository.findTop10ByCategoryOrderByCountLikesDesc(categoryByEnum);
+        List<Challenge> challenges = challengeRepository.findTop5ByCategoryOrderByCountLikesDesc(categoryByEnum);
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
                 .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
@@ -285,6 +285,7 @@ public class ChallengeService {
                 .build();
 
         challengeLikeRepository.save(challengeLike);
+        challenge.increaseCountLikes();
 
         return challengeLike.getId();
     }
@@ -297,7 +298,9 @@ public class ChallengeService {
     @Transactional
     public Long challengeUnLike(Long challengeId){
         ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_Id(challengeId);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
 
+        challenge.decreaseCountLikes();;
         challengeLikeRepository.delete(challengeLike);
 
         return challengeLike.getId();
