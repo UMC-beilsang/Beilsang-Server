@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, APPLE
 
-    private String socialId;
+    private Long socialId;
 
     @Column(nullable = false)
     private String nickName;
@@ -56,13 +56,15 @@ public class Member extends BaseEntity {
 
     private String profileUrl;
 
+    private String refreshToken;
+
     @Builder
     public Member(
             String email,
             Role role,
             Gender gender,
             Provider provider,
-            String socialId,
+            Long socialId,
             String nickName,
             LocalDate birth,
             String address,
@@ -92,6 +94,10 @@ public class Member extends BaseEntity {
 
     public void updateProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
+    }
+
+    public void setRefreshToken(String token) {
+        this.refreshToken = token;
     }
 
     public void update(MemberUpdateDto memberUpdateDto){

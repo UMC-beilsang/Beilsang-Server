@@ -21,4 +21,5 @@ public class Uuid extends BaseEntity {
 
     @Column(unique = true)
     private String uuid;
+
 }
