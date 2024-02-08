@@ -19,3 +19,4 @@ public class MemberLoginDto {
     private String resolution;
     private String recommendNickname;
 }
+

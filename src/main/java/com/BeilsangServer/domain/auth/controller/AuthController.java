@@ -3,6 +3,7 @@ package com.BeilsangServer.domain.auth.controller;
 
 import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.auth.service.AuthService;
+import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import com.BeilsangServer.global.jwt.exception.CustomException;
@@ -38,10 +39,18 @@ public class AuthController {
         KakaoResponseDto kakaoResponseDto = new KakaoResponseDto();
         switch (provider) {
             case "KAKAO":
-                String accessToken = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
-                kakaoResponseDto.setAccessToken(accessToken);
+                kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
         }
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,kakaoResponseDto);
+    }
+
+    @PostMapping("/singup")
+    @Operation(summary = "소셜 로그인 후 로그인 폼 받아서 자체 회원가입 API")
+    public ApiResponse<Object> signup(@RequestBody MemberLoginDto memberLoginDto)
+    {
+      authService.signup(memberLoginDto);
+
+      return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
     }
 
     // 리프레시 토큰으로 액세스토큰 재발급 받는 로직

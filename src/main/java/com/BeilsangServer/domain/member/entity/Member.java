@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.member.entity;
 
+import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
@@ -27,7 +28,6 @@ public class Member extends BaseEntity {
     private Role role;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Gender gender;
 
 
@@ -36,10 +36,8 @@ public class Member extends BaseEntity {
 
     private Long socialId;
 
-    @Column(nullable = false)
     private String nickName;
 
-    @Column(nullable = false)
     private LocalDate birth;
 
     private String address;
@@ -57,6 +55,16 @@ public class Member extends BaseEntity {
     private String profileUrl;
 
     private String refreshToken;
+
+    public void setMemberInfo(MemberLoginDto memberLoginDto){
+        this.gender = memberLoginDto.getGender();
+        this.nickName = memberLoginDto.getNickName();
+        this.birth = memberLoginDto.getBirth();
+        this.keyword = memberLoginDto.getKeyword();
+        this.discoveredPath = memberLoginDto.getDiscoveredPath();
+        this.resolution = memberLoginDto.getResolution();
+
+    }
 
     @Builder
     public Member(
