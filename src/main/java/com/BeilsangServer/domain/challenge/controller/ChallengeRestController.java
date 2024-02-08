@@ -1,4 +1,5 @@
 package com.BeilsangServer.domain.challenge.controller;
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
@@ -102,9 +103,9 @@ public class ChallengeRestController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공")
     })
-    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
-            @PathVariable(name = "memberId") Long memberId
-    ) {
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList() {
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
         ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
@@ -119,6 +120,7 @@ public class ChallengeRestController {
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
     ) {
+        // Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
         ChallengeResponseDTO.ChallengeListWithCountDTO challenges = challengeService.getChallengeByStatusAndCategory(status, category, memberId);
@@ -158,7 +160,10 @@ public class ChallengeRestController {
     public ApiResponse<Long> challengeLike(
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        Long challengeLikeId = challengeService.challengeLike(challengeId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        Long challengeLikeId = challengeService.challengeLike(challengeId,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeLikeId);
     }
@@ -167,7 +172,9 @@ public class ChallengeRestController {
     public ApiResponse<Long> challengeUnLike(
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        Long challengeUnLikeId = challengeService.challengeUnLike(challengeId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+        Long challengeUnLikeId = challengeService.challengeUnLike(challengeId,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeUnLikeId);
     }

@@ -32,7 +32,7 @@ public class FeedConverter {
                 .build();
     }
 
-    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes){
+    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes,boolean like){
         return FeedDTO.builder()
                 .id(feed.getId())
                 .review(feed.getReview())
@@ -41,6 +41,7 @@ public class FeedConverter {
                 .challengeTitle(feed.getChallenge().getTitle())
                 .category(feed.getChallenge().getCategory())
                 .likes(likes)
+                .like(like)
                 .build();
     }
 

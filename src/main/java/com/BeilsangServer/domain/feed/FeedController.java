@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.feed;
 
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.service.FeedService;
@@ -30,13 +31,15 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
-    public ApiResponse<FeedDTO> createFeed(
+    public ApiResponse<Long> createFeed(
             @RequestPart MultipartFile file,
             @RequestPart String review,
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        FeedDTO newFeed = feedService.createFeed(file,review,challengeId);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,newFeed);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+        Long newFeedId = feedService.createFeed(file,review,challengeId,memberId);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,newFeedId);
     }
 
     @GetMapping("/feeds/guide/{challengeId}")
@@ -59,7 +62,9 @@ public class FeedController {
     public ApiResponse<FeedDTO> getFeed(
             @PathVariable(name = "feedId") Long feedId
     ){
-        FeedDTO feedDTO = feedService.getFeed(feedId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+        FeedDTO feedDTO = feedService.getFeed(feedId,memberId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
     }
 
@@ -84,7 +89,10 @@ public class FeedController {
     public ApiResponse<Long> feedLike(
             @PathVariable(name = "feedId") Long feedId
     ){
-        Long feedLikeId = feedService.feedLike(feedId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        Long feedLikeId = feedService.feedLike(feedId,memberId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedLikeId);
     }
 
@@ -96,7 +104,9 @@ public class FeedController {
     public ApiResponse<Long> feedUnLike(
             @PathVariable(name = "feedId") Long feedId
     ){
-        Long feedUnLikeId = feedService.feedUnLike(feedId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+        Long feedUnLikeId = feedService.feedUnLike(feedId,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedUnLikeId);
     }
@@ -119,13 +129,14 @@ public class FeedController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
-    public ApiResponse<List<FeedDTO>> getFeedByStatusAndCategory(
+    public ApiResponse<FeedDTO.previewFeedListDto> getFeedByStatusAndCategory(
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
     ){
+        //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        List<FeedDTO> feedDTOList = feedService.getFeedByStatusAndCategory(status,category,memberId);
+        FeedDTO.previewFeedListDto feedDTOList = feedService.getFeedByStatusAndCategory(status,category,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
     }
