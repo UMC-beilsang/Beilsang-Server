@@ -284,4 +284,16 @@ public class ChallengeService {
 
         return challengeLike.getId();
     }
+
+    /***
+     * 챌린지 호스트 이름 찾기
+     * @param challengeId 찾으려는 챌린지 ID
+     * @return 호스트 이름
+     */
+    public String getHostName(Long challengeId) {
+
+        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        return host.getNickName();
+    }
+
 }
