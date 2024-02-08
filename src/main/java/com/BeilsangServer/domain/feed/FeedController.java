@@ -63,17 +63,17 @@ public class FeedController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
     }
 
-    @GetMapping("/feeds/search")
+    @GetMapping("/search")
     @Operation(summary = "챌린지 제목으로 피드 검색 API", description = "검색어가 제목에 포함된 챌린지와 관련된 피드를 검색하는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
-    public ApiResponse<FeedDTO.previewFeedListDto> searchFeed(
+    public ApiResponse<FeedDTO.previewChallengeAndFeed> searchFeed(
             @RequestParam("name") String name
     ){
-        FeedDTO.previewFeedListDto feedDTOList = feedService.searchFeed(name);
+        FeedDTO.previewChallengeAndFeed previewChallengeAndFeed = feedService.searchChallengeAndFeed(name);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,previewChallengeAndFeed);
     }
 
     @PostMapping("/feeds/{feedId}/likes")

@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.feed.dto;
 
+import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.global.enums.Category;
 import lombok.Builder;
@@ -49,4 +50,11 @@ public class FeedDTO {
         private List<previewFeedDto> feeds;
     }
 
+    @Builder
+    @Getter
+    public static class previewChallengeAndFeed{
+        private List<ChallengeResponseDTO.ChallengePreviewDTO> challenges;
+        private List<FeedDTO.previewFeedDto> feeds;
+
+    }
 }
