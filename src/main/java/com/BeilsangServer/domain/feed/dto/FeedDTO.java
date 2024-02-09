@@ -1,11 +1,13 @@
 package com.BeilsangServer.domain.feed.dto;
 
+import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.global.enums.Category;
 import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 public class FeedDTO {
@@ -23,9 +25,10 @@ public class FeedDTO {
     private Category category;
 
     private Long likes;
+    private boolean like;
 
     @Builder
-    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes){
+    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes, boolean like){
         this.id = id;
         this.review = review;
         this.uploadDate = uploadDate;
@@ -33,6 +36,27 @@ public class FeedDTO {
         this.challengeTitle = challengeTitle;
         this.category = category;
         this.likes = likes;
+        this.like = like;
     }
 
+    @Builder
+    @Getter
+    public static class previewFeedDto{
+        private Long feedId;
+        private String feedUrl;
+    }
+
+    @Builder
+    @Getter
+    public static class previewFeedListDto{
+        private List<previewFeedDto> feeds;
+    }
+
+    @Builder
+    @Getter
+    public static class previewChallengeAndFeed{
+        private List<ChallengeResponseDTO.ChallengePreviewDTO> challenges;
+        private List<FeedDTO.previewFeedDto> feeds;
+
+    }
 }

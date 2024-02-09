@@ -8,7 +8,7 @@ spring:
   jpa:
     hibernate:
       #hbm2ddl.auto: update
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -27,9 +27,10 @@ cloud:
     s3:
       bucket: beilsang-bucket
       path:
-        challenge-main: challenge-main
-        feed: feed
+        challenge-main: challenge/main
+        challenge-cert: challenge/cert
         member-profile: member-profile
+        feed: feed
     region:
       static: ap-northeast-2
     stack:

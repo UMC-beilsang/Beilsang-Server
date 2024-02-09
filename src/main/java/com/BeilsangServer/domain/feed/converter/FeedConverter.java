@@ -32,7 +32,7 @@ public class FeedConverter {
                 .build();
     }
 
-    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes){
+    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes,boolean like){
         return FeedDTO.builder()
                 .id(feed.getId())
                 .review(feed.getReview())
@@ -41,8 +41,10 @@ public class FeedConverter {
                 .challengeTitle(feed.getChallenge().getTitle())
                 .category(feed.getChallenge().getCategory())
                 .likes(likes)
+                .like(like)
                 .build();
     }
+
 
     public List<FeedDTO> toDtoList(List<Feed> feedList){
         List<FeedDTO> dtoList = new ArrayList<>();
@@ -53,4 +55,21 @@ public class FeedConverter {
         return dtoList;
     }
 
+    public FeedDTO.previewFeedDto toPreviewFeedDto(Feed feed){
+        return FeedDTO.previewFeedDto.builder()
+                .feedId(feed.getId())
+                .feedUrl(feed.getFeedUrl())
+                .build();
+    }
+
+    public FeedDTO.previewFeedListDto toPreviewFeedListDto(List<Feed> feedList){
+
+        List<FeedDTO.previewFeedDto> feedDtos = feedList.stream().map(feed -> FeedDTO.previewFeedDto.builder()
+                .feedId(feed.getId())
+                .feedUrl(feed.getFeedUrl())
+                .build()
+        ).toList();
+
+        return FeedDTO.previewFeedListDto.builder().feeds(feedDtos).build();
+    }
 }

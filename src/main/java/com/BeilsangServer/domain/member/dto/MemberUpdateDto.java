@@ -1,22 +1,21 @@
 package com.BeilsangServer.domain.member.dto;
 
 import com.BeilsangServer.domain.member.entity.Gender;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
-@NoArgsConstructor
+@Builder
 @Getter
-public class MemberLoginDto {
+@NoArgsConstructor
+@AllArgsConstructor
+public class MemberUpdateDto {
 
-    private Gender gender;
     private String nickName;
     private LocalDate birth;
+    private Gender gender;
     private String address;
-    private String keyword;
-    private String discoveredPath;
-    private String resolution;
-    private String recommendNickname;
 }
-

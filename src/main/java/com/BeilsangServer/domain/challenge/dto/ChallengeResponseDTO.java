@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.dto;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
+import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class ChallengeResponseDTO {
     public static class ChallengeDTO {
 
         private Integer attendeeCount;
-        private String createdMember;
+        private String hostName;
         private LocalDate createdDate;
         private String imageUrl;
         private String certImageUrl;
@@ -52,8 +53,9 @@ public class ChallengeResponseDTO {
         private Integer dDay;
         // 챌린지 유의사항
         private List<String> challengeNotes;
-        // 추천 챌린지 목록
-        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+
+//        // 추천 챌린지 목록
+//        private List<RecommendChallengeDTO> recommendChallengeDTOList;
     }
 
     @Builder
@@ -72,12 +74,21 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class RecommendChallengeListDTO {
+
+        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChallengePreviewDTO { // 챌린지 미리보기 DTO
 
-        private Long categoryId;
+        private Long challengeId;
         private String title;
         private String imageUrl;
-        private String createdMember;
+        private String hostName;
         private Integer attendeeCount;
     }
     @Builder
@@ -106,4 +117,14 @@ public class ChallengeResponseDTO {
         private String certImage;
         private List<String> challengeNoteList;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class JoinChallengeDTO {
+        private ChallengePreviewDTO challengePreviewDTO;
+        private MemberResponseDTO.MemberDTO memberDTO;
+    }
+
 }

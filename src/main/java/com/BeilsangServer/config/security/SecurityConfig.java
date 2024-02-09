@@ -1,8 +1,9 @@
 package com.BeilsangServer.config.security;
 
-import com.BeilsangServer.domain.member.service.MemberService;
+import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.global.jwt.JwtFilter;
 import com.BeilsangServer.global.jwt.JwtTokenProvider;
+import com.BeilsangServer.global.jwt.exception.ExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -18,18 +20,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final MemberService memberService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    //AuthenticationManager가 인자로 받을 AuthenticationConfiguraion 객체 생성자 주입
-    private final AuthenticationConfiguration authenticationConfiguration;
+    private final MemberRepository memberRepository;
 
-
-    //AuthenticationManager Bean 등록
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+    public AuthenticationManager authenticationManager(
+            final AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
 
-        return configuration.getAuthenticationManager();
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        // 아래 url은 filter 에서 제외
+        return web ->
+                web.ignoring()
+                        .requestMatchers("/auth/**", "/token/refresh","/swagger*/**");
     }
 
 
@@ -51,16 +57,25 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").authenticated()
                         .anyRequest().permitAll()); // 일단 임시로 허용
 
-        //JWTFilter 등록
-
-        http
-                .addFilterBefore(new JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+        /*
+        테스트 전 까지 JWT필터 주석처리
+         */
+//        //JWTFilter 등록
+//
+//        http
+//                .addFilterBefore(new JwtFilter(jwtTokenProvider, memberRepository), UsernamePasswordAuthenticationFilter.class);
+//
+//       //JwtFilter 에서 CustomException 사용하기 위해 추가
+//        http
+//                .addFilterBefore(new ExceptionHandlerFilter(), JwtFilter.class);
 
 
         //세션 방식 미사용
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+
 
         return http.build();
     }

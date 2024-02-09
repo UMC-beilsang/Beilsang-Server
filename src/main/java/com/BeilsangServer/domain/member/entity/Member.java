@@ -1,5 +1,7 @@
 package com.BeilsangServer.domain.member.entity;
 
+import com.BeilsangServer.domain.member.dto.MemberLoginDto;
+import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.global.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -21,18 +23,21 @@ public class Member extends BaseEntity {
     @Column(name = "member_id", nullable = false)
     private Long id;
 
+    private String email;
+
+    private Role role;
+
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private Gender gender;
 
 
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, APPLE
 
-    @Column(nullable = false)
+    private Long socialId;
+
     private String nickName;
 
-    @Column(nullable = false)
     private LocalDate birth;
 
     private String address;
@@ -49,10 +54,25 @@ public class Member extends BaseEntity {
 
     private String profileUrl;
 
+    private String refreshToken;
+
+    public void setMemberInfo(MemberLoginDto memberLoginDto){
+        this.gender = memberLoginDto.getGender();
+        this.nickName = memberLoginDto.getNickName();
+        this.birth = memberLoginDto.getBirth();
+        this.keyword = memberLoginDto.getKeyword();
+        this.discoveredPath = memberLoginDto.getDiscoveredPath();
+        this.resolution = memberLoginDto.getResolution();
+
+    }
+
     @Builder
     public Member(
+            String email,
+            Role role,
             Gender gender,
             Provider provider,
+            Long socialId,
             String nickName,
             LocalDate birth,
             String address,
@@ -62,8 +82,11 @@ public class Member extends BaseEntity {
             int totalPoint,
             String recommendNickname,
             String profileUrl) {
+        this.email = email;
+        this.role = role;
         this.gender = gender;
         this.provider = provider;
+        this.socialId = socialId;
         this.nickName = nickName;
         this.birth = birth;
         this.address = address;
@@ -81,7 +104,24 @@ public class Member extends BaseEntity {
         this.profileUrl = profileUrl;
     }
 
+    public void setRefreshToken(String token) {
+        this.refreshToken = token;
+    }
 
+    public void update(MemberUpdateDto memberUpdateDto){
+        if(memberUpdateDto.getNickName() != null){
+            this.nickName = memberUpdateDto.getNickName();
+        }
+        if(memberUpdateDto.getBirth() != null){
+            this.birth = memberUpdateDto.getBirth();
+        }
+        if(memberUpdateDto.getGender() != null){
+            this.gender = memberUpdateDto.getGender();
+        }
+        if(memberUpdateDto.getAddress() != null){
+            this.address = memberUpdateDto.getAddress();
+        }
+    }
 }
 
 

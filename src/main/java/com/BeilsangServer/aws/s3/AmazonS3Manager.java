@@ -1,10 +1,12 @@
 package com.BeilsangServer.aws.s3;
 
 import com.BeilsangServer.config.AmazonConfig;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import jakarta.activation.MimetypesFileTypeMap;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -25,6 +27,7 @@ public class AmazonS3Manager {
 
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentLength(file.getSize());
+        metadata.setContentType(getContentType(file));
         try {
             amazonS3.putObject(new PutObjectRequest(amazonConfig.getBucket(), keyName, file.getInputStream(), metadata));
         } catch (IOException e) {
@@ -32,5 +35,22 @@ public class AmazonS3Manager {
         }
 
         return amazonS3.getUrl(amazonConfig.getBucket(), keyName).toString();
+    }
+
+    public String getContentType(MultipartFile file) {
+        String contentType = new MimetypesFileTypeMap().getContentType(file.getOriginalFilename());
+        return contentType != null ? contentType : "application/octet-stream";
+    }
+
+    public String generateMainKeyName(Uuid uuid) {
+        return amazonConfig.getMainPath() + '/' + uuid.getUuid();
+    }
+
+    public String generateCertKeyName(Uuid uuid) {
+        return amazonConfig.getCertPath() + '/' + uuid.getUuid();
+    }
+
+    public String generateFeedKeyName(Uuid uuid) {
+        return amazonConfig.getFeedPath() + '/' + uuid.getUuid();
     }
 }

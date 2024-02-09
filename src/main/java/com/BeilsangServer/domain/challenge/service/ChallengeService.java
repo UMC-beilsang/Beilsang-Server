@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.challenge.service;
 
+import com.BeilsangServer.aws.s3.AmazonS3Manager;
 import com.BeilsangServer.domain.achievment.entity.Achievement;
 import com.BeilsangServer.domain.achievment.repository.AchievementRepository;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
@@ -9,14 +10,17 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
-import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.like.entity.ChallengeLike;
 import com.BeilsangServer.domain.like.repository.ChallengeLikeRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
+import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
+import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +28,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,27 +41,41 @@ public class ChallengeService {
     private final ChallengeLikeRepository challengeLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
     private final AchievementRepository achievementRepository;
+    private final MemberRepository memberRepository;
+    private final AmazonS3Manager s3Manager;
+    private final UuidRepository uuidRepository;
 
     /***
      * 챌린지 생성하기
      * @param request 챌린지 생성에 필요한 정보
      * @return CreateDTO
-     * 이미지 업로드, 호스트 추가 필요
+     * 이미지 업로드
      */
     @Transactional
-    public Challenge createChallenge(ChallengeRequestDTO.CreateDTO request) {
+    public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
+
+        Member member = memberRepository.findById(memberId).get();
+
+        // 이미지 업로드
+        Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
+        Uuid certUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String certImageUrl = s3Manager.uploadFile(s3Manager.generateCertKeyName(certUuid), request.getCertImage());
 
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
-        Challenge challenge = ChallengeConverter.toChallenge(request);
+        Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
 
         // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
-        for (String note : notes) {
-            ChallengeNote challengeNote = ChallengeNote.builder().note(note).challenge(challenge).build();
-            challengeNoteRepository.save(challengeNote);
-        }
+        notes.stream()
+                .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
+                .forEach(challengeNoteRepository::save);
 
-        return challengeRepository.save(challenge);
+        // ChallengeMember, Challenge 저장
+        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
+        challengeRepository.save(challenge);
+
+        return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
     }
 
     /***
@@ -68,9 +87,13 @@ public class ChallengeService {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
 
+        // 챌린지 시작 D-day 계산
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, getRecommendChallenges());
+        // 챌린지 호스트 이름 찾기
+        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
+
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName);
     }
 
     /***
@@ -85,7 +108,7 @@ public class ChallengeService {
         return recommendChallenges.stream()
                 .map(challenge -> ChallengeResponseDTO.RecommendChallengeDTO.builder()
                         .challengeId(challenge.getId())
-                        .imageUrl(challenge.getImageUrl())
+                        .imageUrl(challenge.getMainImageUrl())
                         .title(challenge.getTitle())
                         .category(challenge.getCategory())
                         .build())
@@ -102,7 +125,12 @@ public class ChallengeService {
 
         Category category = Category.from(stringCategory);
         List<Challenge> challenges = challengeRepository.findAllByStartDateAfterAndCategoryOrderByAttendeeCountDesc(LocalDate.now(), category);
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
     /***
@@ -113,7 +141,12 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
 
         List<Challenge> challenges = challengeRepository.findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate.now());
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
 
@@ -125,9 +158,13 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category){
 
         Category categoryByEnum = Category.valueOf(category);
-        List<Challenge> challenges = challengeRepository.findTop10ByCategoryOrderByCountLikesDesc(categoryByEnum);
+        List<Challenge> challenges = challengeRepository.findTop5ByCategoryOrderByCountLikesDesc(categoryByEnum);
 
-        return ChallengeConverter.toChallengePreviewListDTO(challenges);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
     /***
@@ -144,11 +181,22 @@ public class ChallengeService {
         }
 
         // 챌린지 찾기
-        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
 
-        return ChallengeConverter.toChallengePreviewListDTO(challengeList);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
+    /***
+     * 카테고리와 상태로 나의 챌린지 조회
+     * @param status
+     * @param category
+     * @param memberId
+     * @return
+     */
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.valueOf(category);
 
@@ -156,7 +204,7 @@ public class ChallengeService {
 
         List<Achievement> achievements = achievementRepository.findAllByMember_Id(memberId);
 
-        Integer count = 0;
+        int count = 0;
 
         for (Achievement a : achievements){
             if(categoryByEnum.equals(a.getCategory())){
@@ -178,15 +226,97 @@ public class ChallengeService {
             }
         }
 
-        List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
 
-        ChallengeResponseDTO.ChallengePreviewListDTO challengePreviewList = ChallengeConverter.toChallengePreviewListDTO(challengeList);
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .toList();
 
-        ChallengeResponseDTO.ChallengeListWithCountDTO challengeListWithCount = ChallengeResponseDTO.ChallengeListWithCountDTO.builder()
-                .challenges(challengePreviewList)
+        return ChallengeResponseDTO.ChallengeListWithCountDTO.builder()
+                .challenges(ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build())
                 .count(count)
                 .build();
-
-        return challengeListWithCount;
     }
+
+    /***
+     * 챌린지 참여하기
+     * @param challengeId 참여하는 챌린지 ID
+     * @param memberId 참여하는 멤버 ID
+     * @return JoinChallengeDTO
+     */
+    @Transactional
+    public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
+
+        Member member = memberRepository.findById(memberId).get();
+
+        Challenge challenge = challengeRepository.findById(challengeId).get();
+        challenge.increaseAttendeeCount();
+        challengeRepository.save(challenge);
+
+        challengeMemberRepository.save(
+                ChallengeMember.builder()
+                .challenge(challenge)
+                .member(member)
+                .successDays(0)
+                .challengeStatus(ChallengeStatus.ONGOING)
+                .isHost(false)
+                .build()
+        );
+
+        // 챌린지 호스트 찾기
+        String hostName = getHostName(challengeId);
+
+        return ChallengeConverter.toJoinChallengeDTO(member, challenge, hostName);
+    }
+
+    /***
+     * 챌린지 찜하기
+     * @param challengeId
+     * @return
+     * 멤버 추가 필요
+     */
+    @Transactional
+    public Long challengeLike(Long challengeId, Long memberId){
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->{throw new IllegalArgumentException("챌린지없다.");});
+
+        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
+        ChallengeLike challengeLike = ChallengeLike.builder()
+                .challenge(challenge)
+                .member(member)
+                .build();
+
+        challengeLikeRepository.save(challengeLike);
+        challenge.increaseCountLikes();
+
+        return challengeLike.getId();
+    }
+
+    /***
+     * 챌린지 찜 취소하기
+     * @param challengeId
+     * @return
+     */
+    @Transactional
+    public Long challengeUnLike(Long challengeId, Long memberId){
+        ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_IdAndMember_Id(challengeId,memberId);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+
+        challenge.decreaseCountLikes();;
+        challengeLikeRepository.delete(challengeLike);
+
+        return challengeLike.getId();
+    }
+
+    /***
+     * 챌린지 호스트 이름 찾기
+     * @param challengeId 찾으려는 챌린지 ID
+     * @return 호스트 이름
+     */
+    public String getHostName(Long challengeId) {
+
+        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        return host.getNickName();
+    }
+
 }

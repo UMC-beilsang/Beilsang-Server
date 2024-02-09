@@ -1,23 +1,18 @@
 package com.BeilsangServer.domain.auth.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.Map;
 
-
-@AllArgsConstructor
-@Builder
 @Getter
-@NoArgsConstructor
+@AllArgsConstructor
 public class KakaoInfoDto {
-
-    private Long id;
+    private Long socialId;
+    private String email;
 
     public KakaoInfoDto(Map<String, Object> attributes) {
-        this.id = Long.valueOf(attributes.get("id").toString());
+        this.socialId = Long.valueOf(attributes.get("id").toString());
+        this.email = attributes.get("email") != null ? attributes.get("email").toString() : ""; //email이 null이 아닌 경우에만 저장
     }
-
 }

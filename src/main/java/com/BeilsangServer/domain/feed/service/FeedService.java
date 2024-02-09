@@ -14,7 +14,11 @@ import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
+import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
+import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,33 +40,39 @@ public class FeedService {
     private final FeedRepository feedRepository;
     private final FeedConverter feedConverter;
     private final ChallengeRepository challengeRepository;
-    private final AmazonS3Manager amazonS3Manager;
+    private final AmazonS3Manager s3Manager;
     private final FeedLikeRepository feedLikeRepository;
     private final ChallengeMemberRepository challengeMemberRepository;
     private final ChallengeNoteRepository challengeNoteRepository;
+    private final UuidRepository uuidRepository;
+    private final MemberRepository memberRepository;
 
 
     /***
      * 피드 인증하기
-     * @param file, review, challengeId
+     * @param file,
+     * @param review
      * @param challengeId
-     * @return 새로 추가된 feedDto
-     * challengeMember 추가 필요
+     * @return 새로 추가된 feed의 ID
      */
     @Transactional
-    public FeedDTO createFeed(MultipartFile file, String review, Long challengeId){
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
+    public Long createFeed(MultipartFile file, String review, Long challengeId,Long memberId){
 
-        String uuid = UUID.randomUUID().toString();
-        String feedUrl = amazonS3Manager.uploadFile(uuid,file);
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
+        ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId,challenge.getId());
+
+        Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), file);
+
         Feed feed = Feed.builder()
                 .feedUrl(feedUrl)
                 .review(review)
                 .uploadDate(LocalDate.now())
                 .challenge(challenge)
+                .challengeMember(challengeMember)
                 .build();
         feedRepository.save(feed);
-        return feedConverter.entityToDto(feed);
+        return feed.getId();
     }
 
     /***
@@ -87,24 +97,27 @@ public class FeedService {
      * 선택한 피드 정보 조회
      * @param feedId
      * @return feed dto
+     *
      */
-    public FeedDTO getFeed(Long feedId) {
+    public FeedDTO getFeed(Long feedId, Long memberId) {
         Feed feed = feedRepository.findById(feedId).orElseThrow(() -> {
             throw new IllegalArgumentException("이런피드없다.");
         });
-        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId);
 
-        FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes);
+        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId);
+        boolean feedLike = feedLikeRepository.existsByFeed_IdAndMember_Id(feedId,memberId); // 현재 사용자가 해당 피드 좋아요를 눌렀는지 안 눌렀는지 정보
+
+        FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes,feedLike);
 
         return feedDTO;
     }
 
     /***
-     * 챌린지 이름으로 피드 검색하기
+     * 챌린지 이름으로 챌린지 및 피드 검색하기
      * @param name
-     * @return feedList dto
+     * @return previewChallengeAndFeed dto
      */
-    public List<FeedDTO> searchFeed(String name){
+    public FeedDTO.previewChallengeAndFeed searchChallengeAndFeed(String name){
         List<Challenge> challengeList = challengeRepository.findByTitleContaining(name);
 
         List<Long> challengeIds = new ArrayList<>();
@@ -114,12 +127,18 @@ public class FeedService {
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengeDTOList = challengeList.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge,getHostName(challenge.getId())))
+                .toList();
 
-        return feedDTOList;
+        List<FeedDTO.previewFeedDto> feedDTOList = feedList.stream()
+                .map(feed -> feedConverter.toPreviewFeedDto(feed))
+                .toList();
+
+        return FeedDTO.previewChallengeAndFeed.builder()
+                .challenges(challengeDTOList)
+                .feeds(feedDTOList)
+                .build();
     }
 
     /***
@@ -128,12 +147,15 @@ public class FeedService {
      * @return 좋아요한 feedId
      */
     @Transactional
-    public Long feedLike(Long feedId){
+    public Long feedLike(Long feedId, Long memberId){
         Feed feed = feedRepository.findById(feedId).orElseThrow(()-> {throw new IllegalArgumentException("없다");});
+        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
 
         FeedLike feedLike = FeedLike.builder()
                 .feed(feed)
+                .member(member)
                 .build();
+
         feedLikeRepository.save(feedLike);
 
         return feedLike.getId();
@@ -143,11 +165,10 @@ public class FeedService {
      * 피드 좋아요 취소하기
      * @param feedId
      * @return 좋아요 취소한 feedId
-     * findByIdAndMember_id(id,memberId)
      */
     @Transactional
-    public Long feedUnLike(Long feedId){
-        FeedLike feedLike = feedLikeRepository.findById(feedId).orElseThrow(()->{throw new IllegalArgumentException("좋아요없다");});
+    public Long feedUnLike(Long feedId,Long memberId){
+        FeedLike feedLike = feedLikeRepository.findByFeed_IdAndMember_Id(feedId,memberId);
 
         feedLikeRepository.delete(feedLike);
 
@@ -159,27 +180,24 @@ public class FeedService {
      * @param category
      * @return 주어진 카테고리에 해당하는 feedDtoList
      */
-    public List<FeedDTO> getFeedByCategory(String category){
+    public FeedDTO.previewFeedListDto getFeedByCategory(String category){
         Category categoryByEnum = Category.valueOf(category);
 
         List<Feed> feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
         return feedDTOList;
     }
 
     /***
-     * status 와 category 로 챌린지 피드 조회하기
+     * status 와 category 로 나의 챌린지 피드 조회하기
      * @param status
      * @param category
      * @param memberId
      * @return 필터링된 feedDtoList
      */
-    public List<FeedDTO> getFeedByStatusAndCategory(String status, String category, Long memberId){
+    public FeedDTO.previewFeedListDto getFeedByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.valueOf(category);
 
         // memberId로 그 member와 관련된 챌린지 정보 가져오기
@@ -187,26 +205,7 @@ public class FeedService {
         LocalDate now = LocalDate.now();
 
         List<Long> challengeIds = new ArrayList<>();
-//        if (status == "참여중"){
-//            for (ChallengeMember c : challengeMembers){
-//                if(c.getChallenge().getFinishDate().isAfter(now)) {
-//                    challengeIds.add(c.getChallenge().getId());
-//                }
-//            }
-//            List<Challenge> challengeList = challengeRepository.findAllById(challengeIds);
-//        } else if (status == "등록한") {
-//            for(ChallengeMember c : challengeMembers){
-//                if (c.getIsHost()){
-//                    challengeIds.add(c.getChallenge().getId());
-//                }
-//            }
-//        } else if(status == "완료된"){
-//            for (ChallengeMember c : challengeMembers){
-//                if (c.getChallenge().getFinishDate().isBefore(now)){
-//                    challengeIds.add(c.getChallenge().getId());
-//                }
-//            }
-//        }
+
         // 상태 & 카테고리 한번에 처리
         for (ChallengeMember c : challengeMembers) {
             if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
@@ -220,11 +219,14 @@ public class FeedService {
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
-        List<FeedDTO> feedDTOList = new ArrayList<>();
-        for (Feed f : feedList){
-            feedDTOList.add(feedConverter.entityToDto(f));
-        }
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
         return feedDTOList;
+    }
+
+    public String getHostName(Long challengeId) {
+
+        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        return host.getNickName();
     }
 }

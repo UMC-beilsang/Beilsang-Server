@@ -3,7 +3,6 @@ package com.BeilsangServer.domain.challenge.entity;
 import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -35,7 +34,7 @@ public class Challenge extends BaseEntity {
 
     private Integer joinPoint;
 
-    private String imageUrl;
+    private String mainImageUrl;
 
     private String certImageUrl;
 
@@ -60,4 +59,11 @@ public class Challenge extends BaseEntity {
         note.setChallenge(this);
     }
 
+    // 참여 인원 증가
+    public void increaseAttendeeCount() {
+        this.attendeeCount++;
+    }
+
+    public void increaseCountLikes(){this.countLikes++;}
+    public void decreaseCountLikes(){this.countLikes--;}
 }
