@@ -181,9 +181,15 @@ public class FeedService {
      * @return 주어진 카테고리에 해당하는 feedDtoList
      */
     public FeedDTO.previewFeedListDto getFeedByCategory(String category){
-        Category categoryByEnum = Category.valueOf(category);
+        Category categoryByEnum = Category.from(category);
 
-        List<Feed> feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
+        List<Feed> feedList;
+        if (categoryByEnum.equals(Category.ALL)){
+            feedList = feedRepository.findAll();
+        }
+        else{
+            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
+        }
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
@@ -198,7 +204,8 @@ public class FeedService {
      * @return 필터링된 feedDtoList
      */
     public FeedDTO.previewFeedListDto getFeedByStatusAndCategory(String status, String category, Long memberId){
-        Category categoryByEnum = Category.valueOf(category);
+
+        Category categoryByEnum = Category.from(category);
 
         // memberId로 그 member와 관련된 챌린지 정보 가져오기
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
@@ -208,14 +215,18 @@ public class FeedService {
 
         // 상태 & 카테고리 한번에 처리
         for (ChallengeMember c : challengeMembers) {
-            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
-            } else if ("등록한".equals(status) && c.getIsHost() && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            } else if ("등록한".equals(status) && c.getIsHost() &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
-            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             }
         }
+
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
 
