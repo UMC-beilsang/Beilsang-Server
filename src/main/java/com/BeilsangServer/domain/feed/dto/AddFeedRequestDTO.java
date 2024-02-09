@@ -1,22 +1,22 @@
 package com.BeilsangServer.domain.feed.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
-@Getter
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
+
 public class AddFeedRequestDTO {
 
-    private String review;
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CreateDTO{
+        private String review;
+        private MultipartFile feedImage;
+    }
 
-    private String feedUrl;
-
-    private LocalDate uploadDate;
 
 }
