@@ -217,11 +217,14 @@ public class ChallengeService {
         List<Long> challengeIds = new ArrayList<>();
 
         for (ChallengeMember c : challengeMembers) {
-            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
-            } else if ("등록한".equals(status) && c.getIsHost() && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            } else if ("등록한".equals(status) && c.getIsHost() &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
-            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) && categoryByEnum.equals(c.getChallenge().getCategory())) {
+            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) &&
+                    (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             }
         }
