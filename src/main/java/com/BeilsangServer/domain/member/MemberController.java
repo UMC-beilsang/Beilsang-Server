@@ -60,4 +60,12 @@ public class MemberController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,updated);
     }
 
+    @GetMapping("/join/check/nickname")
+    public ApiResponse<Boolean> checkNickName(
+        @RequestParam("name") String name
+    ){
+        boolean isExists = memberService.checkNickName(name);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,isExists);
+    }
 }
