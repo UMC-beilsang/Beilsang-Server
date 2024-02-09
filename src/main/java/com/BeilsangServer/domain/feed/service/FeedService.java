@@ -7,7 +7,9 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.entity.ChallengeNote;
 import com.BeilsangServer.domain.challenge.repository.ChallengeNoteRepository;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
+import com.BeilsangServer.domain.feed.FeedController;
 import com.BeilsangServer.domain.feed.converter.FeedConverter;
+import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.entity.FeedLike;
@@ -49,29 +51,25 @@ public class FeedService {
 
 
     /***
-     * 피드 인증하기
-     * @param file,
-     * @param review
+     * 피드 생성 (챌린지 인증하기)
+     * @param request
      * @param challengeId
-     * @return 새로 추가된 feed의 ID
+     * @param memberId
+     * @return
      */
     @Transactional
-    public Long createFeed(MultipartFile file, String review, Long challengeId,Long memberId){
+    public Long createFeed(AddFeedRequestDTO.CreateDTO request, Long challengeId, Long memberId){
 
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
         ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId,challenge.getId());
 
         Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
-        String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), file);
+        String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), request.getFeedImage());
 
-        Feed feed = Feed.builder()
-                .feedUrl(feedUrl)
-                .review(review)
-                .uploadDate(LocalDate.now())
-                .challenge(challenge)
-                .challengeMember(challengeMember)
-                .build();
+        Feed feed = feedConverter.toEntity(request,challenge,challengeMember,feedUrl);
+
         feedRepository.save(feed);
+
         return feed.getId();
     }
 
