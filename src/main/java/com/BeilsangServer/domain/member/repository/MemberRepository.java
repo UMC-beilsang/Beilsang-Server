@@ -23,5 +23,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Integer findTotalPointById(Long memberId);
 
+    boolean existsByNickName(String nickName);
 }
 

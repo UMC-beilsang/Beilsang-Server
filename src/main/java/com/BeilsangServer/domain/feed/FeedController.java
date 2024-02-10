@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.feed;
 
 import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
+import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.service.FeedService;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
@@ -32,13 +33,13 @@ public class FeedController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
     public ApiResponse<Long> createFeed(
-            @RequestPart MultipartFile file,
-            @RequestPart String review,
+            @ModelAttribute AddFeedRequestDTO.CreateDTO request,
             @PathVariable(name = "challengeId") Long challengeId
     ){
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        Long newFeedId = feedService.createFeed(file,review,challengeId,memberId);
+
+        Long newFeedId = feedService.createFeed(request,challengeId,memberId);
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,newFeedId);
     }
 

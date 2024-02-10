@@ -130,4 +130,16 @@ public class MemberService {
 
         return MemberConverter.toProfileDTO(member);
     }
+
+    public boolean checkNickName(String nickName){
+
+        boolean isExists = memberRepository.existsByNickName(nickName);
+
+        if (isExists){ // 중복된 회원이 있을 경우
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
 }

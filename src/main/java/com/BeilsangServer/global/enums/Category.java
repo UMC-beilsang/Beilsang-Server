@@ -8,6 +8,7 @@ import lombok.Getter;
 @Getter
 public enum Category {
 
+    ALL("전체"),
     TUMBLER("다회용컵"),
     REFILL_STATION("리필스테이션"),
     MULTIPLE_CONTAINERS("다회용기"),
