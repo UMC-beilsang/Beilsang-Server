@@ -43,7 +43,7 @@ public class MemberResponseDTO {
     @AllArgsConstructor
     public static class profileDTO{
         private String nickName;
-        private LocalDate birth;
+        private String birth;
         private Gender gender;
         private String address;
     }
