@@ -109,16 +109,16 @@ public class Member extends BaseEntity {
     }
 
     public void update(MemberUpdateDto memberUpdateDto){
-        if(memberUpdateDto.getNickName() != null){
+        if(!memberUpdateDto.getNickName().isBlank()){
             this.nickName = memberUpdateDto.getNickName();
         }
         if(memberUpdateDto.getBirth() != null){
             this.birth = memberUpdateDto.getBirth();
         }
-        if(memberUpdateDto.getGender() != null){
-            this.gender = memberUpdateDto.getGender();
+        if(!memberUpdateDto.getGender().isBlank()){
+            this.gender = Gender.valueOf(memberUpdateDto.getGender());
         }
-        if(memberUpdateDto.getAddress() != null){
+        if(!memberUpdateDto.getAddress().isBlank()){
             this.address = memberUpdateDto.getAddress();
         }
     }
