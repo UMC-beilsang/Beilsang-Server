@@ -16,6 +16,6 @@ public class MemberUpdateDto {
 
     private String nickName;
     private LocalDate birth;
-    private Gender gender;
+    private String gender;
     private String address;
 }
