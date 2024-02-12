@@ -14,7 +14,7 @@ public class ChallengeRequestDTO {
     @Getter @Setter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateDTO {
+    public static class CreateChallengeDTO {
 
         private MultipartFile mainImage; // 대표 사진
         private MultipartFile certImage; // 인증 사진

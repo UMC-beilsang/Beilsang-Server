@@ -13,7 +13,7 @@ public class AddFeedRequestDTO {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateDTO{
+    public static class CreateFeedDTO{
         private String review;
         private MultipartFile feedImage;
     }
