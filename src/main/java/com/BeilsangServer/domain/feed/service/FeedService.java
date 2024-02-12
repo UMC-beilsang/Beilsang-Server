@@ -102,10 +102,8 @@ public class FeedService {
             throw new IllegalArgumentException("이런피드없다.");
         });
 
-        Member member = memberRepository.findById(memberId).orElseThrow(()->{
-            throw new IllegalArgumentException("멤버없다");
-        });
-        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId);
+        Member member = memberRepository.findMemberByFeedId(feedId); // 게시한 사용자의 정보
+        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId); // 피드 좋아요 개수
         boolean feedLike = feedLikeRepository.existsByFeed_IdAndMember_Id(feedId,memberId); // 현재 사용자가 해당 피드 좋아요를 눌렀는지 안 눌렀는지 정보
 
         FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes,feedLike,member);
