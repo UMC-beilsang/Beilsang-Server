@@ -1,10 +1,11 @@
-package com.BeilsangServer.domain.auth.apple;
+package com.BeilsangServer.domain.auth.apple.dto;
 
-import java.util.List;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor

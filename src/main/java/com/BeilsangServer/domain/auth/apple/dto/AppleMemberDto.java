@@ -1,4 +1,4 @@
-package com.BeilsangServer.domain.auth.dto;
+package com.BeilsangServer.domain.auth.apple.dto;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -9,11 +9,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 public class AppleMemberDto {
-    private String socialId;
+    private Long socialId;
     private String email;
 
     @Builder
-    private AppleMemberDto(String socialId, String email){
+    public AppleMemberDto(Long socialId, String email){
         this.socialId = socialId;
         this.email = email;
     }

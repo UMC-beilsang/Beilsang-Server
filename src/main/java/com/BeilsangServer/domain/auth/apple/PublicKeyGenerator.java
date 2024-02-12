@@ -1,5 +1,11 @@
 package com.BeilsangServer.domain.auth.apple;
 
+
+import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKey;
+import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKeys;
+import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
+
 import java.math.BigInteger;
 import java.security.KeyFactory;
 import java.security.NoSuchAlgorithmException;
@@ -7,9 +13,10 @@ import java.security.PublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.RSAPublicKeySpec;
 import java.util.Map;
-import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 
+/*
+n, e 를 사용해 RSA 공개키를 생성한다. 생성에 성공했다면, id_token 의 Claim 추출에 사용
+ */
 @Component
 public class PublicKeyGenerator {
 

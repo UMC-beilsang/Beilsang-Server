@@ -5,6 +5,9 @@ spring:
     password: ${PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
+  main:
+    allow-bean-definition-overriding: true
+
   jpa:
     hibernate:
       #hbm2ddl.auto: update
@@ -42,8 +45,8 @@ cloud:
 jwt:
   secret-key: qopfmfoesf234fuhvertsv34789yhiuFDSIUFGYDTE18372ksm
 
-#oauth:
-#  apple:
-#    iss: https://appleid.apple.com
-#    client-id: ${OAUTH_APPLE_CLIENT_ID}
-#    nonce: ${OAUTH_APPLE_NONCE}
+oauth:
+  apple:
+    iss: https://appleid.apple.com
+    client-id: ${OAUTH_APPLE_CLIENT_ID}
+    nonce: ${OAUTH_APPLE_NONCE}

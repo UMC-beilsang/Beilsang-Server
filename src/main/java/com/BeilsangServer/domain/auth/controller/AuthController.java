@@ -1,6 +1,9 @@
 package com.BeilsangServer.domain.auth.controller;
 
 
+import com.BeilsangServer.domain.auth.apple.dto.AppleLoginRequestDto;
+import com.BeilsangServer.domain.auth.apple.dto.AppleResponseDto;
+import com.BeilsangServer.domain.auth.apple.dto.AppleRevokeRequestDto;
 import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.auth.service.AuthService;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
@@ -12,6 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -28,19 +32,29 @@ public class AuthController {
     private final AuthService authService;
 
 
-    @PostMapping("/{provider}/login")
-    @Operation(summary = "소셜 로그인 API")
+    @PostMapping("/kakao/login")
+    @Operation(summary = "카카오 로그인 API")
         @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<KakaoResponseDto> login(@PathVariable String provider, @RequestBody KakaoRequestDto kakaoRequestDto,
+    public ApiResponse<KakaoResponseDto> login(@RequestBody KakaoRequestDto kakaoRequestDto,
                                                           HttpServletResponse response) {
-        KakaoResponseDto kakaoResponseDto = new KakaoResponseDto();
-        switch (provider) {
-            case "KAKAO":
-                kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
-        }
+
+
+        KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
+
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,kakaoResponseDto);
+    }
+
+    @PostMapping("/apple/login")
+    @Operation(summary = "애플 로그인 API")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto,HttpServletResponse response){
+
+        AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(),response);
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,appleResponseDto);
     }
 
     @PostMapping("/signup")
@@ -55,16 +69,27 @@ public class AuthController {
       return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
     }
 
-    @DeleteMapping("/{provider}/revoke")
-    @Operation(summary = "회원 탈퇴")
+    @DeleteMapping("/kakao/revoke")
+    @Operation(summary = "카카오 회원 탈퇴 API")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<Object> revoke(@PathVariable String provider, @RequestBody KakaoRevokeRequestDto kakaoRevokeRequestDto,HttpServletResponse response) {
-        switch (provider) {
-            case "KAKAO":
-                authService.kakaoRevoke(kakaoRevokeRequestDto.getAccesstoken());
-        }
+    public ApiResponse<Object> revoke( @RequestBody KakaoRevokeRequestDto kakaoRevokeRequestDto,HttpServletResponse response) {
+
+        authService.kakaoRevoke(kakaoRevokeRequestDto.getAccesstoken());
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
+    }
+
+    @DeleteMapping("/apple/revoke")
+    @Operation(summary = "애플 회원 탈퇴 API")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<Object> revoke(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) {
+
+        authService.appleRevoke(appleRevokeRequestDto.getAccessToken());
+
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
     }
 
