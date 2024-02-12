@@ -4,6 +4,7 @@ import com.BeilsangServer.domain.auth.dto.KakaoInfoDto;
 import com.BeilsangServer.domain.auth.dto.KakaoMemberAndExistDto;
 import com.BeilsangServer.domain.auth.dto.KakaoResponseDto;
 import com.BeilsangServer.domain.member.entity.Member;
+import com.BeilsangServer.domain.member.entity.Provider;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -38,10 +39,12 @@ public class KakaoAuthService {
         Member member = Member.builder()
                 .socialId(kakaoInfoDto.getSocialId())
                 .email(kakaoInfoDto.getEmail())
+                .provider(Provider.valueOf("KAKAO"))
                 .build();
 
         boolean existMember = false;
         if(memberRepository.findBySocialId(member.getSocialId()) != null) //DB에 회원정보 있으면 그냥 넘김
+
         {
            existMember = true;
 
