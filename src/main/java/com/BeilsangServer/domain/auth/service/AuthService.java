@@ -1,10 +1,10 @@
 package com.BeilsangServer.domain.auth.service;
 
 
-import com.BeilsangServer.domain.auth.dto.KakaoMemberAndExistDto;
-import com.BeilsangServer.domain.auth.dto.KakaoResponseDto;
-import com.BeilsangServer.domain.auth.dto.RefreshRequestDto;
-import com.BeilsangServer.domain.auth.dto.RefreshResponseDto;
+import com.BeilsangServer.domain.auth.apple.dto.AppleMemberAndExistDto;
+import com.BeilsangServer.domain.auth.apple.dto.AppleResponseDto;
+import com.BeilsangServer.domain.auth.apple.service.AppleAuthService;
+import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.entity.Member;
@@ -17,10 +17,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 
 @RequiredArgsConstructor
 @Service
@@ -28,12 +24,20 @@ public class AuthService {
     private final MemberRepository memberRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoAuthService kakaoAuthService;
+    private final AppleAuthService appleAuthService;
 
     //카카오 로그인
     @Transactional
     public  KakaoResponseDto loginWithKakao(String accessToken, HttpServletResponse response) {
         KakaoMemberAndExistDto kakaoMemberAndExistDto = kakaoAuthService.getUserProfileByToken(accessToken); //dto에 socialId,email,Provider 저장
-        return getTokens(kakaoMemberAndExistDto.getMember().getSocialId(),kakaoMemberAndExistDto.getExistMember(), response);
+        return getKaKaoTokens(kakaoMemberAndExistDto.getMember().getSocialId(),kakaoMemberAndExistDto.getExistMember(), response);
+    }
+
+    @Transactional
+    public AppleResponseDto loginWithApple(String idToken, HttpServletResponse response) {
+        AppleMemberAndExistDto appleMemberAndExistDto =
+                appleAuthService.getAppleMemberInfo(idToken); // dto에 socialId, email 저장
+        return getAppleTokens(appleMemberAndExistDto.getMember().getSocialId(),appleMemberAndExistDto.getExistMember(),response);
     }
 
 
@@ -55,12 +59,19 @@ public class AuthService {
         memberRepository.delete(member);
     }
 
+    @Transactional
+    public void appleRevoke(String accessToken){
+        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
+        Member member = memberRepository.findBySocialId(socialId);
+        memberRepository.delete(member);
+    }
+
 
 
 
     //Access Token, Refresh Token 생성
     @Transactional
-    public KakaoResponseDto getTokens(Long socialId, Boolean existMember, HttpServletResponse response) {
+    public KakaoResponseDto getKaKaoTokens(Long socialId, Boolean existMember, HttpServletResponse response) {
         final String accessToken = jwtTokenProvider.createAccessToken(socialId.toString());
         final String refreshToken = jwtTokenProvider.createRefreshToken();
 
@@ -75,6 +86,26 @@ public class AuthService {
                 .existMember(existMember)
                 .build();
     }
+
+
+    //Access Token, Refresh Token 생성
+    @Transactional
+    public AppleResponseDto getAppleTokens(Long socialId, Boolean existMember, HttpServletResponse response) {
+        final String accessToken = jwtTokenProvider.createAccessToken(socialId.toString());
+        final String refreshToken = jwtTokenProvider.createRefreshToken();
+
+        Member member = memberRepository.findBySocialId(socialId);
+        member.setRefreshToken(refreshToken);
+
+//        jwtTokenProvider.addRefreshTokenToCookie(refreshToken,response);
+
+        return AppleResponseDto.builder()
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .existMember(existMember)
+                .build();
+    }
+
 
     // 리프레시 토큰으로 액세스토큰 새로 갱신
     public RefreshResponseDto refreshAccessToken(RefreshRequestDto refreshRequestDto) {
