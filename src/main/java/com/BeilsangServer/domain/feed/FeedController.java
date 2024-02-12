@@ -33,7 +33,7 @@ public class FeedController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
     public ApiResponse<Long> createFeed(
-            @ModelAttribute AddFeedRequestDTO.CreateDTO request,
+            @ModelAttribute AddFeedRequestDTO.CreateFeedDTO request,
             @PathVariable(name = "challengeId") Long challengeId
     ){
         //Long memberId = SecurityUtil.getCurrentUserId();
