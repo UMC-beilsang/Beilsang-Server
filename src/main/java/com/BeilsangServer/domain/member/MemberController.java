@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.member;
 
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
@@ -46,18 +47,28 @@ public class MemberController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,pointLogListDTO);
     }
 
-    @PostMapping("/profile/{memberId}")
+    @PatchMapping("/profile")
     @Operation(summary = "사용자의 프로필 수정 API", description = "프로필 내용을 수정할 수 있는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
     public ApiResponse<MemberResponseDTO.profileDTO> updateProfile(
-            @PathVariable(name = "memberId") Long memberId,
             @RequestBody MemberUpdateDto memberUpdateDto
             ){
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
         MemberResponseDTO.profileDTO updated = memberService.updateProfile(memberUpdateDto,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,updated);
     }
 
+    @GetMapping("/join/check/nickname")
+    public ApiResponse<Boolean> checkNickName(
+        @RequestParam("name") String name
+    ){
+        boolean isExists = memberService.checkNickName(name);
+
+        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,isExists);
+    }
 }

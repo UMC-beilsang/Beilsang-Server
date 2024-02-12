@@ -12,7 +12,7 @@ public class MemberLoginDto {
 
     private Gender gender;
     private String nickName;
-    private LocalDate birth;
+    private String birth;
     private String address;
     private String keyword;
     private String discoveredPath;
