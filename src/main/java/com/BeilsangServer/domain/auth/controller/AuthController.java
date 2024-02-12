@@ -44,7 +44,7 @@ public class AuthController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,kakaoResponseDto);
     }
 
-    @PostMapping("/singup")
+    @PostMapping("/signup")
     @Operation(summary = "소셜 로그인 후 로그인 폼 받아서 자체 회원가입 API")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")

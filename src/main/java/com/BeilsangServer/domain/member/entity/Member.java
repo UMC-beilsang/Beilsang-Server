@@ -38,7 +38,7 @@ public class Member extends BaseEntity {
 
     private String nickName;
 
-    private LocalDate birth;
+    private String birth;
 
     private String address;
 
@@ -60,9 +60,11 @@ public class Member extends BaseEntity {
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
         this.birth = memberLoginDto.getBirth();
+        this.address = memberLoginDto.getAddress();
         this.keyword = memberLoginDto.getKeyword();
         this.discoveredPath = memberLoginDto.getDiscoveredPath();
         this.resolution = memberLoginDto.getResolution();
+        this.recommendNickname = memberLoginDto.getRecommendNickname();
 
     }
 
@@ -74,7 +76,7 @@ public class Member extends BaseEntity {
             Provider provider,
             Long socialId,
             String nickName,
-            LocalDate birth,
+            String birth,
             String address,
             String keyword,
             String discoveredPath,
@@ -109,16 +111,16 @@ public class Member extends BaseEntity {
     }
 
     public void update(MemberUpdateDto memberUpdateDto){
-        if(memberUpdateDto.getNickName() != null){
+        if(!memberUpdateDto.getNickName().isBlank()){
             this.nickName = memberUpdateDto.getNickName();
         }
         if(memberUpdateDto.getBirth() != null){
             this.birth = memberUpdateDto.getBirth();
         }
-        if(memberUpdateDto.getGender() != null){
-            this.gender = memberUpdateDto.getGender();
+        if(!memberUpdateDto.getGender().isBlank()){
+            this.gender = Gender.valueOf(memberUpdateDto.getGender());
         }
-        if(memberUpdateDto.getAddress() != null){
+        if(!memberUpdateDto.getAddress().isBlank()){
             this.address = memberUpdateDto.getAddress();
         }
     }
