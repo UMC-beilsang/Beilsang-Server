@@ -37,7 +37,7 @@ public class FeedConverter {
 //                .build();
 //    }
 
-    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes,boolean like, Member member){
+    public FeedDTO entityToDtoIncludeLikes(Feed feed,Long likes,boolean like,Member member){
         return FeedDTO.builder()
                 .id(feed.getId())
                 .review(feed.getReview())
