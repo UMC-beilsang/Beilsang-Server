@@ -72,7 +72,15 @@ public class ChallengeService {
                 .forEach(challengeNoteRepository::save);
 
         // ChallengeMember, Challenge 저장
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
+        challengeMemberRepository.save(
+                ChallengeMember.builder()
+                        .challenge(challenge)
+                        .member(member)
+                        .isHost(true)
+                        .successDays(0)
+                        .challengeStatus(ChallengeStatus.NOT_YET)
+                        .isFeedUpload(false)
+                        .build());
         challengeRepository.save(challenge);
 
         return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
@@ -261,12 +269,13 @@ public class ChallengeService {
 
         challengeMemberRepository.save(
                 ChallengeMember.builder()
-                .challenge(challenge)
-                .member(member)
-                .successDays(0)
-                .challengeStatus(ChallengeStatus.ONGOING)
-                .isHost(false)
-                .build()
+                        .challenge(challenge)
+                        .member(member)
+                        .isHost(false)
+                        .successDays(0)
+                        .challengeStatus(ChallengeStatus.NOT_YET)
+                        .isFeedUpload(false)
+                        .build()
         );
 
         // 챌린지 호스트 찾기
@@ -324,5 +333,4 @@ public class ChallengeService {
         Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
         return host.getNickName();
     }
-
 }

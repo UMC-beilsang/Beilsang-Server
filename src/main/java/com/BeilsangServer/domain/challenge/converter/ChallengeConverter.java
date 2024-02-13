@@ -14,9 +14,9 @@ public class ChallengeConverter {
 
     public static Challenge toChallenge(ChallengeRequestDTO.CreateChallengeDTO request, String mainImageUrl, String certImageUrl) {
 
-        // 시작일로부터 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
+        // 시작일을 포함하여 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
         Integer period = request.getPeriod().getDays();
-        LocalDate finishDate = request.getStartDate().plusDays(period);
+        LocalDate finishDate = request.getStartDate().plusDays(period - 1);
 
         return Challenge.builder()
                 .title(request.getTitle())
