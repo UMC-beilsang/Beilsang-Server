@@ -26,6 +26,8 @@ public class ChallengeMember extends BaseEntity {
 
     private ChallengeStatus challengeStatus;
 
+    private Boolean isFeedUpload;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -34,4 +36,8 @@ public class ChallengeMember extends BaseEntity {
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;
 
+    // 피드 업로드 상태 수정
+    public void makeIsFeedUploadFalse() {
+        this.isFeedUpload = false;
+    }
 }
