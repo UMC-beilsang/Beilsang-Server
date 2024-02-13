@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,7 +39,7 @@ public class Member extends BaseEntity {
 
     private String nickName;
 
-    private String birth;
+    private LocalDate birth;
 
     private String address;
 
@@ -59,7 +60,7 @@ public class Member extends BaseEntity {
     public void setMemberInfo(MemberLoginDto memberLoginDto){
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
-        this.birth = memberLoginDto.getBirth();
+        this.birth = LocalDate.parse(memberLoginDto.getBirth(),DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.address = memberLoginDto.getAddress();
         this.keyword = memberLoginDto.getKeyword();
         this.discoveredPath = memberLoginDto.getDiscoveredPath();
@@ -90,7 +91,7 @@ public class Member extends BaseEntity {
         this.provider = provider;
         this.socialId = socialId;
         this.nickName = nickName;
-        this.birth = birth;
+        this.birth = LocalDate.parse(birth,DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         this.address = address;
         this.keyword = keyword;
         this.discoveredPath = discoveredPath;
@@ -114,8 +115,8 @@ public class Member extends BaseEntity {
         if(!memberUpdateDto.getNickName().isBlank()){
             this.nickName = memberUpdateDto.getNickName();
         }
-        if(memberUpdateDto.getBirth() != null){
-            this.birth = memberUpdateDto.getBirth();
+        if(!memberUpdateDto.getBirth().isBlank()){
+            this.birth = LocalDate.parse(memberUpdateDto.getBirth(),DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         }
         if(!memberUpdateDto.getGender().isBlank()){
             this.gender = Gender.valueOf(memberUpdateDto.getGender());

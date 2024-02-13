@@ -1,14 +1,18 @@
 package com.BeilsangServer.domain.auth.apple;
 
-import org.springframework.cache.annotation.Cacheable;
+import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKeys;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 
 
+/*
+애플 서버로부터 public key 받아옴
+ */
 @FeignClient(name = "apple-public-key-client", url = "https://appleid.apple.com/auth")
 public interface AppleClient {
 
-    @Cacheable(value = "oauthPublicKeyCache", cacheManager = "oauthPublicKeyCacheManager")
     @GetMapping("/keys")
     ApplePublicKeys getApplePublicKeys();
 }
+
+

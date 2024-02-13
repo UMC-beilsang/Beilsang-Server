@@ -12,7 +12,7 @@ import java.util.List;
 
 public class ChallengeConverter {
 
-    public static Challenge toChallenge(ChallengeRequestDTO.CreateDTO request, String mainImageUrl, String certImageUrl) {
+    public static Challenge toChallenge(ChallengeRequestDTO.CreateChallengeDTO request, String mainImageUrl, String certImageUrl) {
 
         // 시작일로부터 기간(7일/30일)만큼 지난 날짜를 챌린지 종료 날짜로 설정
         Integer period = request.getPeriod().getDays();

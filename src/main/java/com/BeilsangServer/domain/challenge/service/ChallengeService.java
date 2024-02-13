@@ -52,7 +52,7 @@ public class ChallengeService {
      * 이미지 업로드
      */
     @Transactional
-    public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateDTO request, Long memberId) {
+    public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateChallengeDTO request, Long memberId) {
 
         Member member = memberRepository.findById(memberId).get();
 
