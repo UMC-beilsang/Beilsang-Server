@@ -7,7 +7,7 @@ import com.BeilsangServer.domain.auth.apple.PublicKeyGenerator;
 import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKeys;
 import com.BeilsangServer.domain.auth.apple.dto.AppleMemberAndExistDto;
 import com.BeilsangServer.domain.member.entity.Member;
-import com.BeilsangServer.domain.member.entity.Provider;
+import com.BeilsangServer.global.enums.Provider;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;

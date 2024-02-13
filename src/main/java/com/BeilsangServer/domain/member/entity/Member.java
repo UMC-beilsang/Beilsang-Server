@@ -3,15 +3,14 @@ package com.BeilsangServer.domain.member.entity;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.global.common.BaseEntity;
+import com.BeilsangServer.global.enums.Gender;
+import com.BeilsangServer.global.enums.Provider;
+import com.BeilsangServer.global.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Objects;
-
-import static java.lang.Boolean.TRUE;
 
 @Entity
 @Getter

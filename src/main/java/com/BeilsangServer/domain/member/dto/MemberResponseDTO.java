@@ -1,7 +1,7 @@
 package com.BeilsangServer.domain.member.dto;
 
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
-import com.BeilsangServer.domain.member.entity.Gender;
+import com.BeilsangServer.global.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
