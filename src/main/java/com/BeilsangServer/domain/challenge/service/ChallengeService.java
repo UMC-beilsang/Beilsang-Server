@@ -83,17 +83,20 @@ public class ChallengeService {
      * @param challengeId 챌린지 ID
      * @return ChallengeDTO
      */
-    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId) {
+    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId,Long memberId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
 
         // 챌린지 시작 D-day 계산
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        // 챌린지 호스트 이름 찾기
+        // 찜 여부
+        Boolean like = challengeLikeRepository.existsByChallenge_IdAndMember_Id(challengeId,memberId);
+
+        // 챌린지 호스트 이름 찾기부
         String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName);
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName,like);
     }
 
     /***

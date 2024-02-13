@@ -50,7 +50,10 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.ChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
-        ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId);
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId,memberId);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
     }
