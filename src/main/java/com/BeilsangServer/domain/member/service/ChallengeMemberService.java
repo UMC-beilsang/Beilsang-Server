@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.member.service;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
+import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.global.enums.ChallengeStatus;
@@ -18,6 +19,7 @@ import java.util.List;
 public class ChallengeMemberService {
 
     private final ChallengeMemberRepository challengeMemberRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyTasks() {
@@ -101,9 +103,28 @@ public class ChallengeMemberService {
     }
 
     /***
+     * 끝난 챌린지 중 성공한 챌린지 조회
      * 성공한 챌린지의 수익 배분
      */
     public void checkSuccess() {
 
+        List<Challenge> finishedChallenges = challengeRepository.findAllByFinishDate(LocalDate.now().minusDays(1));
+        for (Challenge challenge : finishedChallenges) {
+
+            List<ChallengeMember> successMembers = challengeMemberRepository.findAllByChallengeId(challenge.getId())
+                    .stream()
+                    .filter(challengeMember -> challengeMember.getChallengeStatus().equals(ChallengeStatus.SUCCESS))
+                    .toList();
+
+            int pointDivide = challenge.getCollectedPoint() / successMembers.size();
+            pointDivide = pointDivide + (100 - pointDivide % 100); // 100원 단위로 돌려주기 위해 올림
+
+//            successMembers.stream().forEach(
+//                    challengeMember -> {
+//                        challengeMember.getMember().addPoint(pointDivide);
+//
+//                    }
+//            );
+        }
     }
 }
