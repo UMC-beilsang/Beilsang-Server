@@ -64,17 +64,17 @@ public class ChallengeService {
         Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
         challengeRepository.save(challenge);
 
-        // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
-        List<String> notes = request.getNotes();
-        notes.stream()
-                .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
-                .forEach(challengeNoteRepository::save);
-
         // 멤버 포인트 차감, 포인트 부족할 시 예외처리
         Member member = memberRepository.findById(memberId).get();
         int memberPoint = member.getPoint();
         if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 리스트로 받은 리스트 데이터를 ChallengeNote 엔티티 각각에 담고 저장
+        List<String> notes = request.getNotes();
+        notes.stream()
+                .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
+                .forEach(challengeNoteRepository::save);
 
         // ChallengeMember, Challenge 저장
         challengeMemberRepository.save(
@@ -117,7 +117,7 @@ public class ChallengeService {
      */
     public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
 
-        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환한다
+        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환
         List<Challenge> recommendChallenges = challengeRepository.findTop2ByStartDateAfterOrderByCountLikesDesc(LocalDate.now());
 
         return recommendChallenges.stream()
@@ -266,14 +266,17 @@ public class ChallengeService {
     public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
-        challenge.increaseAttendeeCount();
-        challengeRepository.save(challenge);
+        Member member = memberRepository.findById(memberId).get();
 
         // 멤버 포인트 차감, 포인트 부족할 시 예외처리
-        Member member = memberRepository.findById(memberId).get();
         int memberPoint = member.getPoint();
         if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 참여인원, 모인 포인트 증가
+        challenge.increaseAttendeeCount();
+        challenge.addCollectedPoint(challenge.getJoinPoint());
+        challengeRepository.save(challenge);
 
         challengeMemberRepository.save(
                 ChallengeMember.builder()

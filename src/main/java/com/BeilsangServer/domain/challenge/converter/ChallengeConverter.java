@@ -31,6 +31,7 @@ public class ChallengeConverter {
                 .totalGoalDay(request.getTotalGoalDay())
                 .attendeeCount(1)
                 .countLikes(0)
+                .collectedPoint(request.getJoinPoint())
                 .build();
     }
 
