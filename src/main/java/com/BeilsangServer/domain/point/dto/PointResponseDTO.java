@@ -1,6 +1,6 @@
 package com.BeilsangServer.domain.point.dto;
 
-import com.BeilsangServer.domain.point.entity.PointStatus;
+import com.BeilsangServer.global.enums.PointStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;

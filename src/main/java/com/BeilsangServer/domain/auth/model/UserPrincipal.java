@@ -1,7 +1,7 @@
 package com.BeilsangServer.domain.auth.model;
 
 import com.BeilsangServer.domain.member.entity.Member;
-import com.BeilsangServer.domain.member.entity.Role;
+import com.BeilsangServer.global.enums.Role;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;

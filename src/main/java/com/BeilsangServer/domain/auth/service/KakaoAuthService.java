@@ -2,9 +2,8 @@ package com.BeilsangServer.domain.auth.service;
 
 import com.BeilsangServer.domain.auth.dto.KakaoInfoDto;
 import com.BeilsangServer.domain.auth.dto.KakaoMemberAndExistDto;
-import com.BeilsangServer.domain.auth.dto.KakaoResponseDto;
 import com.BeilsangServer.domain.member.entity.Member;
-import com.BeilsangServer.domain.member.entity.Provider;
+import com.BeilsangServer.global.enums.Provider;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @RequiredArgsConstructor
