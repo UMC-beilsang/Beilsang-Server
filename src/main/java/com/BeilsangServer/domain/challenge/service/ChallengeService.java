@@ -72,7 +72,15 @@ public class ChallengeService {
                 .forEach(challengeNoteRepository::save);
 
         // ChallengeMember, Challenge 저장
-        challengeMemberRepository.save(ChallengeMember.builder().challenge(challenge).member(member).isHost(true).build());
+        challengeMemberRepository.save(
+                ChallengeMember.builder()
+                        .challenge(challenge)
+                        .member(member)
+                        .isHost(true)
+                        .successDays(0)
+                        .challengeStatus(ChallengeStatus.NOT_YET)
+                        .isFeedUpload(false)
+                        .build());
         challengeRepository.save(challenge);
 
         return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
@@ -83,17 +91,20 @@ public class ChallengeService {
      * @param challengeId 챌린지 ID
      * @return ChallengeDTO
      */
-    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId) {
+    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId,Long memberId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).get();
 
         // 챌린지 시작 D-day 계산
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
-        // 챌린지 호스트 이름 찾기
+        // 찜 여부
+        Boolean like = challengeLikeRepository.existsByChallenge_IdAndMember_Id(challengeId,memberId);
+
+        // 챌린지 호스트 이름 찾기부
         String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName);
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName,like);
     }
 
     /***
@@ -172,7 +183,9 @@ public class ChallengeService {
      * @param memberId
      * @return 찜 목록을 담은 challengePreviewListDto
      */
-    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId) {
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId,String category) {
+        Category categoryByEnum = Category.from(category);
+
         List<ChallengeLike> challengeLikes = challengeLikeRepository.findAllByMember_Id(memberId); // ChallengeLike 테이블에서 memberId 와 관련된 challengeId 추출
 
         List<Long> challengeIds = new ArrayList<>();
@@ -180,8 +193,16 @@ public class ChallengeService {
             challengeIds.add(c.getChallenge().getId());
         }
 
+
         // 챌린지 찾기
-        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
+        //List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges;
+        if(categoryByEnum.equals(Category.ALL)){
+            challenges = challengeRepository.findAllById(challengeIds);
+        }
+        else{
+            challenges = challengeRepository.findAllByIdInAndCategory(challengeIds,categoryByEnum);
+        }
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
                 .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
@@ -258,12 +279,13 @@ public class ChallengeService {
 
         challengeMemberRepository.save(
                 ChallengeMember.builder()
-                .challenge(challenge)
-                .member(member)
-                .successDays(0)
-                .challengeStatus(ChallengeStatus.ONGOING)
-                .isHost(false)
-                .build()
+                        .challenge(challenge)
+                        .member(member)
+                        .isHost(false)
+                        .successDays(0)
+                        .challengeStatus(ChallengeStatus.NOT_YET)
+                        .isFeedUpload(false)
+                        .build()
         );
 
         // 챌린지 호스트 찾기
@@ -321,5 +343,4 @@ public class ChallengeService {
         Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
         return host.getNickName();
     }
-
 }

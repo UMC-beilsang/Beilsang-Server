@@ -1,4 +1,4 @@
-package com.BeilsangServer.domain.member.entity;
+package com.BeilsangServer.global.enums;
 
 public enum Role {
     USER("user"),

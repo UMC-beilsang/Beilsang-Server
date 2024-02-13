@@ -4,6 +4,7 @@ import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
@@ -23,4 +24,6 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findByTitleContaining(String name);
 
     List<Challenge> findTop5ByCategoryOrderByCountLikesDesc(Category category);
+
+    List<Challenge> findAllByIdInAndCategory(List<Long> challengeIds,Category category);
 }
