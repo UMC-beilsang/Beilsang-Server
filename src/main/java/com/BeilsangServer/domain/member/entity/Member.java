@@ -48,7 +48,7 @@ public class Member extends BaseEntity {
 
     private String resolution;
 
-    private int totalPoint;
+    private int point;
 
     private String recommendNickname;
 
@@ -95,7 +95,7 @@ public class Member extends BaseEntity {
         this.keyword = keyword;
         this.discoveredPath = discoveredPath;
         this.resolution = resolution;
-        this.totalPoint = totalPoint;
+        this.point = totalPoint;
         this.recommendNickname = recommendNickname;
         this.profileUrl = profileUrl;
 
@@ -123,6 +123,15 @@ public class Member extends BaseEntity {
         if(!memberUpdateDto.getAddress().isBlank()){
             this.address = memberUpdateDto.getAddress();
         }
+    }
+
+    // 포인트 차감, 적립
+    public void addPoint(Integer point) {
+        this.point += point;
+    }
+
+    public void subPoint(Integer point) {
+        this.point -= point;
     }
 }
 

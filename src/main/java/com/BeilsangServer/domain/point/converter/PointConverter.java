@@ -20,6 +20,6 @@ public class PointConverter {
                 .build()
         ).toList();
 
-        return PointResponseDTO.pointLogListDTO.builder().points(points).total(member.getTotalPoint()).build();
+        return PointResponseDTO.pointLogListDTO.builder().points(points).total(member.getPoint()).build();
     }
 }
