@@ -26,9 +26,12 @@ public class FeedDTO {
 
     private Long likes;
     private boolean like;
+    private Long day;
+    private String nickName;
+    private String profileImage;
 
     @Builder
-    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes, boolean like){
+    private FeedDTO(Long id, String review, LocalDate uploadDate, String feedUrl, String challengeTitle, Category category, Long likes, boolean like, Long day, String nickName, String profileImage){
         this.id = id;
         this.review = review;
         this.uploadDate = uploadDate;
@@ -37,6 +40,9 @@ public class FeedDTO {
         this.category = category;
         this.likes = likes;
         this.like = like;
+        this.day = day;
+        this.nickName = nickName;
+        this.profileImage = profileImage;
     }
 
     @Builder
@@ -44,6 +50,7 @@ public class FeedDTO {
     public static class previewFeedDto{
         private Long feedId;
         private String feedUrl;
+        private Long day;
     }
 
     @Builder

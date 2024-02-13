@@ -30,14 +30,6 @@ public class SecurityConfig {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    @Bean
-    public WebSecurityCustomizer webSecurityCustomizer(){
-        // 아래 url은 filter 에서 제외
-        return web ->
-                web.ignoring()
-                        .requestMatchers("/auth/**", "/token/refresh","/swagger*/**");
-    }
-
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -54,7 +46,7 @@ public class SecurityConfig {
 
         http
                 .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/auth/**").authenticated()
+                        .requestMatchers("/auth/**", "/token/refresh","/swagger/**").authenticated()
                         .anyRequest().permitAll()); // 일단 임시로 허용
 
         /*
@@ -77,6 +69,17 @@ public class SecurityConfig {
 
 
 
+
+
         return http.build();
+
+
     }
+//    @Bean
+//    public WebSecurityCustomizer webSecurityCustomizer(){
+//        // 아래 url은 filter 에서 제외
+//        return web ->
+//                web.ignoring()
+//                        .requestMatchers("/auth/**", "/token/refresh","/swagger/**");
+//    }
 }

@@ -28,7 +28,7 @@ public class JwtTokenProvider implements InitializingBean {
     private static final long ACCESS_TOKEN_EXPIRE_TIME = 1000 * 60 * 30;            // 30분
     private static final long REFRESH_TOKEN_EXPIRE_TIME = 1000 * 60 * 60 * 24 * 14;  // 14일
 
-    private final String secretKey;
+    private final String secretKey; // Jwt 시크릿 키
     private static Key key;
 
     public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey) {
@@ -36,11 +36,15 @@ public class JwtTokenProvider implements InitializingBean {
     }
 
 
+    /*
+    비밀키를 Base64 인코딩하고 다시 키로 변환하여 저장합
+     */
     @Override
     public void afterPropertiesSet() {
         this.key = getKeyFromBase64EncodedKey(encodeBase64SecretKey(secretKey));
     }
 
+    //여기서 payload는 멤버의 socialId
     public String createAccessToken(String payload){
         return createToken(payload, ACCESS_TOKEN_EXPIRE_TIME);
     }
@@ -64,6 +68,9 @@ public class JwtTokenProvider implements InitializingBean {
                 .compact();
     }
 
+    /*
+    페이로드 추출
+     */
     public String getPayload(String token){
         try{
             return Jwts.parserBuilder()

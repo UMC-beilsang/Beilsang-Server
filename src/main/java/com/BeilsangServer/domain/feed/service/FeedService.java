@@ -58,7 +58,7 @@ public class FeedService {
      * @return
      */
     @Transactional
-    public Long createFeed(AddFeedRequestDTO.CreateDTO request, Long challengeId, Long memberId){
+    public Long createFeed(AddFeedRequestDTO.CreateFeedDTO request, Long challengeId, Long memberId){
 
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
         ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId,challenge.getId());
@@ -102,10 +102,11 @@ public class FeedService {
             throw new IllegalArgumentException("이런피드없다.");
         });
 
-        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId);
+        Member member = memberRepository.findMemberByFeedId(feedId); // 게시한 사용자의 정보
+        Long feedLikes = feedLikeRepository.countByFeed_Id(feedId); // 피드 좋아요 개수
         boolean feedLike = feedLikeRepository.existsByFeed_IdAndMember_Id(feedId,memberId); // 현재 사용자가 해당 피드 좋아요를 눌렀는지 안 눌렀는지 정보
 
-        FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes,feedLike);
+        FeedDTO feedDTO = feedConverter.entityToDtoIncludeLikes(feed,feedLikes,feedLike,member);
 
         return feedDTO;
     }

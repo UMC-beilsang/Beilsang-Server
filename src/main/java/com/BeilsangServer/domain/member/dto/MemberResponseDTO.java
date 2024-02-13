@@ -39,11 +39,10 @@ public class MemberResponseDTO {
 
     @Builder
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class profileDTO{
         private String nickName;
-        private String birth;
+        private LocalDate birth;
         private Gender gender;
         private String address;
     }
