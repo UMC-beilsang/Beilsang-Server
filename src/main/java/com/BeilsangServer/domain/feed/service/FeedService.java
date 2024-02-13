@@ -191,7 +191,7 @@ public class FeedService {
             feedList = feedRepository.findAll();
         }
         else{
-            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
+            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum); // 시간 순으로 정렬
         }
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
