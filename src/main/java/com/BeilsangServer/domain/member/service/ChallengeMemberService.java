@@ -19,21 +19,6 @@ import java.util.List;
 public class ChallengeMemberService {
 
     private final ChallengeMemberRepository challengeMemberRepository;
-    private final ChallengeRepository challengeRepository;
-
-    /***
-     * 모든 챌린지 멤버의 당일 인증 상태 수정
-     * 아직 끝나지 않은 챌린지만 대상이 되어야 함
-     */
-    @Transactional
-    public void dailyMakeIsFeedUploadFalse() {
-
-        // 매일 정시마다 모든 챌린지 멤버의 인증 상태 수정
-        challengeMemberRepository.findAll().forEach(challengeMember -> {
-            challengeMember.makeIsFeedUploadFalse();
-            challengeMemberRepository.save(challengeMember);
-        });
-    }
 
     /***
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
@@ -43,16 +28,12 @@ public class ChallengeMemberService {
     @Transactional
     public void checkFailure() {
 
-        List<ChallengeMember> notUploadedMember = challengeMemberRepository.findAllByIsFeedUpload(false);
+        List<ChallengeMember> notUploadedMember = challengeMemberRepository.findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus.ONGOING, false);
 
         for (ChallengeMember challengeMember : notUploadedMember) {
 
-            // 챌린지가 성공이나 실패로 종료로 끝난건 확인X
-            if (challengeMember.getChallengeStatus() != ChallengeStatus.ONGOING) {
-                break;
-            }
-
             Challenge challenge = challengeMember.getChallenge();
+
             // 지금까지 성공한 일수
             int remainSuccess = challenge.getTotalGoalDay() - challengeMember.getSuccessDays();
             // 챌린지 종료일까지 남은 일수
@@ -69,5 +50,35 @@ public class ChallengeMemberService {
         }
 
         dailyMakeIsFeedUploadFalse();
+        checkIsChallengeStart();
+    }
+
+    /***
+     * 모든 챌린지 멤버의 당일 인증 상태 수정
+     * 아직 끝나지 않은 챌린지만 대상이 되어야 함
+     */
+    @Transactional
+    public void dailyMakeIsFeedUploadFalse() {
+
+        // 매일 정시마다 모든 챌린지 멤버의 인증 상태 수정
+        challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.ONGOING).forEach(challengeMember -> {
+            challengeMember.makeIsFeedUploadFalse();
+            challengeMemberRepository.save(challengeMember);
+        });
+    }
+
+    /***
+     * 시작하지 않은 챌린지의 상태를 진행 중으로 변경
+     */
+    @Transactional
+    public void checkIsChallengeStart() {
+
+        List<ChallengeMember> notYetChallengeMembers = challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.NOT_YET);
+        notYetChallengeMembers.stream()
+                .filter(challengeMember -> challengeMember.getChallenge().getStartDate().equals(LocalDate.now()))
+                .forEach(challengeMember -> {
+                    challengeMember.updateChallengeStatus(ChallengeStatus.ONGOING);
+                    challengeMemberRepository.save(challengeMember);
+                });
     }
 }

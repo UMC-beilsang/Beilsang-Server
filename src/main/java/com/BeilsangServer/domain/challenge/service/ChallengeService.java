@@ -330,5 +330,4 @@ public class ChallengeService {
         Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
         return host.getNickName();
     }
-
 }
