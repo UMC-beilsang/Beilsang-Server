@@ -24,7 +24,7 @@ public class ChallengeMemberService {
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
      * 스케줄러를 사용하여 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
      */
-    @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(cron = "19 45 0 * * *")
     @Transactional
     public void checkFailure() {
 
@@ -80,5 +80,17 @@ public class ChallengeMemberService {
                     challengeMember.updateChallengeStatus(ChallengeStatus.ONGOING);
                     challengeMemberRepository.save(challengeMember);
                 });
+    }
+
+    // 피드 등록 시 당일 성공 처리
+    @Transactional
+    public void checkFeedUpload(ChallengeMember challengeMember) {
+
+        // 처음 피드가 올라가는 경우에만 isFeedUpload, successDays 수정
+        if (!challengeMember.getIsFeedUpload()) {
+            challengeMember.makeIsFeedUploadTrue();
+            challengeMember.increaseSuccessDays();
+            challengeMemberRepository.save(challengeMember);
+        }
     }
 }

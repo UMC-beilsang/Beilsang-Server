@@ -19,6 +19,7 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.member.service.ChallengeMemberService;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
@@ -48,6 +49,7 @@ public class FeedService {
     private final ChallengeNoteRepository challengeNoteRepository;
     private final UuidRepository uuidRepository;
     private final MemberRepository memberRepository;
+    private final ChallengeMemberService challengeMemberService;
 
 
     /***
@@ -69,6 +71,8 @@ public class FeedService {
         Feed feed = feedConverter.toEntity(request,challenge,challengeMember,feedUrl);
 
         feedRepository.save(feed);
+
+        challengeMemberService.checkFeedUpload(feed.getChallengeMember());
 
         return feed.getId();
     }

@@ -24,6 +24,7 @@ public class ChallengeMember extends BaseEntity {
 
     private Integer successDays;
 
+    @Enumerated(EnumType.STRING)
     private ChallengeStatus challengeStatus;
 
     private Boolean isFeedUpload;
@@ -39,6 +40,10 @@ public class ChallengeMember extends BaseEntity {
     // 피드 업로드 상태 수정
     public void makeIsFeedUploadFalse() {
         this.isFeedUpload = false;
+    }
+
+    public void makeIsFeedUploadTrue() {
+        this.isFeedUpload = true;
     }
 
     // 챌린지 상태 변경 메서드
