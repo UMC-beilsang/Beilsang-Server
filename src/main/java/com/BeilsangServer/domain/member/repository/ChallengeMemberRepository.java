@@ -18,4 +18,5 @@ public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember
 
     Long countByMember_Id(Long memberId);
 
+    List<ChallengeMember> findAllByIsFeedUpload(Boolean isFeedUpload);
 }

@@ -40,4 +40,14 @@ public class ChallengeMember extends BaseEntity {
     public void makeIsFeedUploadFalse() {
         this.isFeedUpload = false;
     }
+
+    // 챌린지 상태 변경 메서드
+    public void updateChallengeStatus(ChallengeStatus status) {
+        this.challengeStatus = status;
+    }
+
+    // 성공 일수 증가 메서드
+    public void increaseSuccessDays() {
+        this.successDays++;
+    }
 }
