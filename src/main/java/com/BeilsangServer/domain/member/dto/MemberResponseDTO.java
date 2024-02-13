@@ -35,6 +35,8 @@ public class MemberResponseDTO {
         Long likes;
         Integer points;
         FeedDTO.previewFeedListDto feedDTOs;
+        String nickName;
+        String profileImage;
     }
 
     @Builder
