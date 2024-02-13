@@ -1,7 +1,6 @@
 package com.BeilsangServer.domain.member.service;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
-import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.global.enums.ChallengeStatus;
@@ -24,7 +23,7 @@ public class ChallengeMemberService {
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
      * 스케줄러를 사용하여 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
      */
-    @Scheduled(cron = "19 45 0 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void checkFailure() {
 
@@ -37,13 +36,13 @@ public class ChallengeMemberService {
             // 지금까지 성공한 일수
             int remainSuccess = challenge.getTotalGoalDay() - challengeMember.getSuccessDays();
             // 챌린지 종료일까지 남은 일수
-            int remainDay = challenge.getFinishDate().until(LocalDate.now()).getDays() + 1;
+            int remainDay = LocalDate.now().until(challenge.getFinishDate()).getDays() + 1;
 
             // 남은 일수 확인 후 목표 일수를 다 채우면 성공, 남은 기간 내에 다 채우지 못하면 실패로 변경
             if (remainSuccess == 0) {
                 challengeMember.updateChallengeStatus(ChallengeStatus.SUCCESS);
                 challengeMemberRepository.save(challengeMember);
-            } else if (remainDay > remainSuccess) {
+            } else if (remainSuccess > remainDay) {
                 challengeMember.updateChallengeStatus(ChallengeStatus.FAIL);
                 challengeMemberRepository.save(challengeMember);
             }
@@ -82,7 +81,10 @@ public class ChallengeMemberService {
                 });
     }
 
-    // 피드 등록 시 당일 성공 처리
+    /***
+     * 피드 생성 시 챌린지 인증 처리
+     * @param challengeMember 피드를 생성한 주체
+     */
     @Transactional
     public void checkFeedUpload(ChallengeMember challengeMember) {
 
