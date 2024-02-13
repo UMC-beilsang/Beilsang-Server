@@ -49,7 +49,7 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName,boolean like) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
@@ -66,6 +66,8 @@ public class ChallengeConverter {
                 .challengeNotes(challengeNotes)
                 .joinPoint(challenge.getJoinPoint())
                 .dDay(dDay)
+                .likes(challenge.getCountLikes())
+                .like(like)
                 .build();
 
     }
