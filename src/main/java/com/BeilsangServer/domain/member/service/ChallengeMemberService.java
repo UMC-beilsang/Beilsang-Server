@@ -19,11 +19,18 @@ public class ChallengeMemberService {
 
     private final ChallengeMemberRepository challengeMemberRepository;
 
+    @Scheduled(cron = "0 0 0 * * *")
+    public void dailyTasks() {
+        checkFailure();
+        checkSuccess();
+        makeIsFeedUploadFalse();
+        checkIsChallengeStart();
+    }
+
     /***
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
      * 스케줄러를 사용하여 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
      */
-    @Scheduled(cron = "0 0 0 * * *")
     @Transactional
     public void checkFailure() {
 
@@ -47,9 +54,6 @@ public class ChallengeMemberService {
                 challengeMemberRepository.save(challengeMember);
             }
         }
-
-        dailyMakeIsFeedUploadFalse();
-        checkIsChallengeStart();
     }
 
     /***
@@ -57,7 +61,7 @@ public class ChallengeMemberService {
      * 아직 끝나지 않은 챌린지만 대상이 되어야 함
      */
     @Transactional
-    public void dailyMakeIsFeedUploadFalse() {
+    public void makeIsFeedUploadFalse() {
 
         // 매일 정시마다 모든 챌린지 멤버의 인증 상태 수정
         challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.ONGOING).forEach(challengeMember -> {
@@ -94,5 +98,12 @@ public class ChallengeMemberService {
             challengeMember.increaseSuccessDays();
             challengeMemberRepository.save(challengeMember);
         }
+    }
+
+    /***
+     * 성공한 챌린지의 수익 배분
+     */
+    public void checkSuccess() {
+
     }
 }
