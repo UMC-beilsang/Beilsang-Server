@@ -19,6 +19,7 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.member.service.ChallengeMemberService;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
@@ -48,6 +49,7 @@ public class FeedService {
     private final ChallengeNoteRepository challengeNoteRepository;
     private final UuidRepository uuidRepository;
     private final MemberRepository memberRepository;
+    private final ChallengeMemberService challengeMemberService;
 
 
     /***
@@ -61,14 +63,16 @@ public class FeedService {
     public Long createFeed(AddFeedRequestDTO.CreateFeedDTO request, Long challengeId, Long memberId){
 
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
-        ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId,challenge.getId());
+        ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challenge.getId());
 
         Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), request.getFeedImage());
 
-        Feed feed = feedConverter.toEntity(request,challenge,challengeMember,feedUrl);
+        Feed feed = feedConverter.toEntity(request, challenge, challengeMember, feedUrl);
 
         feedRepository.save(feed);
+
+        challengeMemberService.checkFeedUpload(feed.getChallengeMember());
 
         return feed.getId();
     }
@@ -187,7 +191,7 @@ public class FeedService {
             feedList = feedRepository.findAll();
         }
         else{
-            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum);
+            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum); // 시간 순으로 정렬
         }
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);

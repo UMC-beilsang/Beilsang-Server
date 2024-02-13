@@ -53,6 +53,10 @@ public class ChallengeResponseDTO {
         private Integer dDay;
         // 챌린지 유의사항
         private List<String> challengeNotes;
+        // 찜 개수
+        private Integer likes;
+        // 찜 여부
+        private boolean like;
 
 //        // 추천 챌린지 목록
 //        private List<RecommendChallengeDTO> recommendChallengeDTOList;

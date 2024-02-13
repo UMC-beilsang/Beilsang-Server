@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.member.repository;
 
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,4 +19,7 @@ public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember
 
     Long countByMember_Id(Long memberId);
 
+    List<ChallengeMember> findAllByChallengeStatus(ChallengeStatus challengeStatus);
+
+    List<ChallengeMember> findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus challengeStatus, Boolean isFeedUpload);
 }

@@ -1,10 +1,8 @@
 package com.BeilsangServer.domain.member.dto;
 
-import com.BeilsangServer.domain.member.entity.Gender;
+import com.BeilsangServer.global.enums.Gender;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDate;
 
 @NoArgsConstructor
 @Getter

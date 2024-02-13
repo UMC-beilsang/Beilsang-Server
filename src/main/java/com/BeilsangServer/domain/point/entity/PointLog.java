@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.point.entity;
 
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.global.common.BaseEntity;
+import com.BeilsangServer.global.enums.PointStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
