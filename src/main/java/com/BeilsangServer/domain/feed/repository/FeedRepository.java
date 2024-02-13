@@ -19,5 +19,4 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
     Long countByChallengeMember_IdIn(List<Long> challengeMemberIds);
 
     List<Feed> findTop4ByChallengeMember_IdInOrderByCreatedAtDesc(List<Long> challengeMemberIds);
-
 }

@@ -89,6 +89,9 @@ public class MemberService {
         List<Feed> feeds = feedRepository.findTop4ByChallengeMember_IdInOrderByCreatedAtDesc(challengeMemberIds);
         FeedDTO.previewFeedListDto feedDto = feedConverter.toPreviewFeedListDto(feeds);
 
+        String nickName = member.getNickName();
+        String profileImage = member.getProfileUrl();
+
         return MemberResponseDTO.myPageDTO.builder()
                 .achieve(totalAchievements)
                 .likes(likes)
@@ -98,6 +101,8 @@ public class MemberService {
                 .challenges(challengeNum)
                 .fail(fail)
                 .feedDTOs(feedDto)
+                .nickName(nickName)
+                .profileImage(profileImage)
                 .build();
     }
 
