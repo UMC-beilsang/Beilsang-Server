@@ -2,6 +2,7 @@ package com.BeilsangServer.domain.point.entity;
 
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.global.common.BaseEntity;
+import com.BeilsangServer.global.enums.PointName;
 import com.BeilsangServer.global.enums.PointStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -24,11 +25,14 @@ public class PointLog extends BaseEntity {
     private String name;
 
     @Enumerated(EnumType.STRING)
+    private PointName pointName;
+
+    @Enumerated(EnumType.STRING)
     private PointStatus status;
 
     private int value;
 
-    private LocalDate date;
+//    private LocalDate date;
 
     private int period;
 

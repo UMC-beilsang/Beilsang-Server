@@ -6,7 +6,11 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.point.entity.PointLog;
+import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import com.BeilsangServer.global.enums.ChallengeStatus;
+import com.BeilsangServer.global.enums.PointName;
+import com.BeilsangServer.global.enums.PointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -23,6 +27,7 @@ public class ChallengeMemberService {
     private final ChallengeMemberRepository challengeMemberRepository;
     private final ChallengeRepository challengeRepository;
     private final MemberRepository memberRepository;
+    private final PointLogRepository pointLogRepository;
 
     /***
      * 스케줄러를 사용하여 매일 00시 정각마다 작업을 수행
@@ -130,16 +135,36 @@ public class ChallengeMemberService {
 
             int pointDivide = challenge.getCollectedPoint() / successMembers.size();
             int liftedPoint = pointDivide + (100 - pointDivide % 100); // 100원 단위로 돌려주기 위해 올림
+            int hostPoint = liftedPoint * 2; // 호스트의 경우 2배 지급
 
-            // 성공한 멤버 중 호스트의 경우 2배로 지급
-            successMembers
-                    .forEach(challengeMember -> {
-                        Member member = challengeMember.getMember();
-                        int pointsToAdd = challengeMember.getIsHost() ? liftedPoint * 2 : liftedPoint;
-                        member.addPoint(pointsToAdd);
-                        memberRepository.save(member);
-                    }
-            );
+            successMembers.forEach(challengeMember -> {
+
+                Member member = challengeMember.getMember();
+
+                if (challengeMember.getIsHost()) { // 호스트인 경우
+                    member.addPoint(hostPoint);
+                    memberRepository.save(member);
+
+                    // 포인트 기록 생성 및 디비 저장
+                    pointLogRepository.save(PointLog.builder()
+                            .pointName(PointName.SUCCESS_CHALLENGE_HOST)
+                            .status(PointStatus.EARN)
+                            .value(hostPoint)
+                            .member(member)
+                            .build());
+                } else { // 호스트가 아닌 경우
+                    member.addPoint(liftedPoint);
+                    memberRepository.save(member);
+
+                    // 포인트 기록 생성 및 디비 저장
+                    pointLogRepository.save(PointLog.builder()
+                            .pointName(PointName.SUCCESS_CHALLENGE)
+                            .status(PointStatus.EARN)
+                            .value(liftedPoint)
+                            .member(member)
+                            .build());
+                }
+            });
         }
     }
 }

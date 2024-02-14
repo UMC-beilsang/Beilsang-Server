@@ -16,10 +16,14 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.point.entity.PointLog;
+import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengeStatus;
+import com.BeilsangServer.global.enums.PointName;
+import com.BeilsangServer.global.enums.PointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +48,7 @@ public class ChallengeService {
     private final MemberRepository memberRepository;
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
+    private final PointLogRepository pointLogRepository;
 
     /***
      * 챌린지 생성하기
@@ -69,6 +74,14 @@ public class ChallengeService {
         int memberPoint = member.getPoint();
         if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 포인트 기록 생성 및 디비 저장
+        pointLogRepository.save(PointLog.builder()
+                .pointName(PointName.JOIN_CHALLENGE)
+                .status(PointStatus.USE)
+                .value(challenge.getJoinPoint())
+                .member(member)
+                .build());
 
         // 리스트로 받은 리스트 데이터를 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
@@ -282,6 +295,14 @@ public class ChallengeService {
         int memberPoint = member.getPoint();
         if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 포인트 기록 생성 및 디비 저장
+        pointLogRepository.save(PointLog.builder()
+                .pointName(PointName.JOIN_CHALLENGE)
+                .status(PointStatus.USE)
+                .value(challenge.getJoinPoint())
+                .member(member)
+                .build());
 
         // 참여인원, 모인 포인트 증가
         challenge.increaseAttendeeCount();
