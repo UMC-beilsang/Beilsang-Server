@@ -101,15 +101,17 @@ public class ChallengeRestController {
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
     }
 
-    @GetMapping("/likes")
+    @GetMapping("/likes/{category}")
     @Operation(summary = "사용자의 찜한 챌린지 목록 조회 API", description = "사용자가 찜한 챌린지의 정보를 조회하는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200", description = "성공")
     })
-    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList() {
+    public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
+            @PathVariable(name = "category") String category
+    ) {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId);
+        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId,category);
 
         return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
     }

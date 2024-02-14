@@ -8,7 +8,12 @@ import com.BeilsangServer.domain.feed.service.FeedService;
 import com.BeilsangServer.global.common.apiResponse.ApiResponse;
 import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.Parameters;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
@@ -19,6 +24,7 @@ import java.util.List;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
+@Tag(name = "feeds", description = "피드 api")
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -28,9 +34,12 @@ public class FeedController {
     private final FeedService feedService;
 
     @PostMapping(value = "/feeds/{challengeId}",consumes = MULTIPART_FORM_DATA, produces = MediaType.APPLICATION_JSON_VALUE)
-    @Operation(summary = "피드 생성 API", description = "챌린지 인증을 통해 피드를 생성하는 API 입니다.")
+    @Operation(summary = "피드 생성 API", description = "challengeId 를 통해 챌린지 인증을 하여 피드를 생성하는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "피드 생성 성공")
+    })
+    @Parameters({
+            @Parameter(name = "challengeId", description = "id에 해당하는 챌린지에 대한 피드를 생성합니다.")
     })
     public ApiResponse<Long> createFeed(
             @ModelAttribute AddFeedRequestDTO.CreateFeedDTO request,

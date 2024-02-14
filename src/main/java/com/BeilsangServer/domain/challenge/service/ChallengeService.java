@@ -187,7 +187,9 @@ public class ChallengeService {
      * @param memberId
      * @return 찜 목록을 담은 challengePreviewListDto
      */
-    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId) {
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId,String category) {
+        Category categoryByEnum = Category.from(category);
+
         List<ChallengeLike> challengeLikes = challengeLikeRepository.findAllByMember_Id(memberId); // ChallengeLike 테이블에서 memberId 와 관련된 challengeId 추출
 
         List<Long> challengeIds = new ArrayList<>();
@@ -195,8 +197,16 @@ public class ChallengeService {
             challengeIds.add(c.getChallenge().getId());
         }
 
+
         // 챌린지 찾기
-        List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
+        //List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
+        List<Challenge> challenges;
+        if(categoryByEnum.equals(Category.ALL)){
+            challenges = challengeRepository.findAllById(challengeIds);
+        }
+        else{
+            challenges = challengeRepository.findAllByIdInAndCategory(challengeIds,categoryByEnum);
+        }
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
                 .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
