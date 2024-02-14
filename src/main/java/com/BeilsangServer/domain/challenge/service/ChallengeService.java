@@ -185,7 +185,7 @@ public class ChallengeService {
      */
     public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category){
 
-        Category categoryByEnum = Category.valueOf(category);
+        Category categoryByEnum = Category.from(category);
         List<Challenge> challenges = challengeRepository.findTop5ByCategoryOrderByCountLikesDesc(categoryByEnum);
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
@@ -236,7 +236,7 @@ public class ChallengeService {
      * @return
      */
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
-        Category categoryByEnum = Category.valueOf(category);
+        Category categoryByEnum = Category.from(category);
 
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
 

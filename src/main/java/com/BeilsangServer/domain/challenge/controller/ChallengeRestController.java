@@ -34,6 +34,7 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewDTO> createChallenge(@ModelAttribute ChallengeRequestDTO.CreateChallengeDTO request) {
 
+        //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
         ChallengeResponseDTO.ChallengePreviewDTO response = challengeService.createChallenge(request, memberId);
@@ -141,6 +142,7 @@ public class ChallengeRestController {
     @PostMapping("/{challengeId}")
     public ApiResponse<ChallengeResponseDTO.JoinChallengeDTO> joinChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
+        //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
         ChallengeResponseDTO.JoinChallengeDTO response = challengeService.joinChallenge(challengeId, memberId);

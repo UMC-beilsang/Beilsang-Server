@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-@AllArgsConstructor
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+//@AllArgsConstructor
 @Getter
 public enum Category {
 
@@ -19,10 +24,41 @@ public enum Category {
     BIKE("자전거"),
     RECYCLE("재활용");
 
-    private final String descriptions;
+//    private static final Map<String, String> DES_MAP = Collections.unmodifiableMap(
+//            Stream.of(values()).collect(Collectors.toMap(Category::getDescriptions, Category::name))
+//    );
+//    @Getter
+//    private final String descriptions;
+//    Category(String descriptions){
+//        this.descriptions = descriptions;
+//    }
+//
+//    public static Category of(final String descriptions){
+//        return Category.valueOf(DES_MAP.get(descriptions));
+//    }
+    private String korName;
+
+    Category(String korName) {
+        this.korName = korName;
+    }
+
+    public String getKorName() {
+        return korName;
+    }
 
     @JsonCreator
     public static Category from(String stringCategory) {
-        return Category.valueOf(stringCategory.toUpperCase());
+        // 주어진 문자열 값과 매핑된 열거형 상수 반환
+        for (Category category : Category.values()) {
+            if (category.name().equalsIgnoreCase(stringCategory) || category.getKorName().equals(stringCategory)) {
+                return category;
+            }
+        }
+        throw new IllegalArgumentException("유효하지 않은 카테고리 값입니다: " + stringCategory);
     }
+
+//    @JsonCreator
+//    public static Category from(String stringCategory) {
+//        return Category.valueOf(stringCategory.toUpperCase());
+//    }
 }
