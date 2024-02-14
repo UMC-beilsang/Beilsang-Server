@@ -16,10 +16,14 @@ import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.point.entity.PointLog;
+import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengeStatus;
+import com.BeilsangServer.global.enums.PointName;
+import com.BeilsangServer.global.enums.PointStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +48,7 @@ public class ChallengeService {
     private final MemberRepository memberRepository;
     private final AmazonS3Manager s3Manager;
     private final UuidRepository uuidRepository;
+    private final PointLogRepository pointLogRepository;
 
     /***
      * 챌린지 생성하기
@@ -54,8 +59,6 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponseDTO.ChallengePreviewDTO createChallenge(ChallengeRequestDTO.CreateChallengeDTO request, Long memberId) {
 
-        Member member = memberRepository.findById(memberId).get();
-
         // 이미지 업로드
         Uuid mainUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String mainImageUrl = s3Manager.uploadFile(s3Manager.generateMainKeyName(mainUuid), request.getMainImage());
@@ -64,8 +67,23 @@ public class ChallengeService {
 
         // 컨버터를 사용해 DTO를 챌린지 엔티티로 변환
         Challenge challenge = ChallengeConverter.toChallenge(request, mainImageUrl, certImageUrl);
+        challengeRepository.save(challenge);
 
-        // 리스트로 받은 리스트 데이터를 반복문을 통해 ChallengeNote 엔티티 각각에 담고 저장
+        // 멤버 포인트 차감, 포인트 부족할 시 예외처리
+        Member member = memberRepository.findById(memberId).get();
+        int memberPoint = member.getPoint();
+        if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
+        member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 포인트 기록 생성 및 디비 저장
+        pointLogRepository.save(PointLog.builder()
+                .pointName(PointName.JOIN_CHALLENGE)
+                .status(PointStatus.USE)
+                .value(challenge.getJoinPoint())
+                .member(member)
+                .build());
+
+        // 리스트로 받은 리스트 데이터를 ChallengeNote 엔티티 각각에 담고 저장
         List<String> notes = request.getNotes();
         notes.stream()
                 .map(note -> ChallengeNote.builder().note(note).challenge(challenge).build())
@@ -81,7 +99,6 @@ public class ChallengeService {
                         .challengeStatus(ChallengeStatus.NOT_YET)
                         .isFeedUpload(false)
                         .build());
-        challengeRepository.save(challenge);
 
         return ChallengeConverter.toChallengePreviewDTO(challenge, member.getNickName());
     }
@@ -113,7 +130,7 @@ public class ChallengeService {
      */
     public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
 
-        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환한다
+        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환
         List<Challenge> recommendChallenges = challengeRepository.findTop2ByStartDateAfterOrderByCountLikesDesc(LocalDate.now());
 
         return recommendChallenges.stream()
@@ -271,10 +288,25 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
 
+        Challenge challenge = challengeRepository.findById(challengeId).get();
         Member member = memberRepository.findById(memberId).get();
 
-        Challenge challenge = challengeRepository.findById(challengeId).get();
+        // 멤버 포인트 차감, 포인트 부족할 시 예외처리
+        int memberPoint = member.getPoint();
+        if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
+        member.subPoint(challenge.getJoinPoint()); // 포인트 차감
+
+        // 포인트 기록 생성 및 디비 저장
+        pointLogRepository.save(PointLog.builder()
+                .pointName(PointName.JOIN_CHALLENGE)
+                .status(PointStatus.USE)
+                .value(challenge.getJoinPoint())
+                .member(member)
+                .build());
+
+        // 참여인원, 모인 포인트 증가
         challenge.increaseAttendeeCount();
+        challenge.addCollectedPoint(challenge.getJoinPoint());
         challengeRepository.save(challenge);
 
         challengeMemberRepository.save(
