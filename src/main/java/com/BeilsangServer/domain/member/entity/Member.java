@@ -30,7 +30,6 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, APPLE
 
