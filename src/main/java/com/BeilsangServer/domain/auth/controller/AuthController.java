@@ -7,21 +7,15 @@ import com.BeilsangServer.domain.auth.apple.dto.AppleRevokeRequestDto;
 import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.auth.service.AuthService;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
-import com.BeilsangServer.global.jwt.exception.CustomException;
-import com.BeilsangServer.global.jwt.exception.ErrorCode;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor

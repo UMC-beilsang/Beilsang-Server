@@ -1,4 +1,4 @@
-package com.BeilsangServer.global.common.apiResponse;
+package com.BeilsangServer.global.common.apiPayload;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,26 +7,26 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@JsonPropertyOrder({"isSuccess", "status", "message", "data"}) // 변수 순서를 지정
+@JsonPropertyOrder({"isSuccess", "code", "message", "data"}) // 변수 순서를 지정
 @AllArgsConstructor
 public class ApiResponse<T> {
     private boolean isSuccess;
-    private String status;
+    private String code;
     private String message;
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
-    public ApiResponse(ApiResponseStatus status) {
-        this.isSuccess = status.isSuccess();
-        this.status = status.getStatus();
-        this.message = status.getMessage();
+    public ApiResponse(ApiResponseStatus code) {
+        this.isSuccess = code.isSuccess();
+        this.code = code.getStatus();
+        this.message = code.getMessage();
     }
 
-    public ApiResponse(ApiResponseStatus status, T data) {
-        this.isSuccess = status.isSuccess();
-        this.status = status.getStatus();
-        this.message = status.getMessage();
+    public ApiResponse(ApiResponseStatus code, T data) {
+        this.isSuccess = code.isSuccess();
+        this.code = code.getStatus();
+        this.message = code.getMessage();
         this.data = data;
     }
     @JsonProperty("isSuccess")
@@ -35,8 +35,8 @@ public class ApiResponse<T> {
     }
 
     @JsonProperty("status")
-    public String getStatus() {
-        return status;
+    public String getCode() {
+        return code;
     }
 
     @JsonProperty("message")
@@ -47,5 +47,10 @@ public class ApiResponse<T> {
     @JsonProperty("data")
     public T getData() {
         return data;
+    }
+
+    // 실패한 경우 응답 생성
+    public static <T> ApiResponse<T> onFailure(String code, String message, T data) {
+        return new ApiResponse<>(true, code, message, data);
     }
 }

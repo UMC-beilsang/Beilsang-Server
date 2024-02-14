@@ -1,23 +1,18 @@
 package com.BeilsangServer.domain.challenge.controller;
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
-import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
 
 @RestController

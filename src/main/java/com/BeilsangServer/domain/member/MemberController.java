@@ -1,12 +1,11 @@
 package com.BeilsangServer.domain.member;
 
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
