@@ -13,7 +13,7 @@ public class PointConverter {
         List<PointResponseDTO.pointLogDTO> points = pointLogs.stream().map(pointLog -> PointResponseDTO.pointLogDTO.builder()
                 .id(pointLog.getId())
                 .value(pointLog.getValue())
-                .name(pointLog.getName())
+                .name(pointLog.getPointName().getDescription())
                 .period(pointLog.getPeriod())
                 .date(pointLog.getCreatedAt().toLocalDate())
                 .status(pointLog.getStatus())
