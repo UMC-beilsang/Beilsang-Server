@@ -255,7 +255,7 @@ public class ChallengeService {
         List<Long> challengeIds = new ArrayList<>();
 
         for (ChallengeMember c : challengeMembers) {
-            if ("참여중".equals(status) && c.getChallenge().getFinishDate().isAfter(now) &&
+            if ("참여중".equals(status) && isAfterOrEqual(c.getChallenge().getFinishDate(),now) &&
                     (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             } else if ("등록한".equals(status) && c.getIsHost() &&
@@ -374,5 +374,9 @@ public class ChallengeService {
 
         Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
         return host.getNickName();
+    }
+
+    public static boolean isAfterOrEqual(LocalDate date1, LocalDate date2){
+        return !date1.isBefore(date2);
     }
 }
