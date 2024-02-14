@@ -15,7 +15,7 @@ public class PointConverter {
                 .value(pointLog.getValue())
                 .name(pointLog.getName())
                 .period(pointLog.getPeriod())
-                .date(pointLog.getDate())
+                .date(pointLog.getCreatedAt().toLocalDate())
                 .status(pointLog.getStatus())
                 .build()
         ).toList();

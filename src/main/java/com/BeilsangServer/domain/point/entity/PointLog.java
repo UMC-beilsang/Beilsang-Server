@@ -28,7 +28,7 @@ public class PointLog extends BaseEntity {
 
     private int value;
 
-    private LocalDate date;
+//    private LocalDate date;
 
     private int period;
 
