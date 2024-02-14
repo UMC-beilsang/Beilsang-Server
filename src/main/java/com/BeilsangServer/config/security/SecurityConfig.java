@@ -41,8 +41,8 @@ public class SecurityConfig {
         http
                 .formLogin((auth) -> auth.disable()); // 로그인 폼 미사용
 
-        http
-                .httpBasic((auth) -> auth.disable()); // http basic 미사용
+//        http
+//                .httpBasic((auth) -> auth.disable()); // http basic 미사용
 
         http
                 .authorizeHttpRequests((auth) -> auth
