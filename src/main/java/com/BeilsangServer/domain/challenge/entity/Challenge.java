@@ -52,6 +52,8 @@ public class Challenge extends BaseEntity {
 
     private Integer countLikes;
 
+    private Integer collectedPoint;
+
 
     // 연관관계 메서드
     public void setChallengeNotes(ChallengeNote note) {
@@ -66,4 +68,9 @@ public class Challenge extends BaseEntity {
 
     public void increaseCountLikes(){this.countLikes++;}
     public void decreaseCountLikes(){this.countLikes--;}
+
+    // 모인 포인트 증가
+    public void addCollectedPoint(Integer point) {
+        this.collectedPoint += point;
+    }
 }

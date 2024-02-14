@@ -10,7 +10,7 @@ public class MemberConverter {
         return MemberResponseDTO.MemberDTO.builder()
                 .memberId(member.getId())
                 .nickName(member.getNickName())
-                .totalPoint(member.getTotalPoint())
+                .totalPoint(member.getPoint())
                 .build();
     }
 
