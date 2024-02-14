@@ -3,7 +3,9 @@ package com.BeilsangServer.domain.member.service;
 import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.repository.ChallengeRepository;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
+import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.ChallengeMemberRepository;
+import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.global.enums.ChallengeStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +22,7 @@ public class ChallengeMemberService {
 
     private final ChallengeMemberRepository challengeMemberRepository;
     private final ChallengeRepository challengeRepository;
+    private final MemberRepository memberRepository;
 
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyTasks() {
@@ -103,12 +106,15 @@ public class ChallengeMemberService {
     }
 
     /***
-     * 끝난 챌린지 중 성공한 챌린지 조회
      * 성공한 챌린지의 수익 배분
+     * 호스트는 참가비의 2배를 돌려 받고, 일반 참여자는 실패한 사람들의 포인트를 나눈다.
+     * 이때 100원 단위로 돌려주기 위해 올림 처리를 하여 지급한다.
      */
+    @Transactional
     public void checkSuccess() {
 
         List<Challenge> finishedChallenges = challengeRepository.findAllByFinishDate(LocalDate.now().minusDays(1));
+
         for (Challenge challenge : finishedChallenges) {
 
             List<ChallengeMember> successMembers = challengeMemberRepository.findAllByChallengeId(challenge.getId())
@@ -116,15 +122,21 @@ public class ChallengeMemberService {
                     .filter(challengeMember -> challengeMember.getChallengeStatus().equals(ChallengeStatus.SUCCESS))
                     .toList();
 
-            int pointDivide = challenge.getCollectedPoint() / successMembers.size();
-            pointDivide = pointDivide + (100 - pointDivide % 100); // 100원 단위로 돌려주기 위해 올림
+            // 성공한 멤버가 없는 경우 예외 발생
+            if (successMembers.isEmpty()) throw new RuntimeException("성공한 사람이 없습니다.");
 
-//            successMembers.stream().forEach(
-//                    challengeMember -> {
-//                        challengeMember.getMember().addPoint(pointDivide);
-//
-//                    }
-//            );
+            int pointDivide = challenge.getCollectedPoint() / successMembers.size();
+            int liftedPoint = pointDivide + (100 - pointDivide % 100); // 100원 단위로 돌려주기 위해 올림
+
+            // 성공한 멤버 중 호스트의 경우 2배로 지급
+            successMembers
+                    .forEach(challengeMember -> {
+                        Member member = challengeMember.getMember();
+                        int pointsToAdd = challengeMember.getIsHost() ? liftedPoint * 2 : liftedPoint;
+                        member.addPoint(pointsToAdd);
+                        memberRepository.save(member);
+                    }
+            );
         }
     }
 }
