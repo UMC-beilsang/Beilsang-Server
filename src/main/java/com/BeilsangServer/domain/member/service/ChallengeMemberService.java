@@ -24,6 +24,9 @@ public class ChallengeMemberService {
     private final ChallengeRepository challengeRepository;
     private final MemberRepository memberRepository;
 
+    /***
+     * 스케줄러를 사용하여 매일 00시 정각마다 작업을 수행
+     */
     @Scheduled(cron = "0 0 0 * * *")
     public void dailyTasks() {
         checkFailure();
@@ -34,7 +37,7 @@ public class ChallengeMemberService {
 
     /***
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
-     * 스케줄러를 사용하여 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
+     * 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
      */
     @Transactional
     public void checkFailure() {
