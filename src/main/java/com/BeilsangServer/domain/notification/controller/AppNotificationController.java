@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.BeilsangServer.global.common.apiPayload.ApiResponseStatus.REQUEST_SUCCESS;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/notifications")
@@ -30,6 +28,6 @@ public class AppNotificationController {
 
         List<NotificationDto> response = appNotificationService.getNotification(memberId);
 
-        return new ApiResponse<>(REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 }

@@ -17,11 +17,20 @@ public enum SuccessStatus implements BaseCode {
 
     @Override
     public ReasonDTO getReason() {
-        return null;
+        return ReasonDTO.builder()
+                .message(message)
+                .code(code)
+                .isSuccess(true)
+                .build();
     }
 
     @Override
     public ReasonDTO getReasonHttpStatus() {
-        return null;
+        return ReasonDTO.builder()
+                .message(message)
+                .code(code)
+                .isSuccess(true)
+                .httpStatus(httpStatus)
+                .build();
     }
 }

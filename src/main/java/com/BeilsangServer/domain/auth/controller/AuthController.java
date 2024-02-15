@@ -37,7 +37,7 @@ public class AuthController {
 
         KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,kakaoResponseDto);
+        return ApiResponse.onSuccess(kakaoResponseDto);
     }
 
     @PostMapping("/apple/login")
@@ -48,7 +48,7 @@ public class AuthController {
     public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto,HttpServletResponse response){
 
         AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(),response);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,appleResponseDto);
+        return ApiResponse.onSuccess(appleResponseDto);
     }
 
     @PostMapping("/signup")
@@ -60,7 +60,7 @@ public class AuthController {
     {
       authService.signup(memberLoginDto);
 
-      return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
+      return ApiResponse.onSuccess();
     }
 
     @DeleteMapping("/kakao/revoke")
@@ -72,7 +72,7 @@ public class AuthController {
 
         authService.kakaoRevoke(kakaoRevokeRequestDto.getAccesstoken());
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
+        return ApiResponse.onSuccess();
     }
 
     @DeleteMapping("/apple/revoke")
@@ -84,7 +84,7 @@ public class AuthController {
 
         authService.appleRevoke(appleRevokeRequestDto.getAccessToken());
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS);
+        return ApiResponse.onSuccess();
     }
 
     // 리프레시 토큰으로 액세스토큰 재발급 받는 로직
@@ -107,12 +107,7 @@ public class AuthController {
 //        }
 //        String accessToken = authService.refreshAccessToken(refreshTokenCookie.getValue());
 //        refreshTokenResponseDto.setAccessToken(accessToken);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,refreshResponseDto);
+        return ApiResponse.onSuccess(refreshResponseDto);
     }
-
-
-
-
-
 
 }
