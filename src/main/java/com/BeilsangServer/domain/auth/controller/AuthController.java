@@ -28,11 +28,11 @@ public class AuthController {
 
     @PostMapping("/kakao/login")
     @Operation(summary = "카카오 로그인 API")
-        @io.swagger.v3.oas.annotations.responses.ApiResponses({
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
     public ApiResponse<KakaoResponseDto> login(@RequestBody KakaoRequestDto kakaoRequestDto,
-                                                          HttpServletResponse response) {
+                                               HttpServletResponse response) {
 
 
         KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
@@ -45,9 +45,9 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto,HttpServletResponse response){
+    public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
 
-        AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(),response);
+        AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(), response);
         return ApiResponse.onSuccess(appleResponseDto);
     }
 
@@ -56,11 +56,10 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<Object> signup(@RequestBody MemberLoginDto memberLoginDto)
-    {
-      authService.signup(memberLoginDto);
+    public ApiResponse<Object> signup(@RequestBody MemberLoginDto memberLoginDto) {
+        authService.signup(memberLoginDto);
 
-      return ApiResponse.onSuccess();
+        return ApiResponse.onSuccess();
     }
 
     @DeleteMapping("/kakao/revoke")
@@ -68,7 +67,7 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<Object> revoke( @RequestBody KakaoRevokeRequestDto kakaoRevokeRequestDto,HttpServletResponse response) {
+    public ApiResponse<Object> revoke(@RequestBody KakaoRevokeRequestDto kakaoRevokeRequestDto, HttpServletResponse response) {
 
         authService.kakaoRevoke(kakaoRevokeRequestDto.getAccesstoken());
 
@@ -94,20 +93,12 @@ public class AuthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
     public ApiResponse<RefreshResponseDto> tokenRefresh(@RequestBody RefreshRequestDto refreshRequestDto, HttpServletResponse httpServletResponse) {
-        RefreshResponseDto refreshResponseDto = authService.refreshAccessToken(refreshRequestDto);
-//        Cookie[] list = request.getCookies();
-//        if(list == null) {
-//            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
-//        }
-//
-//        Cookie refreshTokenCookie = Arrays.stream(list).filter(cookie -> cookie.getName().equals("refresh_token")).collect(Collectors.toList()).get(0);
-//
-//        if(refreshTokenCookie == null) {
-//            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
-//        }
-//        String accessToken = authService.refreshAccessToken(refreshTokenCookie.getValue());
-//        refreshTokenResponseDto.setAccessToken(accessToken);
-        return ApiResponse.onSuccess(refreshResponseDto);
-    }
 
+        RefreshResponseDto refreshResponseDto = authService.refreshAccessToken(refreshRequestDto);
+
+        return ApiResponse.onSuccess(refreshResponseDto);
+
+    }
 }
+
+

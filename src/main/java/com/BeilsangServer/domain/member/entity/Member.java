@@ -58,7 +58,7 @@ public class Member extends BaseEntity {
     public void setMemberInfo(MemberLoginDto memberLoginDto){
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
-        this.birth = LocalDate.parse(memberLoginDto.getBirth(),DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        this.birth = LocalDate.parse(memberLoginDto.getBirth());
         this.address = memberLoginDto.getAddress();
         this.keyword = memberLoginDto.getKeyword();
         this.discoveredPath = memberLoginDto.getDiscoveredPath();
