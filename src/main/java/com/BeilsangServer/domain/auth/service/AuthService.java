@@ -44,10 +44,12 @@ public class AuthService {
 
     @Transactional
     public void signup(MemberLoginDto memberLoginDto){
+        String accessToken = memberLoginDto.getAccessToken();
 
-        Long memberId = SecurityUtil.getCurrentUserId();
-        Member member = memberRepository.findById(memberId)
-                .orElseThrow(()-> new RuntimeException("존재하지 않는 멤버입니다."));
+        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
+
+        Member member = memberRepository.findBySocialId(socialId);
+
         member.setMemberInfo(memberLoginDto);
 
     }
@@ -78,7 +80,6 @@ public class AuthService {
         Member member = memberRepository.findBySocialId(socialId);
         member.setRefreshToken(refreshToken);
 
-//        jwtTokenProvider.addRefreshTokenToCookie(refreshToken,response);
 
         return KakaoResponseDto.builder()
                 .accessToken(accessToken)
@@ -96,8 +97,6 @@ public class AuthService {
 
         Member member = memberRepository.findBySocialId(socialId);
         member.setRefreshToken(refreshToken);
-
-//        jwtTokenProvider.addRefreshTokenToCookie(refreshToken,response);
 
         return AppleResponseDto.builder()
                 .accessToken(accessToken)

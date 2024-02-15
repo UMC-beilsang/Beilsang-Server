@@ -52,8 +52,8 @@ public class SecurityConfig {
         /*
         테스트 전 까지 JWT필터 주석처리
          */
-//        //JWTFilter 등록
-//
+        //JWTFilter 등록
+
 //        http
 //                .addFilterBefore(new JwtFilter(jwtTokenProvider, memberRepository), UsernamePasswordAuthenticationFilter.class);
 //
@@ -75,11 +75,11 @@ public class SecurityConfig {
 
 
     }
-//    @Bean
-//    public WebSecurityCustomizer webSecurityCustomizer(){
-//        // 아래 url은 filter 에서 제외
-//        return web ->
-//                web.ignoring()
-//                        .requestMatchers("/auth/**", "/token/refresh","/swagger/**");
-//    }
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer(){
+        // 아래 url은 filter 에서 제외
+        return web ->
+                web.ignoring()
+                        .requestMatchers("/auth/**", "/token/refresh","/swagger/**");
+    }
 }

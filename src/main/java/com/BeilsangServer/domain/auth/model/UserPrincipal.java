@@ -19,7 +19,7 @@ import java.util.Map;
 // SecurityContext authentication에 저장될 유저정보
 public class UserPrincipal implements UserDetails {
 
-    private long id;
+    private Long id;
     private String email;
     private Collection<? extends GrantedAuthority> authorities;
     @Setter
