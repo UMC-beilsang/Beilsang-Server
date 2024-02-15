@@ -19,6 +19,8 @@ import com.BeilsangServer.domain.point.converter.PointConverter;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
 import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
+import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
+import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -162,6 +164,9 @@ public class MemberService {
                 .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now()))
                 .map(challengeMember -> challengeMember.getChallenge().getId())
                 .toList();
+
+//        boolean hasDuplicates = enrolledChallengeIds.stream().distinct().count() != enrolledChallengeIds.size();
+//        if (hasDuplicates) throw new ErrorHandler(ErrorStatus.HAS_DUPLICATE_CHALLENGE);
 
         Boolean isEnrolled = enrolledChallengeIds.contains(challengeId);
 
