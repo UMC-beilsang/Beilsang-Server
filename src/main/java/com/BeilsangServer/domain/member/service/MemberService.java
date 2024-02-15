@@ -23,9 +23,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -146,5 +148,17 @@ public class MemberService {
         else{
             return true;
         }
+    }
+
+    public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
+
+        Boolean isEnrolled = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isEmpty();
+
+        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
+                .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now()))
+                .map(challengeMember -> challengeMember.getChallenge().getId())
+                .toList();
+
+        return MemberConverter.toCheckEnrolledDTO(isEnrolled, enrolledChallengeIds);
     }
 }

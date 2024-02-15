@@ -5,7 +5,6 @@ import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
-import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -69,5 +68,16 @@ public class MemberRestController {
 
         boolean isExists = memberService.checkNickName(name);
         return ApiResponse.onSuccess(isExists);
+    }
+
+    @GetMapping("/check/{challengeId}")
+    public ApiResponse<MemberResponseDTO.CheckEnrolledDTO> checkIsMemberEnrolled(@PathVariable(name = "challengeId") Long challengeId) {
+
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        MemberResponseDTO.CheckEnrolledDTO response = memberService.checkEnroll(memberId, challengeId);
+
+        return ApiResponse.onSuccess(response);
     }
 }

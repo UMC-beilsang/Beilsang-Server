@@ -3,6 +3,8 @@ package com.BeilsangServer.domain.member.converter;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.entity.Member;
 
+import java.util.List;
+
 public class MemberConverter {
 
     public static MemberResponseDTO.MemberDTO toMemberDTO(Member member) {
@@ -22,5 +24,9 @@ public class MemberConverter {
                 .gender(member.getGender())
                 .address(member.getAddress())
                 .build();
+    }
+
+    public static MemberResponseDTO.CheckEnrolledDTO toCheckEnrolledDTO(Boolean isEnrolled, List<Long> enrolledChallengeIds) {
+        return MemberResponseDTO.CheckEnrolledDTO.builder().isEnrolled(isEnrolled).enrolledChallengeIds(enrolledChallengeIds).build();
     }
 }

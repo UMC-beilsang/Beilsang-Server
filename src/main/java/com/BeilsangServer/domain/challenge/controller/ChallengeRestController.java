@@ -49,7 +49,7 @@ public class ChallengeRestController {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId,memberId);
+        ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId, memberId);
 
         return ApiResponse.onSuccess(response);
     }
@@ -107,7 +107,7 @@ public class ChallengeRestController {
     ) {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getLikesList(memberId,category);
+        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getLikesList(memberId, category);
 
         return ApiResponse.onSuccess(response);
     }
@@ -161,11 +161,11 @@ public class ChallengeRestController {
     @PostMapping("/{challengeId}/likes")
     public ApiResponse<Long> challengeLike(
             @PathVariable(name = "challengeId") Long challengeId
-    ){
+    ) {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        Long challengeLikeId = challengeService.challengeLike(challengeId,memberId);
+        Long challengeLikeId = challengeService.challengeLike(challengeId, memberId);
 
         return ApiResponse.onSuccess(challengeLikeId);
     }
@@ -173,10 +173,10 @@ public class ChallengeRestController {
     @DeleteMapping("/{challengeId}/likes")
     public ApiResponse<Long> challengeUnLike(
             @PathVariable(name = "challengeId") Long challengeId
-    ){
+    ) {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        Long challengeUnLikeId = challengeService.challengeUnLike(challengeId,memberId);
+        Long challengeUnLikeId = challengeService.challengeUnLike(challengeId, memberId);
 
         return ApiResponse.onSuccess(challengeUnLikeId);
     }
