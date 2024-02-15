@@ -69,8 +69,9 @@ public class ChallengeConverter {
                 .dDay(dDay)
                 .likes(challenge.getCountLikes())
                 .like(like)
+                .period(challenge.getPeriod())
+                .totalGoalDay(challenge.getTotalGoalDay())
                 .build();
-
     }
 
     public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
