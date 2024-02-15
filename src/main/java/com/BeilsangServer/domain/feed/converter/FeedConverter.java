@@ -6,6 +6,8 @@ import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.domain.member.entity.Member;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -82,4 +84,5 @@ public class FeedConverter {
 
         return FeedDTO.previewFeedListDto.builder().feeds(feedDtos).build();
     }
+
 }
