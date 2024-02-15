@@ -131,5 +131,4 @@ public class ChallengeResponseDTO {
         private ChallengePreviewDTO challengePreviewDTO;
         private MemberResponseDTO.MemberDTO memberDTO;
     }
-
 }

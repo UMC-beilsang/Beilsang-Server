@@ -61,7 +61,7 @@ public class FeedService {
     public Long createFeed(AddFeedRequestDTO.CreateFeedDTO request, Long challengeId, Long memberId){
 
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
-        ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challenge.getId());
+        ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challenge.getId()).get();
 
         Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
         String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), request.getFeedImage());

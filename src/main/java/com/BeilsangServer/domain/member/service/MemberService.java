@@ -23,9 +23,11 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -146,5 +148,23 @@ public class MemberService {
         else{
             return true;
         }
+    }
+
+    /***
+     * 멤버의 챌린지 참여 여부 판단
+     * @param memberId 멤버
+     * @param challengeId 챌린지
+     * @return CheckEnrolledDTO 멤버가 해당 챌린지에 참여 중인지와, 참여 중인 챌린지의 id 값들을 보내준다
+     */
+    public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
+
+        Boolean isEnrolled = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isPresent();
+
+        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
+                .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now()))
+                .map(challengeMember -> challengeMember.getChallenge().getId())
+                .toList();
+
+        return MemberConverter.toCheckEnrolledDTO(isEnrolled, enrolledChallengeIds);
     }
 }
