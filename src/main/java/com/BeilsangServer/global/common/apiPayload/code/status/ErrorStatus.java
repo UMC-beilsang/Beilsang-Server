@@ -15,11 +15,13 @@ public enum ErrorStatus implements BaseErrorCode {
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
-    ;
+
 
     // 멤버 관련 응답
 
     // 챌린지 관련 응답
+    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND,"CHALLENGE4001", "챌린지가 없습니다."),
+    POINT_LACK(HttpStatus.INTERNAL_SERVER_ERROR, "CHALLENGE5001", "포인트가 부족합니다.");
 
     // 피드 관련 응답
 
