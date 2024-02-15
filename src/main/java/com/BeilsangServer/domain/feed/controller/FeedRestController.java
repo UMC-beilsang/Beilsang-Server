@@ -1,26 +1,18 @@
-package com.BeilsangServer.domain.feed;
+package com.BeilsangServer.domain.feed.controller;
 
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.service.FeedService;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
@@ -29,7 +21,7 @@ import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FO
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class FeedController {
+public class FeedRestController {
 
     private final FeedService feedService;
 
@@ -47,9 +39,9 @@ public class FeedController {
     ){
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-
         Long newFeedId = feedService.createFeed(request,challengeId,memberId);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,newFeedId);
+
+        return ApiResponse.onSuccess(newFeedId);
     }
 
     @GetMapping("/feeds/guide/{challengeId}")
@@ -60,8 +52,9 @@ public class FeedController {
     public ApiResponse<ChallengeResponseDTO.ChallengeGuide> getGuide(
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        ChallengeResponseDTO.ChallengeGuide guide = feedService.getGuide(challengeId);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,guide);
+
+        ChallengeResponseDTO.ChallengeGuide response = feedService.getGuide(challengeId);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/feeds/{feedId}")
@@ -74,8 +67,8 @@ public class FeedController {
     ){
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        FeedDTO feedDTO = feedService.getFeed(feedId,memberId);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTO);
+        FeedDTO response = feedService.getFeed(feedId,memberId);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/search")
@@ -86,9 +79,9 @@ public class FeedController {
     public ApiResponse<FeedDTO.previewChallengeAndFeed> searchFeed(
             @RequestParam("name") String name
     ){
-        FeedDTO.previewChallengeAndFeed previewChallengeAndFeed = feedService.searchChallengeAndFeed(name);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,previewChallengeAndFeed);
+        FeedDTO.previewChallengeAndFeed response = feedService.searchChallengeAndFeed(name);
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping("/feeds/{feedId}/likes")
@@ -102,8 +95,8 @@ public class FeedController {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        Long feedLikeId = feedService.feedLike(feedId,memberId);
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedLikeId);
+        Long feedLikeId = feedService.feedLike(feedId, memberId);
+        return ApiResponse.onSuccess(feedLikeId);
     }
 
     @DeleteMapping("/feeds/{feedId}/likes")
@@ -118,7 +111,7 @@ public class FeedController {
         Long memberId = 1L;
         Long feedUnLikeId = feedService.feedUnLike(feedId,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedUnLikeId);
+        return ApiResponse.onSuccess(feedUnLikeId);
     }
 
     @GetMapping("/feeds/category/{category}")
@@ -129,9 +122,9 @@ public class FeedController {
     public ApiResponse<FeedDTO.previewFeedListDto> getFeedByCategory(
             @PathVariable(name = "category") String category
     ){
-        FeedDTO.previewFeedListDto feedDTOList = feedService.getFeedByCategory(category);
+        FeedDTO.previewFeedListDto response = feedService.getFeedByCategory(category);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/feeds/{status}/{category}")
@@ -146,8 +139,8 @@ public class FeedController {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        FeedDTO.previewFeedListDto feedDTOList = feedService.getFeedByStatusAndCategory(status,category,memberId);
+        FeedDTO.previewFeedListDto response = feedService.getFeedByStatusAndCategory(status,category,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,feedDTOList);
+        return ApiResponse.onSuccess(response);
     }
 }
