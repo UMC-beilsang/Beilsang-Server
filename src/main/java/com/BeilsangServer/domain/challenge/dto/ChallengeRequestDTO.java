@@ -2,6 +2,8 @@ package com.BeilsangServer.domain.challenge.dto;
 
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 

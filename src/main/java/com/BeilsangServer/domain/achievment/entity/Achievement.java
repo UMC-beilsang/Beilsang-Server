@@ -22,6 +22,7 @@ public class Achievement extends BaseEntity {
 
     private int count;
 
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @ManyToOne(fetch = FetchType.LAZY)
