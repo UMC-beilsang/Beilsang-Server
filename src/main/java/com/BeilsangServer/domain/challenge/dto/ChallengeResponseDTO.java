@@ -57,9 +57,8 @@ public class ChallengeResponseDTO {
         private Integer likes;
         // 찜 여부
         private boolean like;
-
-//        // 추천 챌린지 목록
-//        private List<RecommendChallengeDTO> recommendChallengeDTOList;
+        private ChallengePeriod period;
+        private Integer totalGoalDay;
     }
 
     @Builder
