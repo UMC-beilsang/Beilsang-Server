@@ -1,5 +1,6 @@
 package com.BeilsangServer.global.common.apiPayload;
 
+import com.BeilsangServer.global.common.apiPayload.code.status.SuccessStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -29,24 +30,10 @@ public class ApiResponse<T> {
         this.message = code.getMessage();
         this.data = data;
     }
-    @JsonProperty("isSuccess")
-    public boolean isSuccess() {
-        return isSuccess;
-    }
 
-    @JsonProperty("status")
-    public String getCode() {
-        return code;
-    }
-
-    @JsonProperty("message")
-    public String getMessage() {
-        return message;
-    }
-
-    @JsonProperty("data")
-    public T getData() {
-        return data;
+    // 성공한 경우 응답 생성
+    public static <T> ApiResponse<T> onSuccess(T result) {
+        return new ApiResponse<>(true, SuccessStatus._OK.getCode(), SuccessStatus._OK.getMessage(), result);
     }
 
     // 실패한 경우 응답 생성

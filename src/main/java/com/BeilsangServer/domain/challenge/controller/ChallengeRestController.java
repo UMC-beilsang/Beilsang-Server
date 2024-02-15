@@ -50,7 +50,7 @@ public class ChallengeRestController {
 
         ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/categories/{category}")
