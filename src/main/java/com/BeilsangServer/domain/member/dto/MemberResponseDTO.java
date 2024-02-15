@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.member.dto;
 
+import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.global.enums.Gender;
 import lombok.AllArgsConstructor;
@@ -8,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class MemberResponseDTO {
 
@@ -47,5 +49,15 @@ public class MemberResponseDTO {
         private LocalDate birth;
         private Gender gender;
         private String address;
+    }
+
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CheckEnrolledDTO {
+        private Boolean isEnrolled;
+        private List<Long> enrolledChallengeIds;
     }
 }

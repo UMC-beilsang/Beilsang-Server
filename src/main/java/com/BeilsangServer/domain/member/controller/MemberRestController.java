@@ -5,8 +5,8 @@ import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
-import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -69,5 +69,24 @@ public class MemberRestController {
 
         boolean isExists = memberService.checkNickName(name);
         return ApiResponse.onSuccess(isExists);
+    }
+
+    @GetMapping("/check/{challengeId}")
+    @Operation(
+            summary = "멤버의 챌린지 참여 조회 API",
+            description = "챌린지ID를 PathVariable로 입력 받아 해당하는 챌린지에 멤버가 참여 중인지와, 멤버가 참여하고 있는 챌린지의 ID들을 알아내는 API입니다."
+    )
+    @Parameter(name = "challengeId", description = "챌린지 ID")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<MemberResponseDTO.CheckEnrolledDTO> checkIsMemberEnrolled(@PathVariable(name = "challengeId") Long challengeId) {
+
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        MemberResponseDTO.CheckEnrolledDTO response = memberService.checkEnroll(memberId, challengeId);
+
+        return ApiResponse.onSuccess(response);
     }
 }

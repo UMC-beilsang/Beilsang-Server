@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 public class MemberLoginDto {
-
+    private String accessToken;
     private Gender gender;
     private String nickName;
     private String birth;
