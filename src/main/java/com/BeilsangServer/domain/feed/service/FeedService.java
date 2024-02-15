@@ -242,6 +242,19 @@ public class FeedService {
         return feedDTOList;
     }
 
+    /***
+     * 챌린지 인증 갤러리에서 사용하는 가장 최근에 인증한 피드 상위 4개
+     * @param challengeId
+     * @return
+     */
+    public FeedDTO.previewFeedListDto getGallery(Long challengeId){
+        List<Feed> feedList = feedRepository.findTop4ByChallenge_IdOrderByCreatedAtDesc(challengeId);
+
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
+
+        return feedDTOList;
+    }
+
     public String getHostName(Long challengeId) {
 
         Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();

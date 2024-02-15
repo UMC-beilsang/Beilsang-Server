@@ -148,4 +148,13 @@ public class FeedRestController {
 
         return ApiResponse.onSuccess(response);
     }
+
+    @GetMapping("/feeds/gallery/{challengeId}")
+    public ApiResponse<FeedDTO.previewFeedListDto> getGallery(
+            @PathVariable(name = "challengeId") Long challengeId
+    ){
+        FeedDTO.previewFeedListDto response = feedService.getGallery(challengeId);
+
+        return ApiResponse.onSuccess(response);
+    }
 }
