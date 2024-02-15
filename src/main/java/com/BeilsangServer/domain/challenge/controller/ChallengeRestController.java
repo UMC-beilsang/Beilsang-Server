@@ -1,23 +1,18 @@
 package com.BeilsangServer.domain.challenge.controller;
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
-import com.BeilsangServer.domain.challenge.entity.Challenge;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
-
-import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
 
 @RestController
@@ -40,7 +35,7 @@ public class ChallengeRestController {
         ChallengeResponseDTO.ChallengePreviewDTO response = challengeService.createChallenge(request, memberId);
 
         // 컨버터를 사용해 response DTO로 변환하여 응답
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/{challengeId}")
@@ -56,7 +51,7 @@ public class ChallengeRestController {
 
         ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/categories/{category}")
@@ -74,7 +69,7 @@ public class ChallengeRestController {
 
         ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getChallengePreviewList(category);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("")
@@ -86,7 +81,7 @@ public class ChallengeRestController {
 
         ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getChallengePreviewList();
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/famous/{category}")
@@ -97,9 +92,9 @@ public class ChallengeRestController {
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getFamousChallengeList(
             @PathVariable(name = "category") String category
     ) {
-        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getFamousChallengeList(category);
+        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getFamousChallengeList(category);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/likes/{category}")
@@ -112,9 +107,9 @@ public class ChallengeRestController {
     ) {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
-        ChallengeResponseDTO.ChallengePreviewListDTO challenges = challengeService.getLikesList(memberId,category);
+        ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getLikesList(memberId,category);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/{status}/{category}")
@@ -129,9 +124,9 @@ public class ChallengeRestController {
         // Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        ChallengeResponseDTO.ChallengeListWithCountDTO challenges = challengeService.getChallengeByStatusAndCategory(status, category, memberId);
+        ChallengeResponseDTO.ChallengeListWithCountDTO response = challengeService.getChallengeByStatusAndCategory(status, category, memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, challenges);
+        return ApiResponse.onSuccess(response);
     }
 
     @Operation(summary = "챌린지 참여 API", description = "참여하는 챌린지 ID를 받아 참여하는 API입니다.")
@@ -147,7 +142,7 @@ public class ChallengeRestController {
 
         ChallengeResponseDTO.JoinChallengeDTO response = challengeService.joinChallenge(challengeId, memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @Operation(summary = "추천 챌린지 조회 API", description = "아직 시작 안한 챌린지들 중 참여인원이 가장 많은 2개의 챌린지를 미리보기로 보여주는 API입니다.")
@@ -160,7 +155,7 @@ public class ChallengeRestController {
         List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges();
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 
     @PostMapping("/{challengeId}/likes")
@@ -172,7 +167,7 @@ public class ChallengeRestController {
 
         Long challengeLikeId = challengeService.challengeLike(challengeId,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeLikeId);
+        return ApiResponse.onSuccess(challengeLikeId);
     }
 
     @DeleteMapping("/{challengeId}/likes")
@@ -183,6 +178,6 @@ public class ChallengeRestController {
         Long memberId = 1L;
         Long challengeUnLikeId = challengeService.challengeUnLike(challengeId,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,challengeUnLikeId);
+        return ApiResponse.onSuccess(challengeUnLikeId);
     }
 }

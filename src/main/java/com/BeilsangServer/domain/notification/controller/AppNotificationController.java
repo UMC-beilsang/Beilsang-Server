@@ -2,7 +2,7 @@ package com.BeilsangServer.domain.notification.controller;
 
 import com.BeilsangServer.domain.notification.dto.NotificationResponseDto.NotificationDto;
 import com.BeilsangServer.domain.notification.service.AppNotificationService;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-
-import static com.BeilsangServer.global.common.apiResponse.ApiResponseStatus.REQUEST_SUCCESS;
 
 @RestController
 @RequiredArgsConstructor
@@ -30,6 +28,6 @@ public class AppNotificationController {
 
         List<NotificationDto> response = appNotificationService.getNotification(memberId);
 
-        return new ApiResponse<>(REQUEST_SUCCESS, response);
+        return ApiResponse.onSuccess(response);
     }
 }

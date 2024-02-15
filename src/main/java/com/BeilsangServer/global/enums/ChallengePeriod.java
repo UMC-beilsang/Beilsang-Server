@@ -11,3 +11,4 @@ public enum ChallengePeriod {
     private final Integer days;
 }
 
+

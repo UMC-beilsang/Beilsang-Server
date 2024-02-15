@@ -1,12 +1,11 @@
-package com.BeilsangServer.domain.member;
+package com.BeilsangServer.domain.member.controller;
 
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
-import com.BeilsangServer.global.common.apiResponse.ApiResponse;
-import com.BeilsangServer.global.common.apiResponse.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.ApiResponse;
+import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RequiredArgsConstructor
 @RequestMapping("/api")
-public class MemberController {
+public class MemberRestController {
 
     private final MemberService memberService;
     @GetMapping("/mypage/{memberId}")
@@ -28,9 +27,9 @@ public class MemberController {
             @PathVariable(name = "memberId") Long memberId
     ){
 
-        MemberResponseDTO.myPageDTO myPageDTO = memberService.getMyPage(memberId);
+        MemberResponseDTO.myPageDTO response = memberService.getMyPage(memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,myPageDTO);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/mypage/points/{memberId}")
@@ -42,9 +41,9 @@ public class MemberController {
             @PathVariable(name = "memberId") Long memberId
     ){
 
-        PointResponseDTO.pointLogListDTO pointLogListDTO = memberService.getPointLog(memberId);
+        PointResponseDTO.pointLogListDTO response = memberService.getPointLog(memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,pointLogListDTO);
+        return ApiResponse.onSuccess(response);
     }
 
     @PatchMapping("/profile")
@@ -58,17 +57,17 @@ public class MemberController {
         //Long memberId = SecurityUtil.getCurrentUserId();
         Long memberId = 1L;
 
-        MemberResponseDTO.profileDTO updated = memberService.updateProfile(memberUpdateDto,memberId);
+        MemberResponseDTO.profileDTO response = memberService.updateProfile(memberUpdateDto,memberId);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,updated);
+        return ApiResponse.onSuccess(response);
     }
 
     @GetMapping("/join/check/nickname")
     public ApiResponse<Boolean> checkNickName(
         @RequestParam("name") String name
     ){
-        boolean isExists = memberService.checkNickName(name);
 
-        return new ApiResponse<>(ApiResponseStatus.REQUEST_SUCCESS,isExists);
+        boolean isExists = memberService.checkNickName(name);
+        return ApiResponse.onSuccess(isExists);
     }
 }

@@ -58,6 +58,7 @@ public class ChallengeConverter {
                 .attendeeCount(challenge.getAttendeeCount())
                 .hostName(hostName)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
+                .dayOfWeek(challenge.getCreatedAt().toLocalDate().getDayOfWeek())
                 .imageUrl(challenge.getMainImageUrl())
                 .certImageUrl(challenge.getCertImageUrl())
                 .title(challenge.getTitle())
