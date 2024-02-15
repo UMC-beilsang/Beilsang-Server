@@ -152,7 +152,7 @@ public class MemberService {
 
     public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
 
-        Boolean isEnrolled = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isEmpty();
+        Boolean isEnrolled = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isPresent();
 
         List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
                 .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now()))
