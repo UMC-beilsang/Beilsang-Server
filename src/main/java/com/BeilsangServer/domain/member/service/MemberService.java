@@ -150,6 +150,12 @@ public class MemberService {
         }
     }
 
+    /***
+     * 멤버의 챌린지 참여 여부 판단
+     * @param memberId 멤버
+     * @param challengeId 챌린지
+     * @return CheckEnrolledDTO 멤버가 해당 챌린지에 참여 중인지와, 참여 중인 챌린지의 id 값들을 보내준다
+     */
     public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
 
         Boolean isEnrolled = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isPresent();
