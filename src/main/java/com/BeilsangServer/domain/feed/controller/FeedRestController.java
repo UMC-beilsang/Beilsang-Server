@@ -3,6 +3,7 @@ package com.BeilsangServer.domain.feed.controller;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
+import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.service.FeedService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -11,8 +12,11 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
@@ -120,10 +124,11 @@ public class FeedRestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
     public ApiResponse<FeedDTO.previewFeedListDto> getFeedByCategory(
-            @PathVariable(name = "category") String category
+            @PathVariable(name = "category") String category,
+            @RequestParam("page") Integer page
     ){
-        FeedDTO.previewFeedListDto response = feedService.getFeedByCategory(category);
 
+        FeedDTO.previewFeedListDto response = feedService.getFeedByCategory(category,page);
         return ApiResponse.onSuccess(response);
     }
 
