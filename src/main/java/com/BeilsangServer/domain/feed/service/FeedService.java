@@ -24,6 +24,10 @@ import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -181,16 +185,19 @@ public class FeedService {
      * @param category
      * @return 주어진 카테고리에 해당하는 feedDtoList
      */
-    public FeedDTO.previewFeedListDto getFeedByCategory(String category){
+    public FeedDTO.previewFeedListDto getFeedByCategory(String category, Integer page){
         Category categoryByEnum = Category.from(category);
 
-        List<Feed> feedList;
+        Pageable pageable = PageRequest.of(page,6, Sort.by("createdAt").descending());
+
+        Page<Feed> feedPage;
         if (categoryByEnum.equals(Category.ALL)){
-            feedList = feedRepository.findAll();
+            feedPage = feedRepository.findAll(pageable);
         }
         else{
-            feedList = feedRepository.findAllByChallenge_Category(categoryByEnum); // 시간 순으로 정렬
+            feedPage = feedRepository.findAllByChallenge_Category(categoryByEnum,pageable); // 시간 순으로 정렬
         }
+        List<Feed> feedList = feedPage.getContent();
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
@@ -229,6 +236,19 @@ public class FeedService {
         }
 
         List<Feed> feedList = feedRepository.findAllByChallenge_IdIn(challengeIds);
+
+        FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
+
+        return feedDTOList;
+    }
+
+    /***
+     * 챌린지 인증 갤러리에서 사용하는 가장 최근에 인증한 피드 상위 4개
+     * @param challengeId
+     * @return
+     */
+    public FeedDTO.previewFeedListDto getGallery(Long challengeId){
+        List<Feed> feedList = feedRepository.findTop4ByChallenge_IdOrderByCreatedAtDesc(challengeId);
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
