@@ -34,7 +34,6 @@ public class AuthController {
     public ApiResponse<KakaoResponseDto> login(@RequestBody KakaoRequestDto kakaoRequestDto,
                                                HttpServletResponse response) {
 
-
         KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
 
         return ApiResponse.onSuccess(kakaoResponseDto);
@@ -48,6 +47,7 @@ public class AuthController {
     public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
 
         AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(), response);
+
         return ApiResponse.onSuccess(appleResponseDto);
     }
 
@@ -57,6 +57,7 @@ public class AuthController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
     public ApiResponse<Object> signup(@RequestBody MemberLoginDto memberLoginDto) {
+
         authService.signup(memberLoginDto);
 
         return ApiResponse.onSuccess();
@@ -73,6 +74,7 @@ public class AuthController {
 
         return ApiResponse.onSuccess();
     }
+
 
     @DeleteMapping("/apple/revoke")
     @Operation(summary = "애플 회원 탈퇴 API")

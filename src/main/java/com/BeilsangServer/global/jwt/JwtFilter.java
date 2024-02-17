@@ -29,15 +29,20 @@ public class JwtFilter extends GenericFilterBean {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
         logger.info("[JwtFilter] : " + httpServletRequest.getRequestURL().toString());
+        // resolveToken 메소드를 호출하여 HTTP 요청 헤더에서 access token을 추출
         String jwt = resolveToken(httpServletRequest);
 
+        // access token이 존재하며 토큰이 유효한 경우에만 이후의 코드를 실행
         if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            Long memberId = Long.valueOf(jwtTokenProvider.getPayload(jwt)); // 토큰 Payload에 있는 userId 가져오기
-            Member member = memberRepository.findBySocialId(memberId);
+            // 토큰에서 socialId를 추출하고 멤버를 가져옴
+            Long socialId = Long.valueOf(jwtTokenProvider.getPayload(jwt));
+            Member member = memberRepository.findBySocialId(socialId);
 
+           //member가 null이면 디비에 존재하지 않는 멤버
             if(member == null) {
                 throw new CustomException(ErrorCode.NOT_EXIST_USER);
             }
+            // 멤버 정보를 바탕으로 인증 토큰을 생성하고, 이를 Security Context에 저장
             UserDetails userDetails = UserPrincipal.create(member);
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -50,6 +55,7 @@ public class JwtFilter extends GenericFilterBean {
 
     // Header에서 Access Token 가져오기
     private String resolveToken(HttpServletRequest request) {
+        // HTTP 요청의 헤더에서 "Bearer "를 접두어로 가진 JWT를 추출
         String bearerToken = request.getHeader(AUTHORIZATION_HEADER);
 
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {

@@ -145,6 +145,10 @@ public class AuthService {
 
         String changeAccessToken = jwtTokenProvider.createAccessToken(member.getSocialId().toString());
 
+//        Long memberId = SecurityUtil.getCurrentUserId();
+
+        System.out.println(member);
+
         return RefreshResponseDto.builder()
                 .accessToken(changeAccessToken)
                 .refreshToken(refreshToken)
