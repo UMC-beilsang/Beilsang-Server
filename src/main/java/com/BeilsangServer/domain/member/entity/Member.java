@@ -72,41 +72,6 @@ public class Member extends BaseEntity {
         this.resolution = memberLoginDto.getResolution();
     }
 
-
-    @Builder
-    public Member(
-            String email,
-            Role role,
-            Gender gender,
-            Provider provider,
-            Long socialId,
-            String nickName,
-            String birth,
-            String address,
-            String keyword,
-            String discoveredPath,
-            String resolution,
-            int totalPoint,
-            String recommendNickname,
-            String profileUrl) {
-        this.email = email;
-        this.role = role;
-        this.gender = gender;
-        this.provider = provider;
-        this.socialId = socialId;
-        this.nickName = nickName;
-        this.birth = LocalDate.parse(birth,DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        this.address = address;
-        this.keyword = keyword;
-        this.discoveredPath = discoveredPath;
-        this.resolution = resolution;
-        this.point = totalPoint;
-        this.recommendNickname = recommendNickname;
-        this.profileUrl = profileUrl;
-
-    }
-
-
     public void updateProfileUrl(String profileUrl) {
         this.profileUrl = profileUrl;
     }
