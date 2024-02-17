@@ -23,6 +23,7 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 챌린지 관련 응답
     CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND,"CHALLENGE4001", "챌린지가 없습니다."),
+    CHALLENGE_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE4002", "챌린지의 호스트가 없습니다."),
     POINT_LACK(HttpStatus.INTERNAL_SERVER_ERROR, "CHALLENGE5001", "포인트가 부족합니다."),
     ;
 

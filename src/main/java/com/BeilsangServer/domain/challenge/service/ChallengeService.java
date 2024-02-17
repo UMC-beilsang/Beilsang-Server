@@ -118,10 +118,10 @@ public class ChallengeService {
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
         // 찜 여부
-        Boolean like = challengeLikeRepository.existsByChallenge_IdAndMember_Id(challengeId,memberId);
+        Boolean like = challengeLikeRepository.existsByChallengeIdAndMemberId(challengeId,memberId);
 
         // 챌린지 호스트 이름 찾기
-        String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
+        String hostName = getHostName(challengeId);
 
         return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName,like);
     }
@@ -358,7 +358,7 @@ public class ChallengeService {
      */
     @Transactional
     public Long challengeUnLike(Long challengeId, Long memberId){
-        ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_IdAndMember_Id(challengeId,memberId);
+        ChallengeLike challengeLike = challengeLikeRepository.findByChallengeIdAndMemberId(challengeId,memberId);
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
         challenge.decreaseCountLikes();
@@ -374,7 +374,9 @@ public class ChallengeService {
      */
     public String getHostName(Long challengeId) {
 
-        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        Member host = challengeMemberRepository.findByChallengeIdAndIsHostIsTrue(challengeId)
+                .orElseThrow(()->new ErrorHandler(ErrorStatus.CHALLENGE_HOST_NOT_FOUND))
+                .getMember();
         return host.getNickName();
     }
 
