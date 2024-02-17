@@ -72,7 +72,6 @@ public class Member extends BaseEntity {
         this.resolution = memberLoginDto.getResolution();
     }
 
-
     @Builder
     public Member(
             String email,
