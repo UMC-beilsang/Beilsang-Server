@@ -74,7 +74,6 @@ public class ChallengeService {
         // 멤버 포인트 차감, 포인트 부족할 시 예외처리
         Member member = memberRepository.findById(memberId).get();
         int memberPoint = member.getPoint();
-//        if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         if (challenge.getJoinPoint() > memberPoint) throw new ErrorHandler(ErrorStatus.POINT_LACK); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
 

@@ -9,6 +9,10 @@ import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
+import com.BeilsangServer.domain.point.entity.PointLog;
+import com.BeilsangServer.domain.point.repository.PointLogRepository;
+import com.BeilsangServer.global.enums.PointName;
+import com.BeilsangServer.global.enums.PointStatus;
 import com.BeilsangServer.global.jwt.JwtTokenProvider;
 import com.BeilsangServer.global.jwt.exception.CustomException;
 import com.BeilsangServer.global.jwt.exception.ErrorCode;
@@ -25,6 +29,7 @@ public class AuthService {
     private final JwtTokenProvider jwtTokenProvider;
     private final KakaoAuthService kakaoAuthService;
     private final AppleAuthService appleAuthService;
+    private final PointLogRepository pointLogRepository;
 
     //카카오 로그인
     @Transactional
@@ -52,6 +57,24 @@ public class AuthService {
 
         member.setMemberInfo(memberLoginDto);
 
+        // 회원가입 시 1000포인트 지급
+        int welcomePoint = 1000;
+
+        // 추천인(recommendNickname) null인지 확인 후 MemberRepository에서 일치하는 회원 있는지 확인
+        // 그 후 추천인 포인트 추가
+        String recommendNickname = memberLoginDto.getRecommendNickname();
+        int recommendPoint = memberRepository.existsByNickName(recommendNickname) ? 500 : 0;
+
+        int point = welcomePoint + recommendPoint;
+        member.addPoint(point);
+
+        // 포인트 기록 생성 및 디비 저장
+        pointLogRepository.save(PointLog.builder()
+                .pointName(PointName.NEW_MEMBER)
+                .status(PointStatus.EARN)
+                .value(point)
+                .member(member)
+                .build());
     }
 
     @Transactional

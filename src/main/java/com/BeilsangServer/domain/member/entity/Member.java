@@ -64,7 +64,6 @@ public class Member extends BaseEntity {
         this.discoveredPath = memberLoginDto.getDiscoveredPath();
         this.resolution = memberLoginDto.getResolution();
         this.recommendNickname = memberLoginDto.getRecommendNickname();
-
     }
 
     @Builder
