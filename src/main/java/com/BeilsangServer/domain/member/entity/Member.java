@@ -56,16 +56,22 @@ public class Member extends BaseEntity {
     private String refreshToken;
 
     public void setMemberInfo(MemberLoginDto memberLoginDto){
+        if(memberLoginDto.getAddress() != null && !memberLoginDto.getAddress().isBlank()){
+            this.address = memberLoginDto.getAddress();
+        }
+        if(memberLoginDto.getDiscoveredPath() != null && !memberLoginDto.getDiscoveredPath().isBlank()){
+            this.discoveredPath = memberLoginDto.getDiscoveredPath();
+        }
+        if(memberLoginDto.getRecommendNickname() != null && !memberLoginDto.getRecommendNickname().isBlank()){
+            this.recommendNickname = memberLoginDto.getRecommendNickname();
+        }
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
         this.birth = LocalDate.parse(memberLoginDto.getBirth());
-        this.address = memberLoginDto.getAddress();
         this.keyword = memberLoginDto.getKeyword();
-        this.discoveredPath = memberLoginDto.getDiscoveredPath();
         this.resolution = memberLoginDto.getResolution();
-        this.recommendNickname = memberLoginDto.getRecommendNickname();
-
     }
+
 
     @Builder
     public Member(

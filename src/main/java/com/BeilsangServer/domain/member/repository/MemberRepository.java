@@ -14,8 +14,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByEmail(String email);
 
-    void deleteBySocialId(Long id);
-
     Member findBySocialId(Long socialId);
 
     Member findByRefreshToken(String token);
@@ -32,6 +30,5 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
             "JOIN Feed f ON cm.id = f.challengeMember.id " +
             "WHERE f.id = :feedId")
     Member findMemberByFeedId(@Param("feedId") Long feedId);
-
 }
 
