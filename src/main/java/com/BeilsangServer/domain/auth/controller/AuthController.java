@@ -44,7 +44,7 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<AppleResponseDto> login(@RequestBody @Valid AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
+    public ApiResponse<AppleResponseDto> login(@RequestBody AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
 
         AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(), response);
 

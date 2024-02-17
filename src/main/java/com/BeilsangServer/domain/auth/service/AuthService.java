@@ -5,7 +5,6 @@ import com.BeilsangServer.domain.auth.apple.dto.AppleMemberAndExistDto;
 import com.BeilsangServer.domain.auth.apple.dto.AppleResponseDto;
 import com.BeilsangServer.domain.auth.apple.service.AppleAuthService;
 import com.BeilsangServer.domain.auth.dto.*;
-import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
@@ -41,7 +40,7 @@ public class AuthService {
     @Transactional
     public AppleResponseDto loginWithApple(String idToken, HttpServletResponse response) {
         AppleMemberAndExistDto appleMemberAndExistDto =
-                appleAuthService.getAppleMemberInfo(idToken); // dto에 socialId, email 저장
+                appleAuthService.getAppleMemberInfo(idToken);
         return getAppleTokens(appleMemberAndExistDto.getMember().getSocialId(),appleMemberAndExistDto.getExistMember(),response);
     }
 
@@ -144,10 +143,6 @@ public class AuthService {
         }
 
         String changeAccessToken = jwtTokenProvider.createAccessToken(member.getSocialId().toString());
-
-//        Long memberId = SecurityUtil.getCurrentUserId();
-
-        System.out.println(member);
 
         return RefreshResponseDto.builder()
                 .accessToken(changeAccessToken)
