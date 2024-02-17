@@ -72,9 +72,8 @@ public class ChallengeService {
         challengeRepository.save(challenge);
 
         // 멤버 포인트 차감, 포인트 부족할 시 예외처리
-        Member member = memberRepository.findById(memberId).get();
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
         int memberPoint = member.getPoint();
-//        if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
         if (challenge.getJoinPoint() > memberPoint) throw new ErrorHandler(ErrorStatus.POINT_LACK); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
 
@@ -113,7 +112,7 @@ public class ChallengeService {
      */
     public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId,Long memberId) {
 
-        Challenge challenge = challengeRepository.findById(challengeId).get();
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
         // 챌린지 시작 D-day 계산
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
@@ -121,7 +120,7 @@ public class ChallengeService {
         // 찜 여부
         Boolean like = challengeLikeRepository.existsByChallenge_IdAndMember_Id(challengeId,memberId);
 
-        // 챌린지 호스트 이름 찾기부
+        // 챌린지 호스트 이름 찾기
         String hostName = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember().getNickName();
 
         return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName,like);
@@ -291,12 +290,12 @@ public class ChallengeService {
     @Transactional
     public ChallengeResponseDTO.JoinChallengeDTO joinChallenge(Long challengeId, Long memberId) {
 
-        Challenge challenge = challengeRepository.findById(challengeId).get();
-        Member member = memberRepository.findById(memberId).get();
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
         // 멤버 포인트 차감, 포인트 부족할 시 예외처리
         int memberPoint = member.getPoint();
-        if (challenge.getJoinPoint() > memberPoint) throw new RuntimeException("포인트가 부족합니다"); // 예외처리
+        if (challenge.getJoinPoint() > memberPoint) throw new ErrorHandler(ErrorStatus.POINT_LACK); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
 
         // 포인트 기록 생성 및 디비 저장
@@ -338,9 +337,9 @@ public class ChallengeService {
     @Transactional
     public Long challengeLike(Long challengeId, Long memberId){
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(()->{throw new IllegalArgumentException("챌린지없다.");});
+                .orElseThrow(()-> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
-        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
         ChallengeLike challengeLike = ChallengeLike.builder()
                 .challenge(challenge)
                 .member(member)
@@ -360,9 +359,9 @@ public class ChallengeService {
     @Transactional
     public Long challengeUnLike(Long challengeId, Long memberId){
         ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_IdAndMember_Id(challengeId,memberId);
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
-        challenge.decreaseCountLikes();;
+        challenge.decreaseCountLikes();
         challengeLikeRepository.delete(challengeLike);
 
         return challengeLike.getId();
