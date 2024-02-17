@@ -1,5 +1,7 @@
 package com.BeilsangServer.global.enums;
 
+import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
+import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -54,7 +56,7 @@ public enum Category {
                 return category;
             }
         }
-        throw new IllegalArgumentException("유효하지 않은 카테고리 값입니다: " + stringCategory);
+        throw new ErrorHandler(ErrorStatus.CATEGORY_NOT_FOUND);
     }
 
 //    @JsonCreator

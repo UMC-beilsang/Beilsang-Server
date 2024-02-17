@@ -337,9 +337,9 @@ public class ChallengeService {
     @Transactional
     public Long challengeLike(Long challengeId, Long memberId){
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(()->{throw new IllegalArgumentException("챌린지없다.");});
+                .orElseThrow(()->{throw new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND);});
 
-        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
+        Member member = memberRepository.findById(memberId).get();
         ChallengeLike challengeLike = ChallengeLike.builder()
                 .challenge(challenge)
                 .member(member)
@@ -359,7 +359,8 @@ public class ChallengeService {
     @Transactional
     public Long challengeUnLike(Long challengeId, Long memberId){
         ChallengeLike challengeLike = challengeLikeRepository.findByChallenge_IdAndMember_Id(challengeId,memberId);
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->{throw new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND);});
 
         challenge.decreaseCountLikes();;
         challengeLikeRepository.delete(challengeLike);

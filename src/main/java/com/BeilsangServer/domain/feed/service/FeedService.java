@@ -21,6 +21,8 @@ import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.domain.member.service.ChallengeMemberService;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
+import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
+import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import com.BeilsangServer.global.enums.Category;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -64,7 +66,8 @@ public class FeedService {
     @Transactional
     public Long createFeed(AddFeedRequestDTO.CreateFeedDTO request, Long challengeId, Long memberId){
 
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> {throw new IllegalArgumentException("없는챌린지다.");});
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->{throw new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND);});
         ChallengeMember challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challenge.getId()).get();
 
         Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
@@ -85,7 +88,8 @@ public class FeedService {
      * @return guide dto
      */
     public ChallengeResponseDTO.ChallengeGuide getGuide(Long challengeId){
-        Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(()->{throw new IllegalArgumentException("없는챌린지다.");});
+        Challenge challenge = challengeRepository.findById(challengeId)
+                .orElseThrow(()->{throw new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND);});
         List<ChallengeNote> challengeNotes = challengeNoteRepository.findAllByChallenge_Id(challenge.getId());
 
         List<String> challengeNoteList = ChallengeConverter.toStringChallengeNotes(challengeNotes);
@@ -105,7 +109,7 @@ public class FeedService {
      */
     public FeedDTO getFeed(Long feedId, Long memberId) {
         Feed feed = feedRepository.findById(feedId).orElseThrow(() -> {
-            throw new IllegalArgumentException("이런피드없다.");
+            throw new ErrorHandler(ErrorStatus.FEED_NOT_FOUND);
         });
 
         Member member = memberRepository.findMemberByFeedId(feedId); // 게시한 사용자의 정보
@@ -153,8 +157,9 @@ public class FeedService {
      */
     @Transactional
     public Long feedLike(Long feedId, Long memberId){
-        Feed feed = feedRepository.findById(feedId).orElseThrow(()-> {throw new IllegalArgumentException("없다");});
-        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+        Feed feed = feedRepository.findById(feedId)
+                .orElseThrow(()-> {throw new ErrorHandler(ErrorStatus.FEED_NOT_FOUND);});
+        Member member = memberRepository.findById(memberId).get(); // 멤버가 없는 경우는 없음
 
         FeedLike feedLike = FeedLike.builder()
                 .feed(feed)
@@ -217,19 +222,18 @@ public class FeedService {
 
         // memberId로 그 member와 관련된 챌린지 정보 가져오기
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
-        LocalDate now = LocalDate.now();
 
         List<Long> challengeIds = new ArrayList<>();
 
         // 상태 & 카테고리 한번에 처리
         for (ChallengeMember c : challengeMembers) {
-            if ("참여중".equals(status) && isAfterOrEqual(c.getChallenge().getFinishDate(),now) &&
+            if ("참여중".equals(status) && !c.getChallenge().getFinishDate().isBefore(LocalDate.now()) &&
                     (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             } else if ("등록한".equals(status) && c.getIsHost() &&
                     (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
-            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(now) &&
+            } else if ("완료된".equals(status) && c.getChallenge().getFinishDate().isBefore(LocalDate.now()) &&
                     (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             }
