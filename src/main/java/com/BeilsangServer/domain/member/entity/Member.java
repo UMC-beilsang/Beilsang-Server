@@ -72,7 +72,7 @@ public class Member extends BaseEntity {
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
         this.birth = LocalDate.parse(memberLoginDto.getBirth());
-        this.keyword = memberLoginDto.getKeyword();
+        this.keyword = Category.from(memberLoginDto.getKeyword());
         this.resolution = memberLoginDto.getResolution();
     }
 
