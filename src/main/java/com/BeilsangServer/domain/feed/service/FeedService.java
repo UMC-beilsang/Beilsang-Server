@@ -261,7 +261,7 @@ public class FeedService {
 
     public String getHostName(Long challengeId) {
 
-        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        Member host = challengeMemberRepository.findByChallengeIdAndIsHostIsTrue(challengeId).getMember();
         return host.getNickName();
     }
 

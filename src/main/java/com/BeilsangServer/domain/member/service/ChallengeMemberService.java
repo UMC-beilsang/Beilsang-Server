@@ -130,8 +130,8 @@ public class ChallengeMemberService {
                     .filter(challengeMember -> challengeMember.getChallengeStatus().equals(ChallengeStatus.SUCCESS))
                     .toList();
 
-            // 성공한 멤버가 없는 경우 예외 발생
-            if (successMembers.isEmpty()) throw new RuntimeException("성공한 사람이 없습니다.");
+            // 성공한 멤버가 없는 경우 종료
+            if (successMembers.isEmpty()) return;
 
             int pointDivide = challenge.getCollectedPoint() / successMembers.size();
             int liftedPoint = pointDivide + (100 - pointDivide % 100); // 100원 단위로 돌려주기 위해 올림

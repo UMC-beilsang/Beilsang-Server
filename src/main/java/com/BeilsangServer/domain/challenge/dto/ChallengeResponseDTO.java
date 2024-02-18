@@ -19,26 +19,6 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateResultDTO {
-
-        private Long id;
-        private String title;
-        private Category category;
-        private LocalDate startDate;
-        private LocalDate finishDate;
-        private Integer joinPoint;
-        private String imageUrl;
-        private String certImageUrl;
-        private String details;
-        private List<ChallengeNote> challengeNotes = new ArrayList<>();
-        private ChallengePeriod period;
-        private Integer totalGoalDay;
-    }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ChallengeDTO {
 
         private Integer attendeeCount;
