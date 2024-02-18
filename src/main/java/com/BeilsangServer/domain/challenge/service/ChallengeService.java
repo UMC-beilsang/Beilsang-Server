@@ -377,8 +377,9 @@ public class ChallengeService {
     public String getHostName(Long challengeId) {
 
         Member host = challengeMemberRepository.findByChallengeIdAndIsHostIsTrue(challengeId)
-                .orElseThrow(()->new ErrorHandler(ErrorStatus.CHALLENGE_HOST_NOT_FOUND))
+                .orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_HOST_NOT_FOUND))
                 .getMember();
+
         return host.getNickName();
     }
 
