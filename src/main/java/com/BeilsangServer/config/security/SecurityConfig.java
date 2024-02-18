@@ -3,7 +3,6 @@ package com.BeilsangServer.config.security;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.global.jwt.JwtFilter;
 import com.BeilsangServer.global.jwt.JwtTokenProvider;
-import com.BeilsangServer.global.jwt.exception.ExceptionHandlerFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -54,13 +53,9 @@ public class SecurityConfig {
         테스트 전 까지 JWT필터 주석처리
          */
         //JWTFilter 등록
-
+//
 //        http
 //                .addFilterBefore(new JwtFilter(jwtTokenProvider, memberRepository), UsernamePasswordAuthenticationFilter.class);
-//
-//       //JwtFilter 에서 CustomException 사용하기 위해 추가
-//        http
-//                .addFilterBefore(new ExceptionHandlerFilter(), JwtFilter.class);
 
 
         //세션 방식 미사용
