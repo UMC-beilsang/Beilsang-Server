@@ -46,9 +46,8 @@ public class AppleTokenParser {
     public Claims extractClaims(final String idToken, final PublicKey publicKey) {
         try {
             // identity 토큰을 파싱하고 검증한 후 페이로드를 반환
-            return Jwts.parserBuilder()
+            return Jwts.parser()
                     .setSigningKey(publicKey)
-                    .build()
                     .parseClaimsJws(idToken)
                     .getBody();
         } catch (UnsupportedJwtException e) {

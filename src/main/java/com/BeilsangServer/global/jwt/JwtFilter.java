@@ -7,16 +7,16 @@ import com.BeilsangServer.global.jwt.exception.CustomException;
 import com.BeilsangServer.global.jwt.exception.ErrorCode;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
+
 
 @RequiredArgsConstructor
 public class JwtFilter extends GenericFilterBean {
@@ -28,27 +28,29 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
         logger.info("[JwtFilter] : " + httpServletRequest.getRequestURL().toString());
+
         // resolveToken 메소드를 호출하여 HTTP 요청 헤더에서 access token을 추출
         String jwt = resolveToken(httpServletRequest);
 
-        // access token이 존재하며 토큰이 유효한 경우에만 이후의 코드를 실행
-        if (StringUtils.hasText(jwt) && jwtTokenProvider.validateToken(jwt)) {
-            // 토큰에서 socialId를 추출하고 멤버를 가져옴
-            Long socialId = Long.valueOf(jwtTokenProvider.getPayload(jwt));
-            Member member = memberRepository.findBySocialId(socialId);
-
-           //member가 null이면 디비에 존재하지 않는 멤버
-            if(member == null) {
-                throw new CustomException(ErrorCode.NOT_EXIST_USER);
-            }
-            // 멤버 정보를 바탕으로 인증 토큰을 생성하고, 이를 Security Context에 저장
-            UserDetails userDetails = UserPrincipal.create(member);
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-        } else {
-            throw new CustomException(ErrorCode.INVALID_ACCESS_TOKEN);
+        // access token이 존재하지 않거나 토큰이 유효하지 않으면 401 코드 반환
+        if(!jwtTokenProvider.validateToken(jwt)||!StringUtils.hasText(jwt)){
+            httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
+            return;
         }
+
+        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(jwt));
+        Member member = memberRepository.findBySocialId(socialId);
+
+        //member가 null이면 디비에 존재하지 않는 멤버
+        if(member == null) {
+            throw new CustomException(ErrorCode.NOT_EXIST_USER);
+        }
+        // 멤버 정보를 바탕으로 인증 토큰을 생성하고, 이를 Security Context에 저장
+        UserDetails userDetails = UserPrincipal.create(member);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
 
         filterChain.doFilter(servletRequest, servletResponse);
     }
@@ -65,3 +67,4 @@ public class JwtFilter extends GenericFilterBean {
         return null;
     }
 }
+

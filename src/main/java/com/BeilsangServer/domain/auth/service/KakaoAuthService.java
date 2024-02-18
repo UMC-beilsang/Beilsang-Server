@@ -28,6 +28,7 @@ public class KakaoAuthService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .block();
+
     }
 
     // 카카오API에서 가져온 유저정보를 DB에 저장

@@ -10,6 +10,8 @@ import com.BeilsangServer.domain.member.entity.Member;
 import com.BeilsangServer.domain.member.repository.MemberRepository;
 import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
+import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
+import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import com.BeilsangServer.global.enums.PointName;
 import com.BeilsangServer.global.enums.PointStatus;
 import com.BeilsangServer.global.jwt.JwtTokenProvider;
@@ -134,12 +136,12 @@ public class AuthService {
         String refreshToken = refreshRequestDto.getRefreshToken();
         //유효성 검사 실패 시
         if(!jwtTokenProvider.validateToken(refreshToken)) {
-            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new ErrorHandler(ErrorStatus.INVALID_REFRESH_TOKEN);
         }
 
         Member member = memberRepository.findByRefreshToken(refreshToken);
         if(member == null) {
-            throw new CustomException(ErrorCode.INVALID_REFRESH_TOKEN);
+            throw new ErrorHandler(ErrorStatus.NOT_EXIST_USER);
         }
 
         String changeAccessToken = jwtTokenProvider.createAccessToken(member.getSocialId().toString());

@@ -32,7 +32,15 @@ public enum ErrorStatus implements BaseErrorCode {
     FEED_NOT_FOUND(HttpStatus.NOT_FOUND,"FEED4001","피드가 없습니다."),
 
     // 기타
-    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"CATEGORY4001", "카테고리가 없습니다.")
+    CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND,"CATEGORY4001", "카테고리가 없습니다."),
+
+    // 인증 관련
+    UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"AUTH401","인증되지 않은 요청입니다"),
+    INVALID_ACCESS_TOKEN(HttpStatus.UNAUTHORIZED,"AUTH401","유효하지않은 액세스 토큰입니다."),
+    INVALID_REFRESH_TOKEN(HttpStatus.UNAUTHORIZED,"AUTH401","유효하지않은 리프레시 토큰입니다."),
+    BAD_REQUEST(HttpStatus.BAD_REQUEST,"AUTH400","잘못된 요청입니다."),
+    NOT_EXIST_USER(HttpStatus.UNAUTHORIZED,"AUTH401","존재하지 않는 유저입니다.")
+
 
     ;
 
