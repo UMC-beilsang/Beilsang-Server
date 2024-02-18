@@ -1,6 +1,5 @@
 package com.BeilsangServer.domain.member.dto;
 
-import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.Gender;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ public class MemberLoginDto {
     private String nickName;
     private String birth;
     private String address;
-    private Category keyword;
+    private String keyword;
     private String discoveredPath;
     private String resolution;
     private String recommendNickname;
