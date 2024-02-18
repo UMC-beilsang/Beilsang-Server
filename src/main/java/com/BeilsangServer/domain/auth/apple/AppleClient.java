@@ -8,10 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 /*
 애플 서버로부터 public key 받아옴
  */
-@FeignClient(name = "apple-public-key-client", url = "https://appleid.apple.com/auth")
+@FeignClient(name = "apple-public-key", url = "https://appleid.apple.com")
 public interface AppleClient {
 
-    @GetMapping("/keys")
+    @GetMapping("/auth/keys")
     ApplePublicKeys getApplePublicKeys();
 }
 

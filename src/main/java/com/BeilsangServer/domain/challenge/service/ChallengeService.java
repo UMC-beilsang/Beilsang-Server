@@ -340,6 +340,7 @@ public class ChallengeService {
                 .orElseThrow(()-> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
         ChallengeLike challengeLike = ChallengeLike.builder()
                 .challenge(challenge)
                 .member(member)
@@ -358,6 +359,7 @@ public class ChallengeService {
      */
     @Transactional
     public Long challengeUnLike(Long challengeId, Long memberId){
+
         ChallengeLike challengeLike = challengeLikeRepository.findByChallengeIdAndMemberId(challengeId,memberId);
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
