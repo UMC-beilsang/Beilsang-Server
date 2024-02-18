@@ -135,7 +135,8 @@ public class ChallengeService {
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
-        Category keyword = Category.from(member.getKeyword());
+//        Category keyword = Category.from(member.getKeyword());
+        Category keyword = member.getKeyword();
 
         // 이미 참여한 챌린지는 추천하지 않도록 추가 구현
 //        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
