@@ -7,18 +7,22 @@ import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
+
 @Getter
+@NoArgsConstructor
 public class ApplePublicKeys {
 
     private List<ApplePublicKey> keys;
 
-    public ApplePublicKey getMatchesKey(String alg, String kid) {
-        return this.keys
-                .stream()
-                .filter(k -> k.getAlg().equals(alg) && k.getKid().equals(kid))
+    public ApplePublicKeys(List<ApplePublicKey> keys) {
+        this.keys = List.copyOf(keys);
+    }
+
+    // alg와 kid를 파라미터로 받아 일치하는 키를 찾는 메서드
+    public ApplePublicKey getMatchingKey(final String alg, final String kid) {
+        return keys.stream()
+                .filter(key -> key.isSameAlg(alg) && key.isSameKid(kid))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Apple JWT 값의 alg, kid 정보가 올바르지 않습니다."));
+                .orElseThrow(() -> new RuntimeException("잘못된 토큰 형태입니다."));
     }
 }

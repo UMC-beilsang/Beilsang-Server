@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserPrincipal implements UserDetails {
 
     private Long id;
-    private String email;
+    private Long socialId;
     private Collection<? extends GrantedAuthority> authorities;
     @Setter
     private Map<String, Object> attributes;
@@ -30,7 +30,7 @@ public class UserPrincipal implements UserDetails {
                 Collections.singletonList(new SimpleGrantedAuthority(Role.USER.getRole()));
         return new UserPrincipal(
                 member.getId(),
-                member.getEmail(),
+                member.getSocialId(),
                 authorities,
                 null
         );
@@ -63,7 +63,7 @@ public class UserPrincipal implements UserDetails {
 
     @Override
     public String getUsername() {
-        return email;
+        return String.valueOf(socialId);
     }
 
 }
