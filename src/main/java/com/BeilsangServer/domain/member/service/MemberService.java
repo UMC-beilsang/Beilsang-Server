@@ -161,7 +161,7 @@ public class MemberService {
     public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
 
         List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
-                .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now()))
+                .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now())) // 아직 끝나지 않은 챌린지만
                 .map(challengeMember -> challengeMember.getChallenge().getId())
                 .toList();
 

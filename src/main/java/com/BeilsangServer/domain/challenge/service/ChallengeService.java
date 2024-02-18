@@ -129,11 +129,33 @@ public class ChallengeService {
     /***
      * 추천 챌린지 미리보기 조회하기
      * @return ChallengeResponseDTO.RecommendChallengeDTO 2개를 리스트로 반환
+     * 이미 참여한 챌린지는 추천하지 않도록 추가 구현 필요
      */
-    public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges() {
+    public List<ChallengeResponseDTO.RecommendChallengeDTO> getRecommendChallenges(Long memberId) {
 
-        // JPA를 사용해 아직 시작 안한 챌린지 중 좋아요 많은 2개를 리스트로 만들어 반환
-        List<Challenge> recommendChallenges = challengeRepository.findTop2ByStartDateAfterOrderByCountLikesDesc(LocalDate.now());
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+//        Category keyword = Category.from(member.getKeyword());
+        Category keyword = member.getKeyword();
+
+        // 이미 참여한 챌린지는 추천하지 않도록 추가 구현
+//        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
+//                .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now())) // 아직 끝나지 않은 챌린지만
+//                .map(challengeMember -> challengeMember.getChallenge().getId())
+//                .toList();
+//        List<Challenge> recommendChallenges = challengeRepository.findAllByStartDateAfterOrderByCountLikesDesc(LocalDate.now());
+//        List<Challenge> challenges = recommendChallenges
+//                .stream().filter(challenge -> keyword.equals(challenge.getCategory()) && !enrolledChallengeIds.contains(challenge.getId()))
+//                .limit(2)
+//                .toList();
+
+        int recommendNum = 2;
+        List<Challenge> recommendChallenges = challengeRepository.findAllByStartDateAfterOrderByCountLikesDesc(LocalDate.now())
+                .stream().filter(challenge -> keyword.equals(challenge.getCategory()))
+                .limit(recommendNum)
+                .toList();
+
+        if (recommendChallenges.size() < recommendNum) throw new ErrorHandler(ErrorStatus.CHALLENGE_INSUFFICIENT);
 
         return recommendChallenges.stream()
                 .map(challenge -> ChallengeResponseDTO.RecommendChallengeDTO.builder()

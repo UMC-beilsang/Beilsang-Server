@@ -152,7 +152,10 @@ public class ChallengeRestController {
     @GetMapping("/recommends")
     public ApiResponse<ChallengeResponseDTO.RecommendChallengeListDTO> getRecommendChallenges() {
 
-        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges();
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges(memberId);
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
 
         return ApiResponse.onSuccess(response);
