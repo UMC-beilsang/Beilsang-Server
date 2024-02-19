@@ -63,6 +63,18 @@ public class MemberRestController {
         return ApiResponse.onSuccess(response);
     }
 
+    @PatchMapping("/profile/image")
+    @Operation(summary = "사용자의 프로필 사진 수정 API", description = "프로필 사진을 수정할 수 있는 API 입니다.")
+    public ApiResponse<MemberResponseDTO.ProfileImageDTO> updateProfileImage(
+            @ModelAttribute MemberUpdateDto.ProfileImageDTO request
+    ){
+        Long memberId = SecurityUtil.getCurrentUserId();
+
+        MemberResponseDTO.ProfileImageDTO response = memberService.updateProfileImage(request,memberId);
+
+        return ApiResponse.onSuccess(response);
+    }
+
     @GetMapping("/join/check/nickname")
     public ApiResponse<Boolean> checkNickName(
         @RequestParam("name") String name

@@ -1,6 +1,7 @@
 package com.BeilsangServer.domain.member.service;
 
 
+import com.BeilsangServer.aws.s3.AmazonS3Manager;
 import com.BeilsangServer.domain.achievment.entity.Achievement;
 import com.BeilsangServer.domain.achievment.repository.AchievementRepository;
 import com.BeilsangServer.domain.feed.converter.FeedConverter;
@@ -19,6 +20,8 @@ import com.BeilsangServer.domain.point.converter.PointConverter;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
 import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
+import com.BeilsangServer.domain.uuid.entity.Uuid;
+import com.BeilsangServer.domain.uuid.repository.UuidRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -39,6 +43,8 @@ public class MemberService {
     private final FeedLikeRepository feedLikeRepository;
     private final FeedConverter feedConverter;
     private final PointLogRepository pointLogRepository;
+    private final UuidRepository uuidRepository;
+    private final AmazonS3Manager s3Manager;
 
     public Optional<Member> findById(Long memberId) {
         return memberRepository.findById(memberId);
@@ -129,12 +135,28 @@ public class MemberService {
      */
     public MemberResponseDTO.profileDTO updateProfile(MemberUpdateDto memberUpdateDto,Long memberId){
 
-        Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("없다");});
+        Member member = memberRepository.findById(memberId).get();
+
 
         member.update(memberUpdateDto);
 
 
         return MemberConverter.toProfileDTO(member);
+    }
+
+    public MemberResponseDTO.ProfileImageDTO updateProfileImage(MemberUpdateDto.ProfileImageDTO profileImageDTO, Long memberId){
+
+        Member member = memberRepository.findById(memberId).get();
+
+        Uuid feedUuid = uuidRepository.save(Uuid.builder().uuid(UUID.randomUUID().toString()).build());
+        String feedUrl = s3Manager.uploadFile(s3Manager.generateFeedKeyName(feedUuid), profileImageDTO.getProfileImage());
+
+        member.updateProfileImageUrl(feedUrl);
+
+        return MemberResponseDTO.ProfileImageDTO.builder()
+                .memberId(memberId)
+                .imgageUrl(feedUrl)
+                .build();
     }
 
     public boolean checkNickName(String nickName){
