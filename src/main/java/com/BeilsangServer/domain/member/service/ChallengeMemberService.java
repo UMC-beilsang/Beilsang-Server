@@ -33,7 +33,7 @@ public class ChallengeMemberService {
      * 스케줄러를 사용하여 매일 00시 정각마다 작업을 수행
      */
     @Scheduled(cron = "0 0 0 * * *")
-    @Scheduled(fixedRate = 60000)
+//    @Scheduled(fixedRate = 60000)
     public void dailyTasks() {
 
         System.out.println("=================================");
@@ -67,11 +67,8 @@ public class ChallengeMemberService {
             // 챌린지 종료일까지 남은 일수
             int remainDay = LocalDate.now().until(challenge.getFinishDate()).getDays() + 1;
 
-            System.out.println("remainSuccess = " + remainSuccess);
-            System.out.println("remainDay = " + remainDay);
-
             // 남은 일수 확인 후 목표 일수를 다 채우면 성공, 남은 기간 내에 다 채우지 못하면 실패로 변경
-            if (remainSuccess == 0) {
+            if (remainSuccess <= 0) {
                 challengeMember.updateChallengeStatus(ChallengeStatus.SUCCESS);
                 challengeMemberRepository.save(challengeMember);
             } else if (remainSuccess > remainDay) {
@@ -108,13 +105,6 @@ public class ChallengeMemberService {
         System.out.println("=================================");
 
         List<ChallengeMember> notYetChallengeMembers = challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.NOT_YET);
-
-        List<ChallengeMember> challengeMembers = notYetChallengeMembers.stream()
-                .filter(challengeMember -> !challengeMember.getChallenge().getStartDate().isAfter(LocalDate.now()))
-                .toList();
-        for (ChallengeMember challengeMember : challengeMembers) {
-            System.out.println("challengeMember.getId() = " + challengeMember.getId());
-        }
 
         notYetChallengeMembers.stream()
                 .filter(challengeMember -> !challengeMember.getChallenge().getStartDate().isAfter(LocalDate.now()))
