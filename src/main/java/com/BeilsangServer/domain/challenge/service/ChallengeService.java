@@ -279,7 +279,7 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.from(category);
 
-        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
 
         List<Achievement> achievements = achievementRepository.findAllByMember_Id(memberId);
 
@@ -425,4 +425,28 @@ public class ChallengeService {
     public static boolean isAfterOrEqual(LocalDate date1, LocalDate date2){
         return !date1.isBefore(date2);
     }
+
+    public ChallengeResponseDTO.MyChallengePreviewListDTO getMyChallengePreviewList(Long memberId) {
+
+        int limit = 2;
+
+        // 멤버의 참여중인 챌린지
+        List<ChallengeResponseDTO.MyChallengePreviewDTO> myChallengePreviewDTOList =
+                challengeMemberRepository.findAllByMemberId(memberId)
+                        .stream()
+                        .filter(challengeMember -> challengeMember.getChallengeStatus() == ChallengeStatus.ONGOING)
+                        .map(challengeMember -> {
+                                    Challenge challenge = challengeMember.getChallenge();
+                                    float achieveRate = (float)challengeMember.getSuccessDays() / challenge.getTotalGoalDay() * 100;
+                                    return ChallengeConverter.toMyChallengePreviewDTO(challenge, achieveRate);
+                                }
+                        )
+                        .limit(limit)
+                        .toList();
+
+        return ChallengeResponseDTO.MyChallengePreviewListDTO.builder()
+                .challenges(myChallengePreviewDTOList)
+                .build();
+    }
+
 }

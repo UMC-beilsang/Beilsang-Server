@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember, Long> {
 
-    List<ChallengeMember> findAllByMember_id(Long memberId);
+    List<ChallengeMember> findAllByMemberId(Long memberId);
     Optional<ChallengeMember> findByMember_idAndChallenge_Id(Long memberId, Long challengeId);
 
     // 챌린지의 호스트 찾기

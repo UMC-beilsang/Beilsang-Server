@@ -89,6 +89,26 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class MyChallengePreviewDTO { // 챌린지 미리보기 DTO
+
+        private Long challengeId;
+        private String title;
+        private String imageUrl;
+        private Float achieveRate;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyChallengePreviewListDTO {
+
+        private List<MyChallengePreviewDTO> challenges;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class ChallengeListWithCountDTO{
         private ChallengePreviewListDTO challenges;
         private Integer count;

@@ -19,8 +19,6 @@ import com.BeilsangServer.domain.point.converter.PointConverter;
 import com.BeilsangServer.domain.point.dto.PointResponseDTO;
 import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
-import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
-import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,7 +27,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -56,7 +53,7 @@ public class MemberService {
         Member member = memberRepository.findById(memberId).orElseThrow(()->{throw new IllegalArgumentException("멤버없다");});
 
         // 피드 개수 : 챌린지멤버 id를 얻고,,,, 그 아이디들에 해당하는 피드 개수 구하기
-        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
 
         List<Long> challengeMemberIds = new ArrayList<>();
 
@@ -160,7 +157,7 @@ public class MemberService {
      */
     public MemberResponseDTO.CheckEnrolledDTO checkEnroll(Long memberId, Long challengeId) {
 
-        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMember_id(memberId).stream()
+        List<Long> enrolledChallengeIds = challengeMemberRepository.findAllByMemberId(memberId).stream()
                 .filter(challengeMember -> challengeMember.getChallenge().getFinishDate().isAfter(LocalDate.now())) // 아직 끝나지 않은 챌린지만
                 .map(challengeMember -> challengeMember.getChallenge().getId())
                 .toList();

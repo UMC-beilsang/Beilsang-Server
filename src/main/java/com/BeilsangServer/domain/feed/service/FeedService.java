@@ -221,7 +221,7 @@ public class FeedService {
         Category categoryByEnum = Category.from(category);
 
         // memberId로 그 member와 관련된 챌린지 정보 가져오기
-        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
 
         List<Long> challengeIds = new ArrayList<>();
 
