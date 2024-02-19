@@ -99,6 +99,10 @@ public class Member extends BaseEntity {
         }
     }
 
+    public void updateProfileImageUrl(String profileUrl){
+        this.profileUrl = profileUrl;
+    }
+
     // 포인트 차감, 적립
     public void addPoint(Integer point) {
         this.point += point;

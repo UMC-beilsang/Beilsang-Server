@@ -1,9 +1,7 @@
 package com.BeilsangServer.domain.member.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @Builder
 @Getter
@@ -15,4 +13,13 @@ public class MemberUpdateDto {
     private String birth;
     private String gender;
     private String address;
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProfileImageDTO{
+        private MultipartFile profileImage;
+    }
 }
