@@ -188,7 +188,6 @@ public class ChallengeService {
     /***
      * 전체 챌린지 목록 조회하기
      * @return ChallengePreviewListDTO
-     * 시작된 챌린지는 뺄지, 정렬 순서 어떻게 할지 등 논의 필요
      */
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
 
@@ -201,6 +200,24 @@ public class ChallengeService {
         return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
+    /***
+     * 챌린지 목록 제한된 갯수로 조회하기
+     * @return ChallengePreviewListDTO
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLimitedChallengePreviewList() {
+
+        // 보여줄 챌린지의 갯수 설정
+        int limitNum = 2;
+
+        List<Challenge> challenges = challengeRepository.findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate.now());
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .limit(limitNum)
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
+    }
 
     /***
      * 명예의 전당 조회 (카테고리별 찜수 기준 상위 10개 챌린지)
