@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class ChallengeMemberService {
 
     private final ChallengeMemberRepository challengeMemberRepository;
@@ -33,7 +33,13 @@ public class ChallengeMemberService {
      * 스케줄러를 사용하여 매일 00시 정각마다 작업을 수행
      */
     @Scheduled(cron = "0 0 0 * * *")
+    @Scheduled(fixedRate = 60000)
     public void dailyTasks() {
+
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.dailyTasks");
+        System.out.println("=================================");
+
         checkFailure();
         checkSuccess();
         makeIsFeedUploadFalse();
@@ -44,8 +50,11 @@ public class ChallengeMemberService {
      * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
      * 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
      */
-    @Transactional
     public void checkFailure() {
+
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.checkFailure");
+        System.out.println("=================================");
 
         List<ChallengeMember> notUploadedMember = challengeMemberRepository.findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus.ONGOING, false);
 
@@ -57,6 +66,9 @@ public class ChallengeMemberService {
             int remainSuccess = challenge.getTotalGoalDay() - challengeMember.getSuccessDays();
             // 챌린지 종료일까지 남은 일수
             int remainDay = LocalDate.now().until(challenge.getFinishDate()).getDays() + 1;
+
+            System.out.println("remainSuccess = " + remainSuccess);
+            System.out.println("remainDay = " + remainDay);
 
             // 남은 일수 확인 후 목표 일수를 다 채우면 성공, 남은 기간 내에 다 채우지 못하면 실패로 변경
             if (remainSuccess == 0) {
@@ -73,8 +85,11 @@ public class ChallengeMemberService {
      * 모든 챌린지 멤버의 당일 인증 상태 수정
      * 아직 끝나지 않은 챌린지만 대상이 되어야 함
      */
-    @Transactional
     public void makeIsFeedUploadFalse() {
+
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.makeIsFeedUploadFalse");
+        System.out.println("=================================");
 
         // 매일 정시마다 모든 챌린지 멤버의 인증 상태 수정
         challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.ONGOING).forEach(challengeMember -> {
@@ -86,12 +101,23 @@ public class ChallengeMemberService {
     /***
      * 시작하지 않은 챌린지의 상태를 진행 중으로 변경
      */
-    @Transactional
     public void checkIsChallengeStart() {
 
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.checkIsChallengeStart");
+        System.out.println("=================================");
+
         List<ChallengeMember> notYetChallengeMembers = challengeMemberRepository.findAllByChallengeStatus(ChallengeStatus.NOT_YET);
+
+        List<ChallengeMember> challengeMembers = notYetChallengeMembers.stream()
+                .filter(challengeMember -> !challengeMember.getChallenge().getStartDate().isAfter(LocalDate.now()))
+                .toList();
+        for (ChallengeMember challengeMember : challengeMembers) {
+            System.out.println("challengeMember.getId() = " + challengeMember.getId());
+        }
+
         notYetChallengeMembers.stream()
-                .filter(challengeMember -> challengeMember.getChallenge().getStartDate().equals(LocalDate.now()))
+                .filter(challengeMember -> !challengeMember.getChallenge().getStartDate().isAfter(LocalDate.now()))
                 .forEach(challengeMember -> {
                     challengeMember.updateChallengeStatus(ChallengeStatus.ONGOING);
                     challengeMemberRepository.save(challengeMember);
@@ -102,8 +128,11 @@ public class ChallengeMemberService {
      * 피드 생성 시 챌린지 인증 처리
      * @param challengeMember 피드를 생성한 주체
      */
-    @Transactional
     public void checkFeedUpload(ChallengeMember challengeMember) {
+
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.checkFeedUpload");
+        System.out.println("=================================");
 
         // 처음 피드가 올라가는 경우에만 isFeedUpload, successDays 수정
         if (!challengeMember.getIsFeedUpload()) {
@@ -120,6 +149,10 @@ public class ChallengeMemberService {
      */
     @Transactional
     public void checkSuccess() {
+
+        System.out.println("=================================");
+        System.out.println("ChallengeMemberService.checkSuccess");
+        System.out.println("=================================");
 
         List<Challenge> finishedChallenges = challengeRepository.findAllByFinishDate(LocalDate.now().minusDays(1));
 
