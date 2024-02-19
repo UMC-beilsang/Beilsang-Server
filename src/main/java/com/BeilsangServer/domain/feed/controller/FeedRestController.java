@@ -1,9 +1,9 @@
 package com.BeilsangServer.domain.feed.controller;
 
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.feed.dto.AddFeedRequestDTO;
 import com.BeilsangServer.domain.feed.dto.FeedDTO;
-import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.service.FeedService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,7 +12,6 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,8 +40,8 @@ public class FeedRestController {
             @ModelAttribute AddFeedRequestDTO.CreateFeedDTO request,
             @PathVariable(name = "challengeId") Long challengeId
     ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
+
         Long newFeedId = feedService.createFeed(request,challengeId,memberId);
 
         return ApiResponse.onSuccess(newFeedId);
@@ -69,8 +68,8 @@ public class FeedRestController {
     public ApiResponse<FeedDTO> getFeed(
             @PathVariable(name = "feedId") Long feedId
     ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
+
         FeedDTO response = feedService.getFeed(feedId,memberId);
         return ApiResponse.onSuccess(response);
     }
@@ -96,8 +95,7 @@ public class FeedRestController {
     public ApiResponse<Long> feedLike(
             @PathVariable(name = "feedId") Long feedId
     ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         Long feedLikeId = feedService.feedLike(feedId, memberId);
         return ApiResponse.onSuccess(feedLikeId);
@@ -111,8 +109,8 @@ public class FeedRestController {
     public ApiResponse<Long> feedUnLike(
             @PathVariable(name = "feedId") Long feedId
     ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
+
         Long feedUnLikeId = feedService.feedUnLike(feedId,memberId);
 
         return ApiResponse.onSuccess(feedUnLikeId);
@@ -141,8 +139,7 @@ public class FeedRestController {
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
     ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         FeedDTO.previewFeedListDto response = feedService.getFeedByStatusAndCategory(status,category,memberId);
 

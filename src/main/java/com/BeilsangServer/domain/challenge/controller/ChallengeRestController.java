@@ -1,12 +1,10 @@
 package com.BeilsangServer.domain.challenge.controller;
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.challenge.converter.ChallengeConverter;
 import com.BeilsangServer.domain.challenge.dto.ChallengeRequestDTO;
 import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
-import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
-import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
-import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -31,8 +29,7 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewDTO> createChallenge(@ModelAttribute ChallengeRequestDTO.CreateChallengeDTO request) {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         ChallengeResponseDTO.ChallengePreviewDTO response = challengeService.createChallenge(request, memberId);
 
@@ -48,8 +45,7 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.ChallengeDTO> getChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         ChallengeResponseDTO.ChallengeDTO response = challengeService.getChallenge(challengeId, memberId);
 
@@ -93,8 +89,7 @@ public class ChallengeRestController {
     })
     public ApiResponse<ChallengeResponseDTO.MyChallengePreviewListDTO> getLimitedChallenge() {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         ChallengeResponseDTO.MyChallengePreviewListDTO response = challengeService.getMyChallengePreviewList(memberId);
 
@@ -122,8 +117,8 @@ public class ChallengeRestController {
     public ApiResponse<ChallengeResponseDTO.ChallengePreviewListDTO> getLikesList(
             @PathVariable(name = "category") String category
     ) {
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
+
         ChallengeResponseDTO.ChallengePreviewListDTO response = challengeService.getLikesList(memberId, category);
 
         return ApiResponse.onSuccess(response);
@@ -138,8 +133,7 @@ public class ChallengeRestController {
             @PathVariable(name = "status") String status,
             @PathVariable(name = "category") String category
     ) {
-        // Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         ChallengeResponseDTO.ChallengeListWithCountDTO response = challengeService.getChallengeByStatusAndCategory(status, category, memberId);
 
@@ -154,8 +148,7 @@ public class ChallengeRestController {
     @PostMapping("/{challengeId}")
     public ApiResponse<ChallengeResponseDTO.JoinChallengeDTO> joinChallenge(@PathVariable(name = "challengeId") Long challengeId) {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         ChallengeResponseDTO.JoinChallengeDTO response = challengeService.joinChallenge(challengeId, memberId);
 
@@ -169,8 +162,7 @@ public class ChallengeRestController {
     @GetMapping("/recommends")
     public ApiResponse<ChallengeResponseDTO.RecommendChallengeListDTO> getRecommendChallenges() {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges(memberId);
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
@@ -182,8 +174,7 @@ public class ChallengeRestController {
     public ApiResponse<Long> challengeLike(
             @PathVariable(name = "challengeId") Long challengeId
     ) {
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         Long challengeLikeId = challengeService.challengeLike(challengeId, memberId);
 
@@ -194,8 +185,8 @@ public class ChallengeRestController {
     public ApiResponse<Long> challengeUnLike(
             @PathVariable(name = "challengeId") Long challengeId
     ) {
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
+
         Long challengeUnLikeId = challengeService.challengeUnLike(challengeId, memberId);
 
         return ApiResponse.onSuccess(challengeUnLikeId);
