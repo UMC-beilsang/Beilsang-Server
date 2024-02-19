@@ -18,8 +18,8 @@ spring:
     database: mysql
   servlet:
     multipart:
-      max-request-size: 30MB
-      max-file-size: 30MB
+      max-request-size: 100MB
+      max-file-size: 100MB
 
 logging:
   level:
