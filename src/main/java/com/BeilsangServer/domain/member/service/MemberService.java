@@ -144,6 +144,12 @@ public class MemberService {
         return MemberConverter.toProfileDTO(member);
     }
 
+    /***
+     * 프로필 이미지 수정 api
+     * @param profileImageDTO
+     * @param memberId
+     * @return
+     */
     public MemberResponseDTO.ProfileImageDTO updateProfileImage(MemberUpdateDto.ProfileImageDTO profileImageDTO, Long memberId){
 
         Member member = memberRepository.findById(memberId).get();
