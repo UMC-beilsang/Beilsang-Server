@@ -39,7 +39,7 @@ public class JwtTokenProvider implements InitializingBean {
 
 
     /*
-    비밀키를 Base64 인코딩하고 다시 키로 변환하여 저장합
+    비밀키를 Base64 인코딩하고 다시 키로 변환하여 저장
      */
     @Override
     public void afterPropertiesSet() {

@@ -4,6 +4,7 @@ import com.BeilsangServer.domain.notification.dto.NotificationResponseDto.Notifi
 import com.BeilsangServer.domain.notification.service.AppNotificationService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,9 @@ public class AppNotificationController {
 
     //읽지 않은 알림 조회 기능
     @GetMapping("/{memberId}")
-    @Operation(summary = "알림 전체 조회 API", description = "해당 유저가 읽지 않은 모든 알림을 조회하는 API입니다.")
+    @Operation(summary = "알림 전체 조회 API",
+            description = "해당 유저가 읽지 않은 모든 알림을 조회하는 API입니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     public ApiResponse<List<NotificationDto>> getNotification(@PathVariable(name = "memberId") Long memberId){
         // 로그인 구현후 토큰에서 멤버Id 추출하는것으로 변경
 

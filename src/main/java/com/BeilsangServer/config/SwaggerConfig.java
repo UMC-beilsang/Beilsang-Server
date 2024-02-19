@@ -22,6 +22,12 @@ public class SwaggerConfig {
                 .info(new Info()
                         .title("비일상 API")
                         .description("구현된 API 테스트 해보기")
-                        .version("1.0.0"));
+                        .version("1.0.0"))
+                .components(new Components().addSecuritySchemes("bearerAuth",
+                        new SecurityScheme().type(SecurityScheme.Type.HTTP)
+                                .scheme("bearer")
+                                .bearerFormat("JWT")
+                                .in(SecurityScheme.In.HEADER)
+                                .name("Authorization")));
     }
 }

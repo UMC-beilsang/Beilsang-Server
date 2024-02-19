@@ -60,4 +60,13 @@ public class MemberResponseDTO {
         private Boolean isEnrolled;
         private List<Long> enrolledChallengeIds;
     }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ProfileImageDTO{
+        private Long memberId;
+        private String imgageUrl;
+    }
 }
