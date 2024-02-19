@@ -188,7 +188,6 @@ public class ChallengeService {
     /***
      * 전체 챌린지 목록 조회하기
      * @return ChallengePreviewListDTO
-     * 시작된 챌린지는 뺄지, 정렬 순서 어떻게 할지 등 논의 필요
      */
     public ChallengeResponseDTO.ChallengePreviewListDTO getChallengePreviewList() {
 
@@ -201,6 +200,24 @@ public class ChallengeService {
         return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
     }
 
+    /***
+     * 챌린지 목록 제한된 갯수로 조회하기
+     * @return ChallengePreviewListDTO
+     */
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLimitedChallengePreviewList() {
+
+        // 보여줄 챌린지의 갯수 설정
+        int limitNum = 2;
+
+        List<Challenge> challenges = challengeRepository.findAllByStartDateAfterOrderByAttendeeCountDesc(LocalDate.now());
+
+        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
+                .map(challenge -> ChallengeConverter.toChallengePreviewDTO(challenge, getHostName(challenge.getId())))
+                .limit(limitNum)
+                .toList();
+
+        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviewDTOList).build();
+    }
 
     /***
      * 명예의 전당 조회 (카테고리별 찜수 기준 상위 10개 챌린지)
@@ -262,7 +279,7 @@ public class ChallengeService {
     public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
         Category categoryByEnum = Category.from(category);
 
-        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
 
         List<Achievement> achievements = achievementRepository.findAllByMember_Id(memberId);
 
@@ -408,4 +425,35 @@ public class ChallengeService {
     public static boolean isAfterOrEqual(LocalDate date1, LocalDate date2){
         return !date1.isBefore(date2);
     }
+
+
+    /***
+     * 참여중인 챌린지 조회
+     * @param memberId 로그인된 멤버
+     * @return MyChallengePreviewListDTO
+     * 멤버가 참여중인 챌린지의 달성률을 계산하여 지정한 갯수 만큼 리스트 형태로 반환한다.
+     */
+    public ChallengeResponseDTO.MyChallengePreviewListDTO getMyChallengePreviewList(Long memberId) {
+
+        int limit = 2;
+
+        // 멤버의 참여중인 챌린지
+        List<ChallengeResponseDTO.MyChallengePreviewDTO> myChallengePreviewDTOList =
+                challengeMemberRepository.findAllByMemberId(memberId)
+                        .stream()
+                        .filter(challengeMember -> challengeMember.getChallengeStatus() == ChallengeStatus.ONGOING)
+                        .map(challengeMember -> {
+                                    Challenge challenge = challengeMember.getChallenge();
+                                    float achieveRate = (float)challengeMember.getSuccessDays() / challenge.getTotalGoalDay() * 100;
+                                    return ChallengeConverter.toMyChallengePreviewDTO(challenge, achieveRate);
+                                }
+                        )
+                        .limit(limit)
+                        .toList();
+
+        return ChallengeResponseDTO.MyChallengePreviewListDTO.builder()
+                .challenges(myChallengePreviewDTOList)
+                .build();
+    }
+
 }

@@ -104,4 +104,14 @@ public class ChallengeConverter {
                 .recommendChallengeDTOList(recommendChallengeList)
                 .build();
     }
+
+    public static ChallengeResponseDTO.MyChallengePreviewDTO toMyChallengePreviewDTO(Challenge challenge, Float achieveRate) {
+
+        return ChallengeResponseDTO.MyChallengePreviewDTO.builder()
+                .challengeId(challenge.getId())
+                .title(challenge.getTitle())
+                .imageUrl(challenge.getMainImageUrl())
+                .achieveRate(Math.round(achieveRate * 10) / 10.0f) // 소수점 아래 한자리까지만 보이도록
+                .build();
+    }
 }
