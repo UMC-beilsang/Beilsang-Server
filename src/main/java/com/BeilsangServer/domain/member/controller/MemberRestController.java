@@ -11,7 +11,10 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
+
+import static org.apache.tomcat.util.http.fileupload.FileUploadBase.MULTIPART_FORM_DATA;
 
 @RestController
 @Slf4j
@@ -20,32 +23,32 @@ import org.springframework.web.bind.annotation.*;
 public class MemberRestController {
 
     private final MemberService memberService;
-    @GetMapping("/mypage/{memberId}")
+    @GetMapping("/mypage")
     @Operation(summary = "마이 페이지 조회 API",
             description = "사용자의 마이 페이지 정보를 조회하는 API 입니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
-    public ApiResponse<MemberResponseDTO.myPageDTO> getMyPage(
-            @PathVariable(name = "memberId") Long memberId
-    ){
+    public ApiResponse<MemberResponseDTO.myPageDTO> getMyPage(){
+
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         MemberResponseDTO.myPageDTO response = memberService.getMyPage(memberId);
 
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/mypage/points/{memberId}")
+    @GetMapping("/mypage/points")
     @Operation(summary = "사용자의 포인트 로그 조회 API",
             description = "사용자의 포인트 지급/사용/소멸 내역과 전체 보유 포인트를 조회하는 API 입니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "200",description = "성공")
     })
-    public ApiResponse<PointResponseDTO.pointLogListDTO> getPointLog(
-            @PathVariable(name = "memberId") Long memberId
-    ){
+    public ApiResponse<PointResponseDTO.pointLogListDTO> getPointLog(){
+
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         PointResponseDTO.pointLogListDTO response = memberService.getPointLog(memberId);
 
@@ -70,7 +73,7 @@ public class MemberRestController {
         return ApiResponse.onSuccess(response);
     }
 
-    @PatchMapping("/profile/image")
+    @PatchMapping(value = "/profile/image",consumes = MULTIPART_FORM_DATA, produces = MediaType.APPLICATION_JSON_VALUE)
     @Operation(summary = "사용자의 프로필 사진 수정 API",
             description = "프로필 사진을 수정할 수 있는 API 입니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
