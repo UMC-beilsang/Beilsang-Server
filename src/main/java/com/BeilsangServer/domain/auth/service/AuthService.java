@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 
 @RequiredArgsConstructor
@@ -51,6 +52,10 @@ public class AuthService {
     @Transactional
     public void signup(MemberLoginDto memberLoginDto){
         String accessToken = memberLoginDto.getAccessToken();
+
+        if(!jwtTokenProvider.validateToken(accessToken)||!StringUtils.hasText(accessToken)){
+            throw new ErrorHandler(ErrorStatus.INVALID_ACCESS_TOKEN);
+        }
 
         Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
 
