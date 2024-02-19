@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.member.controller;
 
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.domain.member.service.MemberService;
@@ -54,8 +55,8 @@ public class MemberRestController {
     public ApiResponse<MemberResponseDTO.profileDTO> updateProfile(
             @RequestBody MemberUpdateDto memberUpdateDto
             ){
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         MemberResponseDTO.profileDTO response = memberService.updateProfile(memberUpdateDto,memberId);
 
@@ -82,8 +83,7 @@ public class MemberRestController {
     })
     public ApiResponse<MemberResponseDTO.CheckEnrolledDTO> checkIsMemberEnrolled(@PathVariable(name = "challengeId") Long challengeId) {
 
-        //Long memberId = SecurityUtil.getCurrentUserId();
-        Long memberId = 1L;
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         MemberResponseDTO.CheckEnrolledDTO response = memberService.checkEnroll(memberId, challengeId);
 
