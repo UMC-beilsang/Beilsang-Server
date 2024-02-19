@@ -221,7 +221,7 @@ public class FeedService {
         Category categoryByEnum = Category.from(category);
 
         // memberId로 그 member와 관련된 챌린지 정보 가져오기
-        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMember_id(memberId);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
 
         List<Long> challengeIds = new ArrayList<>();
 
@@ -261,7 +261,10 @@ public class FeedService {
 
     public String getHostName(Long challengeId) {
 
-        Member host = challengeMemberRepository.findByChallenge_IdAndIsHostIsTrue(challengeId).getMember();
+        Member host = challengeMemberRepository.findByChallengeIdAndIsHostIsTrue(challengeId)
+                .orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_HOST_NOT_FOUND))
+                .getMember();
+
         return host.getNickName();
     }
 

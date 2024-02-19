@@ -5,6 +5,8 @@ import com.BeilsangServer.domain.challenge.dto.ChallengeResponseDTO;
 import com.BeilsangServer.domain.challenge.service.ChallengeService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import com.BeilsangServer.global.common.apiPayload.ApiResponseStatus;
+import com.BeilsangServer.global.common.apiPayload.code.status.ErrorStatus;
+import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -84,6 +86,21 @@ public class ChallengeRestController {
         return ApiResponse.onSuccess(response);
     }
 
+    @GetMapping("/ongoing")
+    @Operation(summary = "참여중인 챌린지 제한된 갯수 조회 API", description = "참여중인 챌린지 목록 중 특정 갯수(2개)만 조회하는 API입니다. 홈화면에서 사용할 수 있습니다.")
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<ChallengeResponseDTO.MyChallengePreviewListDTO> getLimitedChallenge() {
+
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        ChallengeResponseDTO.MyChallengePreviewListDTO response = challengeService.getMyChallengePreviewList(memberId);
+
+        return ApiResponse.onSuccess(response);
+    }
+
     @GetMapping("/famous/{category}")
     @Operation(summary = "명예의 전당 조회 API", description = "카테고리별로 찜 수가 가장 많은 상의 10개의 챌린지를 조회하는 API 입니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
@@ -152,7 +169,10 @@ public class ChallengeRestController {
     @GetMapping("/recommends")
     public ApiResponse<ChallengeResponseDTO.RecommendChallengeListDTO> getRecommendChallenges() {
 
-        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges();
+        //Long memberId = SecurityUtil.getCurrentUserId();
+        Long memberId = 1L;
+
+        List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList = challengeService.getRecommendChallenges(memberId);
         ChallengeResponseDTO.RecommendChallengeListDTO response = ChallengeConverter.toRecommendChallengeListDTO(recommendChallengeList);
 
         return ApiResponse.onSuccess(response);

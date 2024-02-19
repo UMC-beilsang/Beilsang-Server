@@ -35,21 +35,6 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.CreateResultDTO toCreateResultDTO(Challenge challenge) {
-
-        return ChallengeResponseDTO.CreateResultDTO.builder()
-                .title(challenge.getTitle())
-                .category(challenge.getCategory())
-                .startDate(challenge.getStartDate())
-                .finishDate(challenge.getFinishDate())
-                .joinPoint(challenge.getJoinPoint())
-                .details(challenge.getDetails())
-                .challengeNotes(challenge.getChallengeNotes())
-                .period(challenge.getPeriod())
-                .totalGoalDay(challenge.getTotalGoalDay())
-                .build();
-    }
-
     public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName,boolean like) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
@@ -75,13 +60,6 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.CreateResultDTO toGuideResultDto(Challenge challenge){
-        return ChallengeResponseDTO.CreateResultDTO.builder()
-                .certImageUrl(challenge.getCertImageUrl())
-                .challengeNotes(challenge.getChallengeNotes())
-                .build();
-    }
-
     public static List<String> toStringChallengeNotes(List<ChallengeNote> challengeNotes) {
 
         return challengeNotes
@@ -100,27 +78,6 @@ public class ChallengeConverter {
                 .attendeeCount(challenge.getAttendeeCount())
                 .build();
     }
-
-//    필요 없어져 제거할 예정
-//    /***
-//     * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
-//     * @param challenges 챌린지 목록
-//     * @return ChallengePreviewListDTO
-//     */
-//    public static ChallengeResponseDTO.ChallengePreviewListDTO toChallengePreviewListDTO(List<Challenge> challenges) {
-//
-//        List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviews = challenges.stream()
-//                .map(challenge -> ChallengeResponseDTO.ChallengePreviewDTO.builder()
-//                                .challengeId(challenge.getId())
-//                                .title(challenge.getTitle())
-//                                .imageUrl(challenge.getMainImageUrl())
-//                                .hostName(null)
-//                                .attendeeCount(challenge.getAttendeeCount())
-//                                .build())
-//                .toList();
-//
-//        return ChallengeResponseDTO.ChallengePreviewListDTO.builder().challenges(challengePreviews).build();
-//    }
 
     /***
      * Challenge 리스트를 ChallengePreviewListDTO로 변환하기
@@ -145,6 +102,16 @@ public class ChallengeConverter {
     public static ChallengeResponseDTO.RecommendChallengeListDTO toRecommendChallengeListDTO(List<ChallengeResponseDTO.RecommendChallengeDTO> recommendChallengeList) {
         return ChallengeResponseDTO.RecommendChallengeListDTO.builder()
                 .recommendChallengeDTOList(recommendChallengeList)
+                .build();
+    }
+
+    public static ChallengeResponseDTO.MyChallengePreviewDTO toMyChallengePreviewDTO(Challenge challenge, Float achieveRate) {
+
+        return ChallengeResponseDTO.MyChallengePreviewDTO.builder()
+                .challengeId(challenge.getId())
+                .title(challenge.getTitle())
+                .imageUrl(challenge.getMainImageUrl())
+                .achieveRate(Math.round(achieveRate * 10) / 10.0f) // 소수점 아래 한자리까지만 보이도록
                 .build();
     }
 }

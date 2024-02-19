@@ -19,26 +19,6 @@ public class ChallengeResponseDTO {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CreateResultDTO {
-
-        private Long id;
-        private String title;
-        private Category category;
-        private LocalDate startDate;
-        private LocalDate finishDate;
-        private Integer joinPoint;
-        private String imageUrl;
-        private String certImageUrl;
-        private String details;
-        private List<ChallengeNote> challengeNotes = new ArrayList<>();
-        private ChallengePeriod period;
-        private Integer totalGoalDay;
-    }
-
-    @Builder
-    @Getter
-    @NoArgsConstructor
-    @AllArgsConstructor
     public static class ChallengeDTO {
 
         private Integer attendeeCount;
@@ -103,6 +83,26 @@ public class ChallengeResponseDTO {
     public static class ChallengePreviewListDTO {
 
         private List<ChallengePreviewDTO> challenges;
+    }
+
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyChallengePreviewDTO { // 챌린지 미리보기 DTO
+
+        private Long challengeId;
+        private String title;
+        private String imageUrl;
+        private Float achieveRate;
+    }
+    @Builder
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MyChallengePreviewListDTO {
+
+        private List<MyChallengePreviewDTO> challenges;
     }
 
     @Builder

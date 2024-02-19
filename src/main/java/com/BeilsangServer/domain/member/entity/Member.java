@@ -3,6 +3,7 @@ package com.BeilsangServer.domain.member.entity;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
 import com.BeilsangServer.global.common.BaseEntity;
+import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.Gender;
 import com.BeilsangServer.global.enums.Provider;
 import com.BeilsangServer.global.enums.Role;
@@ -41,7 +42,10 @@ public class Member extends BaseEntity {
 
     private String address;
 
-    private String keyword;
+//    private String keyword;
+
+    @Enumerated(EnumType.STRING)
+    private Category keyword;
 
     private String discoveredPath;
 
@@ -68,7 +72,7 @@ public class Member extends BaseEntity {
         this.gender = memberLoginDto.getGender();
         this.nickName = memberLoginDto.getNickName();
         this.birth = LocalDate.parse(memberLoginDto.getBirth());
-        this.keyword = memberLoginDto.getKeyword();
+        this.keyword = Category.from(memberLoginDto.getKeyword());
         this.resolution = memberLoginDto.getResolution();
     }
 
