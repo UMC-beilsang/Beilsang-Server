@@ -23,7 +23,7 @@ public class TestController {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
     public ApiResponse<Long> test1(){
-        Long id = SecurityUtil.getCurrentUserId();
+        Long id = 20L;
         return ApiResponse.onSuccess(id);
     }
 }
