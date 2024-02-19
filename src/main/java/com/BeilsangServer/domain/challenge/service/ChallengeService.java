@@ -426,6 +426,13 @@ public class ChallengeService {
         return !date1.isBefore(date2);
     }
 
+
+    /***
+     * 참여중인 챌린지 조회
+     * @param memberId 로그인된 멤버
+     * @return MyChallengePreviewListDTO
+     * 멤버가 참여중인 챌린지의 달성률을 계산하여 지정한 갯수 만큼 리스트 형태로 반환한다.
+     */
     public ChallengeResponseDTO.MyChallengePreviewListDTO getMyChallengePreviewList(Long memberId) {
 
         int limit = 2;

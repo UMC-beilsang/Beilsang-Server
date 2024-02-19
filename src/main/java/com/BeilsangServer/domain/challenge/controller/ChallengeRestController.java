@@ -86,8 +86,8 @@ public class ChallengeRestController {
         return ApiResponse.onSuccess(response);
     }
 
-    @GetMapping("/limited")
-    @Operation(summary = "참여중인 챌린지 제한된 갯수 조회 API", description = "참여중인 챌린지 목록 중 특정 갯수(2개)만 조회하는 API입니다. 홈화면에서 사용하면 됩니다.")
+    @GetMapping("/ongoing")
+    @Operation(summary = "참여중인 챌린지 제한된 갯수 조회 API", description = "참여중인 챌린지 목록 중 특정 갯수(2개)만 조회하는 API입니다. 홈화면에서 사용할 수 있습니다.")
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
