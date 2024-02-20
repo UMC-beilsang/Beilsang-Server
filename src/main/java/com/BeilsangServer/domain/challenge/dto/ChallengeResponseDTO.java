@@ -53,6 +53,7 @@ public class ChallengeResponseDTO {
         private String imageUrl;
         private String title;
         private Category category;
+        private Integer attendeeCount;
     }
 
     @Builder
