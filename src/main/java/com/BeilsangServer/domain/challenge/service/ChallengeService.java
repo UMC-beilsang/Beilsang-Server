@@ -163,6 +163,7 @@ public class ChallengeService {
                         .imageUrl(challenge.getMainImageUrl())
                         .title(challenge.getTitle())
                         .category(challenge.getCategory())
+                        .attendeeCount(challenge.getAttendeeCount())
                         .build())
                 .collect(Collectors.toList());
     }
