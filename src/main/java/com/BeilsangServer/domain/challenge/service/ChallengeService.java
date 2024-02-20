@@ -442,7 +442,9 @@ public class ChallengeService {
         List<ChallengeResponseDTO.MyChallengePreviewDTO> myChallengePreviewDTOList =
                 challengeMemberRepository.findAllByMemberId(memberId)
                         .stream()
-                        .filter(challengeMember -> challengeMember.getChallengeStatus() == ChallengeStatus.ONGOING)
+                        .filter(challengeMember ->
+                                challengeMember.getChallengeStatus() == ChallengeStatus.ONGOING ||
+                                        challengeMember.getChallengeStatus() == ChallengeStatus.NOT_YET)
                         .map(challengeMember -> {
                                     Challenge challenge = challengeMember.getChallenge();
                                     float achieveRate = (float)challengeMember.getSuccessDays() / challenge.getTotalGoalDay() * 100;
