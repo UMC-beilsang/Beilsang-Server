@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @Getter
-public abstract class AppNotification extends BaseEntity {
+public class AppNotification extends BaseEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "notification_id")
     private Long id;
@@ -30,5 +30,9 @@ public abstract class AppNotification extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
+
+    public void setIsRead(){
+        this.isRead = true;
+    }
 
 }
