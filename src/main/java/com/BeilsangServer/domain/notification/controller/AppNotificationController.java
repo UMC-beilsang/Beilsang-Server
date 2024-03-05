@@ -18,11 +18,10 @@ public class AppNotificationController {
     private final AppNotificationService appNotificationService;
 
     //읽음 처리 기능
-    @PatchMapping("/{notificationID}")
+    @PatchMapping("/{notificationId}")
     @Operation(summary = "알림 읽음 처리 API", description = "유저가 알림을 읽음 처리 할때의 API입니다.")
     public ApiResponse<Object> readNotification(@PathVariable(name = "notificationId") Long notificationId){
 
-        Long memberId = 1L;
         appNotificationService.readNotification(notificationId);
 
         return new ApiResponse<>(REQUEST_SUCCESS);
