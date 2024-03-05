@@ -7,4 +7,5 @@ import lombok.Getter;
 @Getter
 public class KakaoRequestDto {
     private String accesstoken;
+    private String deviceToken;
 }

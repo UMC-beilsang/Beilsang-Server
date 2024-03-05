@@ -32,7 +32,7 @@ public class AuthController {
     public ApiResponse<KakaoResponseDto> login(@RequestBody KakaoRequestDto kakaoRequestDto,
                                                HttpServletResponse response) {
 
-        KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(), response);
+        KakaoResponseDto kakaoResponseDto = authService.loginWithKakao(kakaoRequestDto.getAccesstoken(),kakaoRequestDto.getDeviceToken(), response);
 
         return ApiResponse.onSuccess(kakaoResponseDto);
     }
@@ -44,7 +44,7 @@ public class AuthController {
     })
     public ApiResponse<AppleResponseDto> login(@RequestBody AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
 
-        AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(), response);
+        AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(),appleLoginRequestDto.getDeviceToken(), response);
 
         return ApiResponse.onSuccess(appleResponseDto);
     }

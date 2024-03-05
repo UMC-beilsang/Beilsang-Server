@@ -35,15 +35,17 @@ public class AuthService {
 
     //카카오 로그인
     @Transactional
-    public  KakaoResponseDto loginWithKakao(String accessToken, HttpServletResponse response) {
+    public  KakaoResponseDto loginWithKakao(String accessToken,String deviceToken, HttpServletResponse response) {
         KakaoMemberAndExistDto kakaoMemberAndExistDto = kakaoAuthService.getUserProfileByToken(accessToken); //dto에 socialId,email,Provider 저장
+        kakaoMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
         return getKaKaoTokens(kakaoMemberAndExistDto.getMember().getSocialId(),kakaoMemberAndExistDto.getExistMember(), response);
     }
 
     @Transactional
-    public AppleResponseDto loginWithApple(String idToken, HttpServletResponse response) {
+    public AppleResponseDto loginWithApple(String idToken, String deviceToken, HttpServletResponse response) {
         AppleMemberAndExistDto appleMemberAndExistDto =
                 appleAuthService.getAppleMemberInfo(idToken);
+        appleMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
         return getAppleTokens(appleMemberAndExistDto.getMember().getSocialId(),appleMemberAndExistDto.getExistMember(),response);
     }
 

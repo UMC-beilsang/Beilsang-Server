@@ -113,6 +113,7 @@ public class Member extends BaseEntity {
     public void subPoint(Integer point) {
         this.point -= point;
     }
+    public void updateDeviceToken(String deviceToken){ this.deviceToken = deviceToken; }
 }
 
 

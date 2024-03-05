@@ -1,5 +1,6 @@
 package com.BeilsangServer.domain.notification.controller;
 
+import com.BeilsangServer.domain.auth.util.SecurityUtil;
 import com.BeilsangServer.domain.notification.dto.NotificationResponseDto.NotificationDto;
 import com.BeilsangServer.domain.notification.service.AppNotificationService;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
@@ -23,7 +24,7 @@ public class AppNotificationController {
 
         appNotificationService.readNotification(notificationId);
 
-        return new ApiResponse<>(REQUEST_SUCCESS);
+        return ApiResponse.onSuccess();
     }
 
     //읽지 않은 알림 조회 기능
@@ -31,8 +32,9 @@ public class AppNotificationController {
     @Operation(summary = "알림 전체 조회 API",
             description = "해당 유저가 읽지 않은 모든 알림을 조회하는 API입니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
-    public ApiResponse<List<NotificationDto>> getNotification(@PathVariable(name = "memberId") Long memberId){
-        // 로그인 구현후 토큰에서 멤버Id 추출하는것으로 변경
+    public ApiResponse<List<NotificationDto>> getNotification(){
+
+        Long memberId = SecurityUtil.getCurrentUserId();
 
         List<NotificationDto> response = appNotificationService.getNotification(memberId);
 
