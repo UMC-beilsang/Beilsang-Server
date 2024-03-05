@@ -58,6 +58,8 @@ public class Member extends BaseEntity {
     private String profileUrl;
 
     private String refreshToken;
+    private String deviceToken;
+
 
     public void setMemberInfo(MemberLoginDto memberLoginDto){
         if(memberLoginDto.getAddress() != null && !memberLoginDto.getAddress().isBlank()){
