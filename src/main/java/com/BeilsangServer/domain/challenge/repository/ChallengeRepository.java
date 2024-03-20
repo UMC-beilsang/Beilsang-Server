@@ -29,4 +29,5 @@ public interface ChallengeRepository extends JpaRepository<Challenge, Long> {
     List<Challenge> findAllByFinishDate(LocalDate localDate);
 
     List<Challenge> findAllByIdInAndCategory(List<Long> challengeIds,Category category);
+    List<Challenge> findAllByStartDate(LocalDate localDate);
 }
