@@ -19,7 +19,9 @@ public class AppNotificationController {
 
     //읽음 처리 기능
     @PatchMapping("/{notificationId}")
-    @Operation(summary = "알림 읽음 처리 API", description = "유저가 알림을 읽음 처리 할때의 API입니다.")
+    @Operation(summary = "알림 읽음 처리 API",
+            description = "유저가 알림을 읽음 처리 할때의 API입니다.",
+            security = @SecurityRequirement(name = "bearerAuth"))
     public ApiResponse<Object> readNotification(@PathVariable(name = "notificationId") Long notificationId){
 
         appNotificationService.readNotification(notificationId);
@@ -28,7 +30,7 @@ public class AppNotificationController {
     }
 
     //읽지 않은 알림 조회 기능
-    @GetMapping("/{memberId}")
+    @GetMapping("")
     @Operation(summary = "알림 전체 조회 API",
             description = "해당 유저가 읽지 않은 모든 알림을 조회하는 API입니다.",
             security = @SecurityRequirement(name = "bearerAuth"))
