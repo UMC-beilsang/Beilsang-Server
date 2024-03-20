@@ -15,5 +15,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @DiscriminatorValue("C")
 public class ChallengeNotification extends AppNotification{
-    private Long ChallengeId;
+    private Long challengeId;
 }

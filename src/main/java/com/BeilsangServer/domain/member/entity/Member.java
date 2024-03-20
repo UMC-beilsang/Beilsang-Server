@@ -58,6 +58,8 @@ public class Member extends BaseEntity {
     private String profileUrl;
 
     private String refreshToken;
+    private String deviceToken;
+
 
     public void setMemberInfo(MemberLoginDto memberLoginDto){
         if(memberLoginDto.getAddress() != null && !memberLoginDto.getAddress().isBlank()){
@@ -111,6 +113,7 @@ public class Member extends BaseEntity {
     public void subPoint(Integer point) {
         this.point -= point;
     }
+    public void updateDeviceToken(String deviceToken){ this.deviceToken = deviceToken; }
 }
 
 
