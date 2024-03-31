@@ -36,6 +36,8 @@ dependencies {
 	implementation 'net.minidev:json-smart:2.4.9'
 	implementation 'com.squareup.okhttp3:okhttp:4.9.1'
 	implementation 'com.google.api.grpc:proto-google-common-protos:2.20.0'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.assertj:assertj-core:3.20.2'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
