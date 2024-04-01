@@ -14,7 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableJpaAuditing
 @OpenAPIDefinition(servers = {@Server(url = "https://beilsang.com", description = "비일상 서버")})
 public class BeilsangServerApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(BeilsangServerApplication.class, args);
 	}
