@@ -39,14 +39,18 @@ public class AppleAuthService {
         final Claims claims = appleTokenParser.extractClaims(idToken, publicKey);
 
         // claims로부터 socialId, email 추출
-        Long socialId = Long.valueOf(claims.getSubject());
+        String socialId = claims.getSubject();
+//        String temp = claims.getId();
+//        System.out.println(temp);
+        System.out.println(socialId);
+        //Long socialId = Long.valueOf(claims.getSubject());
         String email = claims.get("email", String.class);
 
         Member member = Member.builder()
                 .socialId(socialId)
                 .email(email)
                 .provider(Provider.valueOf("APPLE"))
-                .role(Role.valueOf("USER"))
+                .role(Role.USER)
                 .build();
 
         boolean existMember = false;

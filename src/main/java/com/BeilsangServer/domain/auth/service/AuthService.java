@@ -42,13 +42,12 @@ public class AuthService {
     }
 
     @Transactional
-    public AppleResponseDto loginWithApple(String idToken, String deviceToken, HttpServletResponse response) {
+    public AppleResponseDto loginWithApple(String idToken,String deviceToken, HttpServletResponse response) {
         AppleMemberAndExistDto appleMemberAndExistDto =
                 appleAuthService.getAppleMemberInfo(idToken);
         appleMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
         return getAppleTokens(appleMemberAndExistDto.getMember().getSocialId(),appleMemberAndExistDto.getExistMember(),response);
     }
-
 
 
     @Transactional
@@ -59,7 +58,7 @@ public class AuthService {
             throw new ErrorHandler(ErrorStatus.INVALID_ACCESS_TOKEN);
         }
 
-        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
+        String socialId = jwtTokenProvider.getPayload(accessToken);
 
         Member member = memberRepository.findBySocialId(socialId);
 
@@ -87,14 +86,14 @@ public class AuthService {
 
     @Transactional
     public void kakaoRevoke(String accessToken){
-        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
+        String socialId = jwtTokenProvider.getPayload(accessToken);
         Member member = memberRepository.findBySocialId(socialId);
         memberRepository.delete(member);
     }
 
     @Transactional
     public void appleRevoke(String accessToken){
-        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(accessToken));
+        String socialId = jwtTokenProvider.getPayload(accessToken);
         Member member = memberRepository.findBySocialId(socialId);
         memberRepository.delete(member);
     }
@@ -102,9 +101,9 @@ public class AuthService {
 
 
 
-    //Access Token, Refresh Token 생성
+//    //Access Token, Refresh Token 생성
     @Transactional
-    public KakaoResponseDto getKaKaoTokens(Long socialId, Boolean existMember, HttpServletResponse response) {
+    public KakaoResponseDto getKaKaoTokens(String socialId, Boolean existMember, HttpServletResponse response) {
         final String accessToken = jwtTokenProvider.createAccessToken(socialId.toString());
         final String refreshToken = jwtTokenProvider.createRefreshToken();
 
@@ -122,7 +121,7 @@ public class AuthService {
 
     //Access Token, Refresh Token 생성
     @Transactional
-    public AppleResponseDto getAppleTokens(Long socialId, Boolean existMember, HttpServletResponse response) {
+    public AppleResponseDto getAppleTokens(String socialId, Boolean existMember, HttpServletResponse response) {
         final String accessToken = jwtTokenProvider.createAccessToken(socialId.toString());
         final String refreshToken = jwtTokenProvider.createRefreshToken();
 
@@ -137,7 +136,7 @@ public class AuthService {
     }
 
 
-    // 리프레시 토큰으로 액세스토큰 새로 갱신
+//    // 리프레시 토큰으로 액세스토큰 새로 갱신
     public RefreshResponseDto refreshAccessToken(RefreshRequestDto refreshRequestDto) {
 
         String refreshToken = refreshRequestDto.getRefreshToken();
