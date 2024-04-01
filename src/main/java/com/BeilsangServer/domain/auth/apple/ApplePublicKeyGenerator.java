@@ -4,7 +4,6 @@ package com.BeilsangServer.domain.auth.apple;
 import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKey;
 import com.BeilsangServer.domain.auth.apple.dto.ApplePublicKeys;
 import org.springframework.stereotype.Component;
-import org.springframework.util.Base64Utils;
 
 import java.math.BigInteger;
 import java.security.KeyFactory;
@@ -26,9 +25,9 @@ public class ApplePublicKeyGenerator {
     private static final int POSITIVE_SIGN_NUMBER = 1;
 
     // 공개키 생성 메서드
-    public PublicKey generate(final Map<String, String> headers, final ApplePublicKeys publicKeys) {
+    public PublicKey generate( Map<String, String> headers, final ApplePublicKeys publicKeys) {
         // 헤더에서 암호화 알고리즘과 키 ID를 가져와 Apple의 공개 키 중에서 일치하는 키를 찾아 applePublicKey에 저장
-        final ApplePublicKey applePublicKey = publicKeys.getMatchingKey(
+         ApplePublicKey applePublicKey = publicKeys.getMatchingKey(
                 headers.get(SIGN_ALGORITHM_HEADER),
                 headers.get(KEY_ID_HEADER)
         );
@@ -46,14 +45,14 @@ public class ApplePublicKeyGenerator {
         final BigInteger n = new BigInteger(POSITIVE_SIGN_NUMBER, nBytes);
         final BigInteger e = new BigInteger(POSITIVE_SIGN_NUMBER, eBytes);
         // BigInteger로 생성한 n과 e 값을 이용해 RSAPublicKeySpec를 생성
-        final RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(n, e);
+         RSAPublicKeySpec rsaPublicKeySpec = new RSAPublicKeySpec(n, e);
 
         try {
             // KeyFactory 인스턴스를 생성하고 공개 키를 생성하여 반환
-            final KeyFactory keyFactory = KeyFactory.getInstance(applePublicKey.getKty());
+            KeyFactory keyFactory = KeyFactory.getInstance(applePublicKey.getKty());
             return keyFactory.generatePublic(rsaPublicKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException exception) {
-            throw new RuntimeException("잘못된 애플 키");
+            throw new IllegalStateException("Apple OAuth 로그인 중 public key 생성에 문제가 발생했습니다.");
         }
     }
 }

@@ -34,7 +34,7 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private Provider provider; // KAKAO, APPLE
 
-    private Long socialId;
+    private String socialId;
 
     private String nickName;
 

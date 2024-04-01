@@ -40,7 +40,7 @@ public class JwtFilter extends GenericFilterBean {
             return;
         }
 
-        Long socialId = Long.valueOf(jwtTokenProvider.getPayload(jwt));
+        String socialId = jwtTokenProvider.getPayload(jwt);
         Member member = memberRepository.findBySocialId(socialId);
 
         //member가 null이면 디비에 존재하지 않는 멤버

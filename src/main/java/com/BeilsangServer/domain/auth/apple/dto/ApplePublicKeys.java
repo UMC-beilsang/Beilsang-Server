@@ -19,10 +19,14 @@ public class ApplePublicKeys {
     }
 
     // alg와 kid를 파라미터로 받아 일치하는 키를 찾는 메서드
-    public ApplePublicKey getMatchingKey(final String alg, final String kid) {
-        return keys.stream()
-                .filter(key -> key.isSameAlg(alg) && key.isSameKid(kid))
+
+    public ApplePublicKey getMatchingKey(String alg, String kid) {
+        return this.keys
+                .stream()
+                .filter(k -> k.getAlg().equals(alg) && k.getKid().equals(kid))
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException("잘못된 토큰 형태입니다."));
+                .orElseThrow(() -> new IllegalArgumentException("Apple JWT 값의 alg, kid 정보가 올바르지 않습니다."));
     }
+
+
 }
