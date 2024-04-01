@@ -40,10 +40,6 @@ public class AppleAuthService {
 
         // claims로부터 socialId, email 추출
         String socialId = claims.getSubject();
-//        String temp = claims.getId();
-//        System.out.println(temp);
-        System.out.println(socialId);
-        //Long socialId = Long.valueOf(claims.getSubject());
         String email = claims.get("email", String.class);
 
         Member member = Member.builder()

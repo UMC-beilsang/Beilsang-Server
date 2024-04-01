@@ -1,8 +1,8 @@
 package com.BeilsangServer.global.enums;
 
 public enum Role {
-    USER("user"),
-    ADMIN("admin");
+    USER("USER"),
+    ADMIN("USER");
 
     private final String role;
 

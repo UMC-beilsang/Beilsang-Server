@@ -58,6 +58,7 @@ public class Member extends BaseEntity {
     private String profileUrl;
 
     private String refreshToken;
+
     private String deviceToken;
 
 
