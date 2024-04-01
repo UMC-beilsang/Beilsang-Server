@@ -14,8 +14,8 @@ import java.security.PublicKey;
 import java.util.Base64;
 import java.util.Map;
 
-@RequiredArgsConstructor
 @Component
+@RequiredArgsConstructor
 public class AppleTokenParser {
 
     //identity 토큰을 파싱하는 데 사용되는 상수, identity 토큰은 '.'으로 구분된 세 부분으로 이루어져 있음
@@ -25,7 +25,7 @@ public class AppleTokenParser {
 
     private static final int HEADER_INDEX = 0;
 
-    private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper ;
 
     public Map<String, String> parseHeader(final String idToken) {
         try {
@@ -43,7 +43,7 @@ public class AppleTokenParser {
     }
 
     //identity 토큰의 페이로드를 파싱하고 검증하는 메소드
-    public Claims extractClaims(final String idToken, final PublicKey publicKey) {
+    public Claims extractClaims(String idToken, PublicKey publicKey) {
         try {
             // identity 토큰을 파싱하고 검증한 후 페이로드를 반환
             return Jwts.parser()

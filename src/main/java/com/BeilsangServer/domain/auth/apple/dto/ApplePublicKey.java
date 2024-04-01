@@ -13,7 +13,7 @@ Apple 공개 키를 구성할 정보
 @Getter
 public class ApplePublicKey {
 
-    private final String kty;
+    private final String kty; // RSA란 값으로 고정
 
     private final String kid;
 
@@ -21,9 +21,9 @@ public class ApplePublicKey {
 
     private final String alg;
 
-    private final String n;
+    private final String n; // RSA 공개키 생성에 사용
 
-    private final String e;
+    private final String e; // RSA 공개키 생성에 사용
 
     public boolean isSameAlg(final String alg) {
         return this.alg.equals(alg);

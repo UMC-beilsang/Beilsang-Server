@@ -20,7 +20,7 @@ import java.util.Map;
 public class UserPrincipal implements UserDetails {
 
     private Long id;
-    private Long socialId;
+    private String socialId;
     private Collection<? extends GrantedAuthority> authorities;
     @Setter
     private Map<String, Object> attributes;
