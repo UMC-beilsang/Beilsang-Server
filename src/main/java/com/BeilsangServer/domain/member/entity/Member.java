@@ -86,9 +86,14 @@ public class Member extends BaseEntity {
         if(memberLoginDto.getRecommendNickname() != null && !memberLoginDto.getRecommendNickname().isBlank()){
             this.recommendNickname = memberLoginDto.getRecommendNickname();
         }
-        this.gender = memberLoginDto.getGender();
+        if(memberLoginDto.getGender()!= null){
+            this.gender = memberLoginDto.getGender();
+        }
+        if(memberLoginDto.getBirth() != null && !memberLoginDto.getBirth().isBlank()){
+            this.birth = LocalDate.parse(memberLoginDto.getBirth());
+        }
+
         this.nickName = memberLoginDto.getNickName();
-        this.birth = LocalDate.parse(memberLoginDto.getBirth());
         this.keyword = Category.from(memberLoginDto.getKeyword());
         this.resolution = memberLoginDto.getResolution();
     }
