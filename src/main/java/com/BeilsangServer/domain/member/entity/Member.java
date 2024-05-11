@@ -1,7 +1,9 @@
 package com.BeilsangServer.domain.member.entity;
 
+import com.BeilsangServer.domain.feed.entity.FeedLike;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
+import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.Gender;
@@ -12,6 +14,8 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -61,6 +65,16 @@ public class Member extends BaseEntity {
 
     private String deviceToken;
 
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<PointLog> pointLogs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChallengeMember> challengeMembers = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<FeedLike> feedLikes = new ArrayList<>();
+
 
     public void setMemberInfo(MemberLoginDto memberLoginDto){
         if(memberLoginDto.getAddress() != null && !memberLoginDto.getAddress().isBlank()){
@@ -72,9 +86,14 @@ public class Member extends BaseEntity {
         if(memberLoginDto.getRecommendNickname() != null && !memberLoginDto.getRecommendNickname().isBlank()){
             this.recommendNickname = memberLoginDto.getRecommendNickname();
         }
-        this.gender = memberLoginDto.getGender();
+        if(memberLoginDto.getGender()!= null){
+            this.gender = memberLoginDto.getGender();
+        }
+        if(memberLoginDto.getBirth() != null && !memberLoginDto.getBirth().isBlank()){
+            this.birth = LocalDate.parse(memberLoginDto.getBirth());
+        }
+
         this.nickName = memberLoginDto.getNickName();
-        this.birth = LocalDate.parse(memberLoginDto.getBirth());
         this.keyword = Category.from(memberLoginDto.getKeyword());
         this.resolution = memberLoginDto.getResolution();
     }
