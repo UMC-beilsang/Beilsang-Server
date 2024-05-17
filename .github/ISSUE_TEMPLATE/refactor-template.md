@@ -2,7 +2,7 @@
 name: Refactor Template
 about: 코드 리팩토링 시 사용해주세요.
 title: "[REFACTOR]"
-labels: ''
+labels: ":recycle:  refactor"
 assignees: ''
 
 ---
