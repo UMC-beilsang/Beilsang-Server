@@ -40,20 +40,12 @@ import java.util.stream.Collectors;
 @Service
 public class AppleTokenProvider {
 
-    private final String clientId;
-    private final String keyId;
-    private final String teamId;
-
-
-    public AppleTokenProvider(
-            @Value("${apple.clinet-id}") String clientId,
-            @Value("${apple.key-id}") String keyId,
-            @Value("${apple.team-id}")String teamId) {
-        this.clientId = clientId;
-        this.keyId = keyId;
-        this.teamId = teamId;
-
-    }
+    @Value("${apple.clinet-id}")
+    private String clientId;
+    @Value("${apple.key-id}")
+    private String keyId;
+    @Value("${apple.team-id}")
+    private String teamId;
 
     public String createClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         Date expirationDate = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant());
