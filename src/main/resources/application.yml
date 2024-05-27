@@ -43,10 +43,5 @@ cloud:
       secretKey: ${AWS_SECRET_ACCESS_KEY}
 
 jwt:
-  secret-key: qopfmfoesf234fuhvertsv34789yhiuFDSIUFGYDTE18372ksm
+  secret-key: ${JWT_SECRET_KEY}
 
-oauth:
-  apple:
-    iss: https://appleid.apple.com
-    client-id: ${OAUTH_APPLE_CLIENT_ID}
-    nonce: ${OAUTH_APPLE_NONCE}
