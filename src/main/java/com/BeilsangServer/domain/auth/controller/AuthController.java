@@ -121,7 +121,9 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<String> test2(String authCode, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+    public ApiResponse<String> test2(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String authCode = appleRevokeRequestDto.getAuthorizationCode();
+        String accessToken = appleRevokeRequestDto.getAccessToken();
         String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode, accessToken).getRefreshToken();
         return ApiResponse.onSuccess(appleRefreshToken);
     }
