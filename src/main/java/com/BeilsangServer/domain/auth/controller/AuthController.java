@@ -106,25 +106,7 @@ public class AuthController {
 
     }
 
-    @GetMapping("/test1")
-    @Operation(summary = "Some operation", security = @SecurityRequirement(name = "bearerAuth"))
-    @io.swagger.v3.oas.annotations.responses.ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
-    })
-    public ApiResponse<String> test1() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String clientSecret = appleTokenProvider.createClientSecret();
-        return ApiResponse.onSuccess(clientSecret);
-    }
 
-    @PostMapping("/test2")
-    @Operation(summary = "Some operation", security = @SecurityRequirement(name = "bearerAuth"))
-    @io.swagger.v3.oas.annotations.responses.ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
-    })
-    public ApiResponse<String> test2(String authCode, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode, accessToken).getRefreshToken();
-        return ApiResponse.onSuccess(appleRefreshToken);
-    }
 }
 
 
