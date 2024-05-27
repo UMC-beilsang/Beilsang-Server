@@ -6,4 +6,5 @@ import lombok.Getter;
 @Getter
 public class AppleRevokeRequestDto {
     private String accessToken;
+    private String authorizationCode;
 }

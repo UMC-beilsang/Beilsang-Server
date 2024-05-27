@@ -4,16 +4,22 @@ package com.BeilsangServer.domain.auth.controller;
 import com.BeilsangServer.domain.auth.apple.dto.AppleLoginRequestDto;
 import com.BeilsangServer.domain.auth.apple.dto.AppleResponseDto;
 import com.BeilsangServer.domain.auth.apple.dto.AppleRevokeRequestDto;
+import com.BeilsangServer.domain.auth.apple.service.AppleTokenProvider;
 import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.auth.service.AuthService;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.global.common.apiPayload.ApiResponse;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Auth", description = "로그인 관련된 API")
 public class AuthController {
     private final AuthService authService;
-
+    private final AppleTokenProvider appleTokenProvider;
 
     @PostMapping("/kakao/login")
     @Operation(summary = "카카오 로그인 API")
@@ -42,7 +48,7 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<AppleResponseDto> login(@RequestBody AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) {
+    public ApiResponse<AppleResponseDto> login(@RequestBody AppleLoginRequestDto appleLoginRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
         AppleResponseDto appleResponseDto = authService.loginWithApple(appleLoginRequestDto.getIdToken(),appleLoginRequestDto.getDeviceToken(), response);
 
@@ -79,9 +85,9 @@ public class AuthController {
     @io.swagger.v3.oas.annotations.responses.ApiResponses({
             @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
     })
-    public ApiResponse<Object> revoke(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) {
+    public ApiResponse<Object> revoke(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        authService.appleRevoke(appleRevokeRequestDto.getAccessToken());
+        authService.appleRevoke(appleRevokeRequestDto);
 
         return ApiResponse.onSuccess();
     }
@@ -98,6 +104,26 @@ public class AuthController {
 
         return ApiResponse.onSuccess(refreshResponseDto);
 
+    }
+
+    @GetMapping("/test1")
+    @Operation(summary = "Some operation", security = @SecurityRequirement(name = "bearerAuth"))
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<String> test1() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String clientSecret = appleTokenProvider.createClientSecret();
+        return ApiResponse.onSuccess(clientSecret);
+    }
+
+    @PostMapping("/test2")
+    @Operation(summary = "Some operation", security = @SecurityRequirement(name = "bearerAuth"))
+    @io.swagger.v3.oas.annotations.responses.ApiResponses({
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
+    })
+    public ApiResponse<String> test2(String authCode, String accessToken) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode, accessToken).getRefreshToken();
+        return ApiResponse.onSuccess(appleRefreshToken);
     }
 }
 
