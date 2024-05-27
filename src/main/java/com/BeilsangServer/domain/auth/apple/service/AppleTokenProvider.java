@@ -105,6 +105,7 @@ public class AppleTokenProvider {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
         try {
             ResponseEntity<AppleAuthTokenResponse> response = restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class);
             return response.getBody();
