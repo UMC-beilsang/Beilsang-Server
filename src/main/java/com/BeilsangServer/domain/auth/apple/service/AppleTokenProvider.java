@@ -40,11 +40,9 @@ import java.util.stream.Collectors;
 @Service
 public class AppleTokenProvider {
 
-<<<<<<< HEAD
     private final String clientId;
     private final String keyId;
     private final String teamId;
-
 
     public AppleTokenProvider(
             @Value("${apple.client-id}") String clientId,
