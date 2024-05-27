@@ -45,13 +45,12 @@ public class AppleTokenProvider {
     private final String teamId;
 
     public AppleTokenProvider(
-            @Value("${apple.client-id}") String clientId,
-            @Value("${apple.key-id}") String keyId,
-            @Value("${apple.team-id}")String teamId) {
+        @Value("${apple.client-id}") String clientId,
+        @Value("${apple.key-id}") String keyId,
+        @Value("${apple.team-id}")String teamId) {
         this.clientId = clientId;
         this.keyId = keyId;
         this.teamId = teamId;
-
     }
 
     public String createClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -106,6 +105,7 @@ public class AppleTokenProvider {
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+
         try {
             ResponseEntity<AppleAuthTokenResponse> response = restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class);
             return response.getBody();
