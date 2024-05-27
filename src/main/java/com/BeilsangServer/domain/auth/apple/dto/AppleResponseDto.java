@@ -12,5 +12,6 @@ public class AppleResponseDto {
 
     private String accessToken;
     private String refreshToken;
+    private String clientSecret;
     private Boolean existMember;
 }

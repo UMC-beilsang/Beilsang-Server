@@ -3,7 +3,9 @@ package com.BeilsangServer.domain.auth.service;
 
 import com.BeilsangServer.domain.auth.apple.dto.AppleMemberAndExistDto;
 import com.BeilsangServer.domain.auth.apple.dto.AppleResponseDto;
+import com.BeilsangServer.domain.auth.apple.dto.AppleRevokeRequestDto;
 import com.BeilsangServer.domain.auth.apple.service.AppleAuthService;
+import com.BeilsangServer.domain.auth.apple.service.AppleTokenProvider;
 import com.BeilsangServer.domain.auth.dto.*;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.entity.Member;
@@ -15,13 +17,32 @@ import com.BeilsangServer.global.common.exception.handler.ErrorHandler;
 import com.BeilsangServer.global.enums.PointName;
 import com.BeilsangServer.global.enums.PointStatus;
 import com.BeilsangServer.global.jwt.JwtTokenProvider;
-import com.BeilsangServer.global.jwt.exception.CustomException;
-import com.BeilsangServer.global.jwt.exception.ErrorCode;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.IOException;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @RequiredArgsConstructor
@@ -32,6 +53,9 @@ public class AuthService {
     private final KakaoAuthService kakaoAuthService;
     private final AppleAuthService appleAuthService;
     private final PointLogRepository pointLogRepository;
+    private final AppleTokenProvider appleTokenProvider;
+
+
 
     //카카오 로그인
     @Transactional
@@ -42,7 +66,7 @@ public class AuthService {
     }
 
     @Transactional
-    public AppleResponseDto loginWithApple(String idToken,String deviceToken, HttpServletResponse response) {
+    public AppleResponseDto loginWithApple(String idToken,String deviceToken, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         AppleMemberAndExistDto appleMemberAndExistDto =
                 appleAuthService.getAppleMemberInfo(idToken);
         appleMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
@@ -92,10 +116,57 @@ public class AuthService {
     }
 
     @Transactional
-    public void appleRevoke(String accessToken){
-        String socialId = jwtTokenProvider.getPayload(accessToken);
-        Member member = memberRepository.findBySocialId(socialId);
-        memberRepository.delete(member);
+    public void appleRevoke(AppleRevokeRequestDto appleRevokeRequestDto) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
+        String clientSecret = appleTokenProvider.createClientSecret();
+        String authorizationCode = appleRevokeRequestDto.getAuthorizationCode();
+        String appleRefreshToken = appleTokenProvider.GenerateAuthToken(authorizationCode,clientSecret).getRefreshToken();
+        String revokeUrl = "https://appleid.apple.com/auth/revoke";
+
+//        Map<String, String> params = new HashMap<>();
+//        params.put("client_secret", clientSecret); // 생성한 client_secret
+//        params.put("token", appleRefreshToken); // 생성한 refresh_token
+//        params.put("client_id", "com.beilsang.apps" ); // app bundle id
+//
+//        try {
+//            HttpRequest getRequest = HttpRequest.newBuilder()
+//                    .uri(new URI(uriStr))
+//                    .POST(getParamsUrlEncoded(params))
+//                    .headers("Content-Type", "application/x-www-form-urlencoded")
+//                    .build();
+//
+//            HttpClient httpClient = HttpClient.newHttpClient();
+//            httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+
+        if (appleRefreshToken!= null) {
+            RestTemplate restTemplate = new RestTemplateBuilder().build();
+
+            LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+            params.add("client_id","com.beilsang.apps");
+            params.add("client_secret", clientSecret);
+            params.add("token", appleRefreshToken);
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+            headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+            HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
+            restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
+        }
+//
+//        String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
+//        Member member = memberRepository.findBySocialId(socialId);
+//        memberRepository.delete(member);
+    }
+
+    private HttpRequest.BodyPublisher getParamsUrlEncoded(Map<String, String> parameters) {
+        String urlEncoded = parameters.entrySet()
+                .stream()
+                .map(e -> e.getKey() + "=" + URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
+        return HttpRequest.BodyPublishers.ofString(urlEncoded);
     }
 
 
@@ -121,9 +192,10 @@ public class AuthService {
 
     //Access Token, Refresh Token 생성
     @Transactional
-    public AppleResponseDto getAppleTokens(String socialId, Boolean existMember, HttpServletResponse response) {
+    public AppleResponseDto getAppleTokens(String socialId, Boolean existMember, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         final String accessToken = jwtTokenProvider.createAccessToken(socialId.toString());
         final String refreshToken = jwtTokenProvider.createRefreshToken();
+        final String clientSecret = appleTokenProvider.createClientSecret();
 
         Member member = memberRepository.findBySocialId(socialId);
         member.setRefreshToken(refreshToken);
@@ -131,6 +203,7 @@ public class AuthService {
         return AppleResponseDto.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
+                .clientSecret(clientSecret)
                 .existMember(existMember)
                 .build();
     }
@@ -157,4 +230,5 @@ public class AuthService {
                 .refreshToken(refreshToken)
                 .build();
     }
+
 }
