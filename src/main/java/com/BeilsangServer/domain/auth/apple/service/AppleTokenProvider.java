@@ -46,7 +46,7 @@ public class AppleTokenProvider {
 
 
     public AppleTokenProvider(
-            @Value("${apple.clinet-id}") String clientId,
+            @Value("${apple.client-id}") String clientId,
             @Value("${apple.key-id}") String keyId,
             @Value("${apple.team-id}")String teamId) {
         this.clientId = clientId;
