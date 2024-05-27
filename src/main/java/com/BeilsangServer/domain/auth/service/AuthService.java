@@ -31,16 +31,12 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.net.URI;
 import java.net.URLEncoder;
-import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -155,10 +151,11 @@ public class AuthService {
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
             restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
         }
-//
+
 //        String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
 //        Member member = memberRepository.findBySocialId(socialId);
 //        memberRepository.delete(member);
+
     }
 
     private HttpRequest.BodyPublisher getParamsUrlEncoded(Map<String, String> parameters) {
