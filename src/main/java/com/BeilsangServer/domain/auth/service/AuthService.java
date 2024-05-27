@@ -118,24 +118,6 @@ public class AuthService {
         String appleRefreshToken = appleTokenProvider.GenerateAuthToken(authorizationCode,clientSecret).getRefreshToken();
         String revokeUrl = "https://appleid.apple.com/auth/revoke";
 
-//        Map<String, String> params = new HashMap<>();
-//        params.put("client_secret", clientSecret); // 생성한 client_secret
-//        params.put("token", appleRefreshToken); // 생성한 refresh_token
-//        params.put("client_id", "com.beilsang.apps" ); // app bundle id
-//
-//        try {
-//            HttpRequest getRequest = HttpRequest.newBuilder()
-//                    .uri(new URI(uriStr))
-//                    .POST(getParamsUrlEncoded(params))
-//                    .headers("Content-Type", "application/x-www-form-urlencoded")
-//                    .build();
-//
-//            HttpClient httpClient = HttpClient.newHttpClient();
-//            httpClient.send(getRequest, HttpResponse.BodyHandlers.ofString());
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
         if (appleRefreshToken!= null) {
             RestTemplate restTemplate = new RestTemplateBuilder().build();
 
@@ -152,21 +134,11 @@ public class AuthService {
             restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
         }
 
-//        String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
-//        Member member = memberRepository.findBySocialId(socialId);
-//        memberRepository.delete(member);
+        String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
+        Member member = memberRepository.findBySocialId(socialId);
+        memberRepository.delete(member);
 
     }
-
-    private HttpRequest.BodyPublisher getParamsUrlEncoded(Map<String, String> parameters) {
-        String urlEncoded = parameters.entrySet()
-                .stream()
-                .map(e -> e.getKey() + "=" + URLEncoder.encode(e.getValue(), StandardCharsets.UTF_8))
-                .collect(Collectors.joining("&"));
-        return HttpRequest.BodyPublishers.ofString(urlEncoded);
-    }
-
-
 
 
 //    //Access Token, Refresh Token 생성
