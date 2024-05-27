@@ -124,7 +124,8 @@ public class AuthController {
     public ApiResponse<String> test2(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         String authCode = appleRevokeRequestDto.getAuthorizationCode();
         String accessToken = appleRevokeRequestDto.getAccessToken();
-        String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode, accessToken).getRefreshToken();
+        String clientSecret = appleTokenProvider.createClientSecret();
+        String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode,clientSecret).getRefreshToken();
         return ApiResponse.onSuccess(appleRefreshToken);
     }
 }
