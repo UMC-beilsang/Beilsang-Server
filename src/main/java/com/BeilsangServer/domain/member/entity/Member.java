@@ -1,8 +1,11 @@
 package com.BeilsangServer.domain.member.entity;
 
+import com.BeilsangServer.domain.achievment.entity.Achievement;
 import com.BeilsangServer.domain.feed.entity.FeedLike;
+import com.BeilsangServer.domain.like.entity.ChallengeLike;
 import com.BeilsangServer.domain.member.dto.MemberLoginDto;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
+import com.BeilsangServer.domain.notification.entity.AppNotification;
 import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
@@ -46,8 +49,6 @@ public class Member extends BaseEntity {
 
     private String address;
 
-//    private String keyword;
-
     @Enumerated(EnumType.STRING)
     private Category keyword;
 
@@ -74,6 +75,16 @@ public class Member extends BaseEntity {
 
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<FeedLike> feedLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChallengeLike> challengeLikes = new ArrayList<>();
+
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Achievement> achievements = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<AppNotification> appNotifications = new ArrayList<>();
 
 
     public void setMemberInfo(MemberLoginDto memberLoginDto){

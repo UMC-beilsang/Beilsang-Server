@@ -23,6 +23,7 @@ import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.LinkedMultiValueMap;
@@ -131,12 +132,19 @@ public class AuthService {
             headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
 
             HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
-            restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
+            ResponseEntity<String> responseEntity = restTemplate.postForEntity(revokeUrl, httpEntity, String.class);
+
+            if (responseEntity.getStatusCode().is2xxSuccessful()) {
+                // 애플 탈퇴 요청 성공 시 실행
+                String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
+                Member member = memberRepository.findBySocialId(socialId);
+                memberRepository.delete(member);
+            } else {
+                throw new RuntimeException("Apple ID revoke 요청 실패: " + responseEntity.getStatusCode());
+            }
+
         }
 
-        String socialId = jwtTokenProvider.getPayload(appleRevokeRequestDto.getAccessToken());
-        Member member = memberRepository.findBySocialId(socialId);
-        memberRepository.delete(member);
 
     }
 

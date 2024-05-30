@@ -1,5 +1,9 @@
 package com.BeilsangServer.domain.challenge.entity;
 
+import com.BeilsangServer.domain.feed.entity.Feed;
+import com.BeilsangServer.domain.feed.entity.FeedLike;
+import com.BeilsangServer.domain.like.entity.ChallengeLike;
+import com.BeilsangServer.domain.member.entity.ChallengeMember;
 import com.BeilsangServer.global.common.BaseEntity;
 import com.BeilsangServer.global.enums.Category;
 import com.BeilsangServer.global.enums.ChallengePeriod;
@@ -40,8 +44,17 @@ public class Challenge extends BaseEntity {
 
     private String details;
 
-    @OneToMany(mappedBy = "challenge")
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
     private List<ChallengeNote> challengeNotes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChallengeLike> challengeLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<Feed> feeds = new ArrayList<>();
+
+    @OneToMany(mappedBy = "challenge", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private List<ChallengeMember> challengeMembers = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
     private ChallengePeriod period;
