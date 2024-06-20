@@ -22,6 +22,7 @@ import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
+import com.BeilsangServer.global.enums.Gender;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,9 @@ public class MemberService {
 
         String nickName = member.getNickName();
         String profileImage = member.getProfileUrl();
+        LocalDate birth = member.getBirth();
+        String address = member.getAddress();
+        Gender gender = member.getGender();
 
         return MemberResponseDTO.myPageDTO.builder()
                 .achieve(totalAchievements)
@@ -110,6 +114,9 @@ public class MemberService {
                 .feedDTOs(feedDto)
                 .nickName(nickName)
                 .profileImage(profileImage)
+                .address(address)
+                .gender(gender)
+                .birth(birth)
                 .build();
     }
 

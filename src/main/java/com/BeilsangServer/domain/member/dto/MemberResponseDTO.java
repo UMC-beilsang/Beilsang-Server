@@ -39,6 +39,9 @@ public class MemberResponseDTO {
         FeedDTO.previewFeedListDto feedDTOs;
         String nickName;
         String profileImage;
+        String address;
+        Gender gender;
+        LocalDate birth;
     }
 
     @Builder
