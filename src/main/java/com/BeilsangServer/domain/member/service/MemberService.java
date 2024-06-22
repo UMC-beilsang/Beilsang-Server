@@ -184,6 +184,19 @@ public class MemberService {
         }
     }
 
+    public boolean checkNickNameExists(Long memberId){
+
+        Optional<Member> member = memberRepository.findById(memberId);
+
+        if(member.get().getNickName().isBlank()){
+            return false;
+        }
+        else{
+            return true;
+        }
+
+    }
+
     /***
      * 멤버의 챌린지 참여 여부 판단
      * @param memberId 멤버
