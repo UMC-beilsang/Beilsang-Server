@@ -51,8 +51,10 @@ public class KakaoAuthService {
         else {
             memberRepository.save(member); //DB에 회원정보 없으면 저장
         }
+
+        Member findMember = memberRepository.findBySocialId(kakaoInfoDto.getSocialId());
         return KakaoMemberAndExistDto.builder()
-                .member(member)
+                .member(findMember)
                 .existMember(existMember)
                 .build();
     }

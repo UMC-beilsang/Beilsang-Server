@@ -58,8 +58,10 @@ public class AppleAuthService {
             memberRepository.save(member); // DB에 회원정보 없으면 저장
         }
 
-            return AppleMemberAndExistDto.builder()
-                    .member(member)
+        Member findMember = memberRepository.findBySocialId(socialId);
+
+        return AppleMemberAndExistDto.builder()
+                    .member(findMember)
                     .existMember(existMember)
                     .build();
         }
