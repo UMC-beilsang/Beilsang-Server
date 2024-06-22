@@ -60,7 +60,7 @@ public class AppNotificationService {
         notification.setIsRead();
     }
 
-    @Scheduled(cron = "0 */10 0 * * *")
+    @Scheduled(cron = "0 */1 0 * * *")
     public void sendPushNotification() throws FirebaseMessagingException {
 
         sendStartChallengePushNotification();
