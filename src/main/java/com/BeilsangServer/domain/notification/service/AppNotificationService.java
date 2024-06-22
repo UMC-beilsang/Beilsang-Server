@@ -61,6 +61,7 @@ public class AppNotificationService {
     }
 
     @Scheduled(cron = "0 */1 0 * * *")
+    @Transactional
     public void sendPushNotification() throws FirebaseMessagingException {
 
         sendStartChallengePushNotification();
@@ -114,7 +115,7 @@ public class AppNotificationService {
 
     }
 
-    @Scheduled(cron = "0 18 0 * * *")
+    //@Scheduled(cron = "0 18 0 * * *")
     public void sendFeedUploadPushNotification() throws FirebaseMessagingException {
 
         List<Member> members = memberRepository.findAll();
