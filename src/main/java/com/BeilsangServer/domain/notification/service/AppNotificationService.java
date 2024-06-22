@@ -64,7 +64,7 @@ public class AppNotificationService {
     public void sendPushNotification() throws FirebaseMessagingException {
 
         sendStartChallengePushNotification();
-        sendRecommendedChallengePushNotification();
+        //sendRecommendedChallengePushNotification();
     }
 
     public void sendStartChallengePushNotification() throws FirebaseMessagingException {
