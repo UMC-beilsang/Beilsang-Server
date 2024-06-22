@@ -155,7 +155,7 @@ public class ChallengeService {
                 .limit(recommendNum)
                 .toList();
 
-        if (recommendChallenges.size() < recommendNum) throw new ErrorHandler(ErrorStatus.CHALLENGE_INSUFFICIENT);
+        //if (recommendChallenges.size() < recommendNum) throw new ErrorHandler(ErrorStatus.CHALLENGE_INSUFFICIENT);
 
         return recommendChallenges.stream()
                 .map(challenge -> ChallengeResponseDTO.RecommendChallengeDTO.builder()
