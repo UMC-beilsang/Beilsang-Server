@@ -60,14 +60,14 @@ public class AppNotificationService {
         notification.setIsRead();
     }
 
-    @Scheduled(cron = "0 */1 0 * * *")
-    @Transactional
     public void sendPushNotification() throws FirebaseMessagingException {
 
         sendStartChallengePushNotification();
         //sendRecommendedChallengePushNotification();
     }
 
+    @Scheduled(cron = "0 */1 0 * * *")
+    @Transactional
     public void sendStartChallengePushNotification() throws FirebaseMessagingException {
 
         List<Challenge> challenges = challengeRepository.findAllByStartDate(LocalDate.now());
