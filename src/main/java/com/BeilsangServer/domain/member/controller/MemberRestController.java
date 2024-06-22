@@ -97,6 +97,19 @@ public class MemberRestController {
         return ApiResponse.onSuccess(isExists);
     }
 
+    @Operation(
+            summary = "멤버의 닉네임 존재 여부 확인 API",
+            description = "멤버의 닉네임이 존재하면 true, 존재하지 않으면 false를 보내는 API 입니다",
+            security = @SecurityRequirement(name = "bearerAuth"))
+    @GetMapping("/join/check/existnickname")
+    public ApiResponse<Boolean> checkNickNameExists(){
+        Long memberId = SecurityUtil.getCurrentUserId();
+
+        boolean isNickNameExists = memberService.checkNickNameExists(memberId);
+
+        return ApiResponse.onSuccess(isNickNameExists);
+    }
+
     @GetMapping("/check/{challengeId}")
     @Operation(
             summary = "멤버의 챌린지 참여 조회 API",
