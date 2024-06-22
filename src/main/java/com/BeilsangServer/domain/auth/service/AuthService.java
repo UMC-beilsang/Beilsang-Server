@@ -39,6 +39,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -58,7 +59,8 @@ public class AuthService {
     @Transactional
     public  KakaoResponseDto loginWithKakao(String accessToken,String deviceToken, HttpServletResponse response) {
         KakaoMemberAndExistDto kakaoMemberAndExistDto = kakaoAuthService.getUserProfileByToken(accessToken); //dto에 socialId,email,Provider 저장
-        kakaoMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
+        Optional<Member> findMember = memberRepository.findById(kakaoMemberAndExistDto.getMember().getId());
+        findMember.get().updateDeviceToken(deviceToken);
         return getKaKaoTokens(kakaoMemberAndExistDto.getMember().getSocialId(),kakaoMemberAndExistDto.getExistMember(), response);
     }
 
@@ -66,7 +68,9 @@ public class AuthService {
     public AppleResponseDto loginWithApple(String idToken,String deviceToken, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         AppleMemberAndExistDto appleMemberAndExistDto =
                 appleAuthService.getAppleMemberInfo(idToken);
-        appleMemberAndExistDto.getMember().updateDeviceToken(deviceToken);
+
+        Optional<Member> findMember = memberRepository.findById(appleMemberAndExistDto.getMember().getId());
+        findMember.get().updateDeviceToken(deviceToken);
         return getAppleTokens(appleMemberAndExistDto.getMember().getSocialId(),appleMemberAndExistDto.getExistMember(),response);
     }
 
