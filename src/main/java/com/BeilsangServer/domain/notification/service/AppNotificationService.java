@@ -66,7 +66,7 @@ public class AppNotificationService {
         //sendRecommendedChallengePushNotification();
     }
 
-    @Scheduled(cron = "0 */1 0 * * *")
+    //@Scheduled(cron = "0 */1 0 * * *")
     @Transactional
     public void sendStartChallengePushNotification() throws FirebaseMessagingException {
 
