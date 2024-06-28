@@ -72,7 +72,7 @@ public class AppleTokenProvider {
 
     public PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        String appleSignKeyFilePath = "static/AuthKey_SPW385Z3Y9.p8";
+        String appleSignKeyFilePath = "static/AuthKey_UJ8CZPN829.p8";
 
         InputStream privateKey = new ClassPathResource(appleSignKeyFilePath).getInputStream();
 
