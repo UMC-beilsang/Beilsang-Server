@@ -51,6 +51,7 @@ public class AppleTokenProvider {
         this.clientId = clientId;
         this.keyId = keyId;
         this.teamId = teamId;
+
     }
 
     public String createClientSecret() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
@@ -72,7 +73,7 @@ public class AppleTokenProvider {
 
     public PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
 
-        String appleSignKeyFilePath = "static/AuthKey_SPW385Z3Y9.p8";
+        String appleSignKeyFilePath = "static/AuthKey_UV3429735V.p8";
 
         InputStream privateKey = new ClassPathResource(appleSignKeyFilePath).getInputStream();
 
