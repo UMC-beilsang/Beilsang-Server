@@ -22,7 +22,7 @@ jobs:
       - name: Make .p8 file
         run: |
           mkdir -p ./src/main/resources/static
-          echo "${{ secrets.PEM_KEY }}" > ./src/main/resources/static/AuthKey_SPW385Z3Y9.p8
+          echo "${{ secrets.PEM_KEY }}" > ./src/main/resources/static/AuthKey_UV3429735V.p8
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
