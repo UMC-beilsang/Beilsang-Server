@@ -188,7 +188,7 @@ public class MemberService {
 
         Optional<Member> member = memberRepository.findById(memberId);
 
-        if(member.get().getNickName().isBlank()){
+        if(member.get().getNickName() == null || member.get().getNickName().isBlank()){
             return false;
         }
         else{
