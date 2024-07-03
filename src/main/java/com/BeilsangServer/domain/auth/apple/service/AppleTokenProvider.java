@@ -111,6 +111,7 @@ public class AppleTokenProvider {
 
         try {
             ResponseEntity<AppleAuthTokenResponse> response = restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class);
+            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + response.toString());
             return response.getBody();
         } catch (HttpClientErrorException e) {
             log.error(String.valueOf(e));
