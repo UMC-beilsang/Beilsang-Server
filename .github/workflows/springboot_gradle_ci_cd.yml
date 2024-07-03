@@ -27,6 +27,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      - name: Make Application.yml
+        run: |
+          cd ./src/main/resources
+          touch ./application.yml
+          echo "${{ secrets.APPLICATION_YML}}" > ./application.yml   
+
         # 스프링부트 코드 Build
       - name: Build with Gradle
         run: ./gradlew clean build
