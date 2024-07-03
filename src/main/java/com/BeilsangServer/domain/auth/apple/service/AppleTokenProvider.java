@@ -110,9 +110,10 @@ public class AppleTokenProvider {
         HttpEntity<MultiValueMap<String, String>> httpEntity = new HttpEntity<>(params, headers);
 
         try {
-            ResponseEntity<AppleAuthTokenResponse> response = restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class);
+            ResponseEntity<String> response = restTemplate.postForEntity(authUrl, httpEntity, String.class);
             System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + response.getBody().toString());
-            return response.getBody();
+            return restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class).getBody();
+            //return response.getBody();
         } catch (HttpClientErrorException e) {
             log.error(String.valueOf(e));
             throw new CustomException(ErrorCode.BAD_REQUEST);
