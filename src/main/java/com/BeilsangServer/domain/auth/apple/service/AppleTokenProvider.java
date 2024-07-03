@@ -59,7 +59,6 @@ public class AppleTokenProvider {
         Map<String, Object> jwtHeader = new HashMap<>();
         jwtHeader.put("kid", keyId); //apple key id
         jwtHeader.put("alg", "ES256");
-        System.out.println("key****************************" + keyId);
 
         return Jwts.builder()
                 .setHeaderParams(jwtHeader)
@@ -102,7 +101,6 @@ public class AppleTokenProvider {
         params.add("client_secret", clientSecret);
         params.add("grant_type", "authorization_code");
 
-        System.out.println("*********************code:" + authorizationCode);
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
@@ -111,7 +109,6 @@ public class AppleTokenProvider {
 
         try {
             ResponseEntity<AppleAuthTokenResponse> response = restTemplate.postForEntity(authUrl, httpEntity, AppleAuthTokenResponse.class);
-            System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@" + response.getBody().toString());
             return response.getBody();
         } catch (HttpClientErrorException e) {
             log.error(String.valueOf(e));
