@@ -10,6 +10,8 @@ import java.util.List;
 public interface ChallengeLikeRepository extends JpaRepository<ChallengeLike, Long> {
     List<ChallengeLike> findAllByMember_Id(Long memberId);
 
+    Long countByMember_Id(Long memberId);
+
     ChallengeLike findByChallengeIdAndMemberId(Long challengeId, Long memberId);
 
     Boolean existsByChallengeIdAndMemberId(Long challengeId, Long memberId);

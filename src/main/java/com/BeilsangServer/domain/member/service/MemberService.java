@@ -9,6 +9,7 @@ import com.BeilsangServer.domain.feed.dto.FeedDTO;
 import com.BeilsangServer.domain.feed.entity.Feed;
 import com.BeilsangServer.domain.feed.repository.FeedLikeRepository;
 import com.BeilsangServer.domain.feed.repository.FeedRepository;
+import com.BeilsangServer.domain.like.repository.ChallengeLikeRepository;
 import com.BeilsangServer.domain.member.converter.MemberConverter;
 import com.BeilsangServer.domain.member.dto.MemberResponseDTO;
 import com.BeilsangServer.domain.member.dto.MemberUpdateDto;
@@ -41,11 +42,11 @@ public class MemberService {
     private final ChallengeMemberRepository challengeMemberRepository;
     private final FeedRepository feedRepository;
     private final AchievementRepository achievementRepository;
-    private final FeedLikeRepository feedLikeRepository;
     private final FeedConverter feedConverter;
     private final PointLogRepository pointLogRepository;
     private final UuidRepository uuidRepository;
     private final AmazonS3Manager s3Manager;
+    private final ChallengeLikeRepository challengeLikeRepository;
 
     public Optional<Member> findById(Long memberId) {
         return memberRepository.findById(memberId);
@@ -88,7 +89,7 @@ public class MemberService {
         Integer fail = challengeNum- totalAchievements;
 
         // 찜 개수 : 회원 아이디로 챌린지라이크 테이블 접근해서 카운트
-        Long likes = feedLikeRepository.countByMember_Id(memberId);
+        Long likes = challengeLikeRepository.countByMember_Id(memberId);
 
         // 현재 보유 포인트 : 회원 테이블에서 가져오기
         Integer points = member.getPoint();
