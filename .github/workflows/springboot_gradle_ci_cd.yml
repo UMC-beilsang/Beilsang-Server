@@ -30,7 +30,7 @@ jobs:
       - name: Make Application.yml
         run: |
           cd ./src/main/resources
-          touch ./application.yml
+          touch ./application.yml 
           echo "${{ secrets.APPLICATION_YML}}" > ./application.yml   
 
         # 스프링부트 코드 Build
