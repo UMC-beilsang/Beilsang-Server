@@ -123,12 +123,6 @@ public class AuthService {
         String appleRefreshToken = appleTokenProvider.GenerateAuthToken(authorizationCode,clientSecret).getRefreshToken();
         String revokeUrl = "https://appleid.apple.com/auth/revoke";
 
-        System.out.println("**********************************");
-        System.out.println("**********************************");
-        System.out.println("**********************************");
-        System.out.println("**********************************");
-        System.out.println(appleRefreshToken);
-
         if (appleRefreshToken!= null) {
             RestTemplate restTemplate = new RestTemplateBuilder().build();
 
