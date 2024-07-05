@@ -107,29 +107,6 @@ public class AuthController {
 
     }
 
-    @PostMapping("test/refresh")
-    @io.swagger.v3.oas.annotations.responses.ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
-    })
-    public ApiResponse<String> refreshTest(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String authCode = appleRevokeRequestDto.getAuthorizationCode();
-        String clientSecret = appleTokenProvider.createClientSecret();
-        String appleRefreshToken  = appleTokenProvider.GenerateAuthToken(authCode, clientSecret).getRefreshToken();
-        return ApiResponse.onSuccess(appleRefreshToken);
-    }
-
-    @PostMapping("test/token")
-    @io.swagger.v3.oas.annotations.responses.ApiResponses({
-            @io.swagger.v3.oas.annotations.responses.ApiResponse(responseCode = "COMMON200", description = "OK, 성공")
-    })
-    public ApiResponse<AppleAuthTokenResponse> tokenTest(@RequestBody AppleRevokeRequestDto appleRevokeRequestDto, HttpServletResponse response) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        String authCode = appleRevokeRequestDto.getAuthorizationCode();
-        String clientSecret = appleTokenProvider.createClientSecret();
-        AppleAuthTokenResponse appleAuthTokenResponse  = appleTokenProvider.GenerateAuthToken(authCode, clientSecret);
-        return ApiResponse.onSuccess(appleAuthTokenResponse);
-    }
-
-
 
 }
 
