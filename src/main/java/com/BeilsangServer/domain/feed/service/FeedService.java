@@ -252,7 +252,7 @@ public class FeedService {
      * @return
      */
     public FeedDTO.previewFeedListDto getGallery(Long challengeId){
-        List<Feed> feedList = feedRepository.findTop4ByChallenge_IdOrderByCreatedAtDesc(challengeId);
+        List<Feed> feedList = feedRepository.findAllByChallenge_IdOrderByCreatedAtDesc(challengeId);
 
         FeedDTO.previewFeedListDto feedDTOList = feedConverter.toPreviewFeedListDto(feedList);
 
