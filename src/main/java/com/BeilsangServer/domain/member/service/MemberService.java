@@ -23,6 +23,7 @@ import com.BeilsangServer.domain.point.entity.PointLog;
 import com.BeilsangServer.domain.point.repository.PointLogRepository;
 import com.BeilsangServer.domain.uuid.entity.Uuid;
 import com.BeilsangServer.domain.uuid.repository.UuidRepository;
+import com.BeilsangServer.global.enums.ChallengeStatus;
 import com.BeilsangServer.global.enums.Gender;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -72,12 +73,13 @@ public class MemberService {
         Long feedNum = feedRepository.countByChallengeMember_IdIn(challengeMemberIds);
 
         // 달성한 챌린지 : achievement 테이블에서 개수 가져오기,,, 카테고리로 필터링 안하고 그냥 회원id 같은거 모두 카운트
-        List<Achievement> achievements = achievementRepository.findByMember_Id(memberId);
-        Integer totalAchievements = 0;
-
-        for(Achievement a : achievements){
-            totalAchievements+=a.getCount();
-        }
+//        List<Achievement> achievements = achievementRepository.findByMember_Id(memberId);
+//        Integer totalAchievements = 0;
+//
+//        for(Achievement a : achievements){
+//            totalAchievements+=a.getCount();
+//        }
+        int totalAchievements = challengeMemberRepository.countByMemberIdAndChallengeStatus(memberId, ChallengeStatus.SUCCESS);
 
         // 다짐 : 회원 테이블에서 가져오기
         String resolution = member.getResolution();

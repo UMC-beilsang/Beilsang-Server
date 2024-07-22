@@ -56,7 +56,8 @@ public class ChallengeMemberService {
         System.out.println("ChallengeMemberService.checkFailure");
         System.out.println("=================================");
 
-        List<ChallengeMember> notUploadedMember = challengeMemberRepository.findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus.ONGOING, false);
+        List<ChallengeMember> notUploadedMember = challengeMemberRepository
+                .findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus.ONGOING, false);
 
         for (ChallengeMember challengeMember : notUploadedMember) {
 

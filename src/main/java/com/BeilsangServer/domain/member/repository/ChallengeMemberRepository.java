@@ -24,4 +24,5 @@ public interface ChallengeMemberRepository extends JpaRepository<ChallengeMember
     List<ChallengeMember> findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus challengeStatus, Boolean isFeedUpload);
 
     List<ChallengeMember> findAllByChallengeId(Long challengeId);
+    int countByMemberIdAndChallengeStatus(Long memberId, ChallengeStatus challengeStatus);
 }

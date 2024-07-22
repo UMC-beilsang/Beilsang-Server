@@ -19,10 +19,10 @@ public enum ErrorStatus implements BaseErrorCode {
 
     // 멤버 관련 응답
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER4001", "멤버가 없습니다."),
-    HAS_DUPLICATE_CHALLENGE(HttpStatus.INTERNAL_SERVER_ERROR, "MEMBER5001", "같은 챌린지에 중복 참여되어 있습니다."),
+    JOIN_DUPLICATE_CHALLENGE(HttpStatus.INTERNAL_SERVER_ERROR, "MEMBER5001", "해당 챌린지에 이미 참여되어 있습니다."),
 
     // 챌린지 관련 응답
-    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND,"CHALLENGE4001", "챌린지가 없습니다."),
+    CHALLENGE_NOT_FOUND(HttpStatus.NOT_FOUND,"CHALLENGE4001", "챌린지가 없습니다.") ,
     CHALLENGE_HOST_NOT_FOUND(HttpStatus.NOT_FOUND, "CHALLENGE4002", "챌린지의 호스트가 없습니다."),
     POINT_LACK(HttpStatus.INTERNAL_SERVER_ERROR, "CHALLENGE5001", "포인트가 부족합니다."),
     CHALLENGE_INSUFFICIENT(HttpStatus.INTERNAL_SERVER_ERROR, "CHALLENGE5002", "챌린지가 부족합니다."),
