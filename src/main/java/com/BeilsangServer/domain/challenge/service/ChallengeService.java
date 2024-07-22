@@ -110,7 +110,7 @@ public class ChallengeService {
      * @param challengeId 챌린지 ID
      * @return ChallengeDTO
      */
-    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId,Long memberId) {
+    public ChallengeResponseDTO.ChallengeDTO getChallenge(Long challengeId, Long memberId) {
 
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
@@ -118,12 +118,12 @@ public class ChallengeService {
         Integer dDay = (int) LocalDate.now().until(challenge.getStartDate(), ChronoUnit.DAYS);
 
         // 찜 여부
-        Boolean like = challengeLikeRepository.existsByChallengeIdAndMemberId(challengeId,memberId);
+        Boolean like = challengeLikeRepository.existsByChallengeIdAndMemberId(challengeId, memberId);
 
         // 챌린지 호스트 이름 찾기
         String hostName = getHostName(challengeId);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName,like);
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName, like);
     }
 
     /***
@@ -225,7 +225,7 @@ public class ChallengeService {
      * @param category
      * @return 상의 10개 챌린지를 담은 challengePreviewListDto
      */
-    public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category){
+    public ChallengeResponseDTO.ChallengePreviewListDTO getFamousChallengeList(String category) {
 
         Category categoryByEnum = Category.from(category);
         List<Challenge> challenges = challengeRepository.findTop5ByCategoryOrderByCountLikesDesc(categoryByEnum);
@@ -242,7 +242,7 @@ public class ChallengeService {
      * @param memberId
      * @return 찜 목록을 담은 challengePreviewListDto
      */
-    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId,String category) {
+    public ChallengeResponseDTO.ChallengePreviewListDTO getLikesList(Long memberId, String category) {
         Category categoryByEnum = Category.from(category);
 
         List<ChallengeLike> challengeLikes = challengeLikeRepository.findAllByMember_Id(memberId); // ChallengeLike 테이블에서 memberId 와 관련된 challengeId 추출
@@ -256,11 +256,10 @@ public class ChallengeService {
         // 챌린지 찾기
         //List<Challenge> challenges = challengeRepository.findAllById(challengeIds);
         List<Challenge> challenges;
-        if(categoryByEnum.equals(Category.ALL)){
+        if (categoryByEnum.equals(Category.ALL)) {
             challenges = challengeRepository.findAllById(challengeIds);
-        }
-        else{
-            challenges = challengeRepository.findAllByIdInAndCategory(challengeIds,categoryByEnum);
+        } else {
+            challenges = challengeRepository.findAllByIdInAndCategory(challengeIds, categoryByEnum);
         }
 
         List<ChallengeResponseDTO.ChallengePreviewDTO> challengePreviewDTOList = challenges.stream()
@@ -277,7 +276,7 @@ public class ChallengeService {
      * @param memberId
      * @return
      */
-    public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId){
+    public ChallengeResponseDTO.ChallengeListWithCountDTO getChallengeByStatusAndCategory(String status, String category, Long memberId) {
         Category categoryByEnum = Category.from(category);
 
         List<ChallengeMember> challengeMembers = challengeMemberRepository.findAllByMemberId(memberId);
@@ -286,8 +285,8 @@ public class ChallengeService {
 
         int count = 0;
 
-        for (Achievement a : achievements){
-            if(categoryByEnum.equals(a.getCategory())){
+        for (Achievement a : achievements) {
+            if (categoryByEnum.equals(a.getCategory())) {
                 count = a.getCount();
             }
         }
@@ -297,7 +296,7 @@ public class ChallengeService {
         List<Long> challengeIds = new ArrayList<>();
 
         for (ChallengeMember c : challengeMembers) {
-            if ("참여중".equals(status) && isAfterOrEqual(c.getChallenge().getFinishDate(),now) &&
+            if ("참여중".equals(status) && isAfterOrEqual(c.getChallenge().getFinishDate(), now) &&
                     (categoryByEnum.equals(Category.ALL) || categoryByEnum.equals(c.getChallenge().getCategory()))) {
                 challengeIds.add(c.getChallenge().getId());
             } else if ("등록한".equals(status) && c.getIsHost() &&
@@ -338,6 +337,12 @@ public class ChallengeService {
         if (challenge.getJoinPoint() > memberPoint) throw new ErrorHandler(ErrorStatus.POINT_LACK); // 예외처리
         member.subPoint(challenge.getJoinPoint()); // 포인트 차감
 
+        // 멤버가 이미 참여한 첼린지인지 확인 후 참여되어 있다면 예외처리
+        if (challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId).isPresent()) {
+            throw new ErrorHandler(ErrorStatus.JOIN_DUPLICATE_CHALLENGE);
+        }
+
+
         // 포인트 기록 생성 및 디비 저장
         pointLogRepository.save(PointLog.builder()
                 .pointName(PointName.JOIN_CHALLENGE)
@@ -375,9 +380,9 @@ public class ChallengeService {
      * 멤버 추가 필요
      */
     @Transactional
-    public Long challengeLike(Long challengeId, Long memberId){
+    public Long challengeLike(Long challengeId, Long memberId) {
         Challenge challenge = challengeRepository.findById(challengeId)
-                .orElseThrow(()-> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
+                .orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
         Member member = memberRepository.findById(memberId).orElseThrow(() -> new ErrorHandler(ErrorStatus.MEMBER_NOT_FOUND));
 
@@ -398,9 +403,9 @@ public class ChallengeService {
      * @return
      */
     @Transactional
-    public Long challengeUnLike(Long challengeId, Long memberId){
+    public Long challengeUnLike(Long challengeId, Long memberId) {
 
-        ChallengeLike challengeLike = challengeLikeRepository.findByChallengeIdAndMemberId(challengeId,memberId);
+        ChallengeLike challengeLike = challengeLikeRepository.findByChallengeIdAndMemberId(challengeId, memberId);
         Challenge challenge = challengeRepository.findById(challengeId).orElseThrow(() -> new ErrorHandler(ErrorStatus.CHALLENGE_NOT_FOUND));
 
         challenge.decreaseCountLikes();
@@ -423,7 +428,7 @@ public class ChallengeService {
         return host.getNickName();
     }
 
-    public static boolean isAfterOrEqual(LocalDate date1, LocalDate date2){
+    public static boolean isAfterOrEqual(LocalDate date1, LocalDate date2) {
         return !date1.isBefore(date2);
     }
 
@@ -447,7 +452,7 @@ public class ChallengeService {
                                         challengeMember.getChallengeStatus() == ChallengeStatus.NOT_YET)
                         .map(challengeMember -> {
                                     Challenge challenge = challengeMember.getChallenge();
-                                    float achieveRate = (float)challengeMember.getSuccessDays() / challenge.getTotalGoalDay() * 100;
+                                    float achieveRate = (float) challengeMember.getSuccessDays() / challenge.getTotalGoalDay() * 100;
                                     return ChallengeConverter.toMyChallengePreviewDTO(challenge, achieveRate);
                                 }
                         )
