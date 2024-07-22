@@ -22,5 +22,5 @@ public interface FeedRepository extends JpaRepository<Feed, Long> {
 
     Page<Feed> findAllByChallenge_Category(Category category, Pageable pageable);
 
-    List<Feed> findTop4ByChallenge_IdOrderByCreatedAtDesc(Long challengeId);
+    List<Feed> findAllByChallenge_IdOrderByCreatedAtDesc(Long challengeId);
 }
