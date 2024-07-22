@@ -47,8 +47,8 @@ public class ChallengeMemberService {
     }
 
     /***
-     * 하루동안 인증하지 않은 챌린지 멤버의 상태 수정
-     * 피드가 올라가 있지 않은 챌린지 멤버의 상태 변경
+     * ONGOING인 챌린지 멤버의 상태 확인
+     * 챌린지 멤버의 상태 변경
      */
     public void checkFailure() {
 
@@ -56,10 +56,10 @@ public class ChallengeMemberService {
         System.out.println("ChallengeMemberService.checkFailure");
         System.out.println("=================================");
 
-        List<ChallengeMember> notUploadedMember = challengeMemberRepository
-                .findAllByChallengeStatusAndIsFeedUpload(ChallengeStatus.ONGOING, false);
+        List<ChallengeMember> challengeMembers = challengeMemberRepository
+                .findAllByChallengeStatus(ChallengeStatus.ONGOING);
 
-        for (ChallengeMember challengeMember : notUploadedMember) {
+        for (ChallengeMember challengeMember : challengeMembers) {
 
             Challenge challenge = challengeMember.getChallenge();
 
