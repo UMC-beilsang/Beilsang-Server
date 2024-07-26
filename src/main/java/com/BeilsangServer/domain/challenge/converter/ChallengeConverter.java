@@ -9,6 +9,7 @@ import com.BeilsangServer.domain.member.entity.Member;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class ChallengeConverter {
 
@@ -35,11 +36,11 @@ public class ChallengeConverter {
                 .build();
     }
 
-    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName,boolean like) {
+    public static ChallengeResponseDTO.ChallengeDTO toChallengeDTO(Challenge challenge, Integer dDay, String hostName, boolean like, Optional<Float> achieveRate) {
 
         List<String> challengeNotes = toStringChallengeNotes(challenge.getChallengeNotes());
 
-        return ChallengeResponseDTO.ChallengeDTO.builder()
+        ChallengeResponseDTO.ChallengeDTO.ChallengeDTOBuilder builder = ChallengeResponseDTO.ChallengeDTO.builder()
                 .attendeeCount(challenge.getAttendeeCount())
                 .hostName(hostName)
                 .createdDate(challenge.getCreatedAt().toLocalDate())
@@ -56,9 +57,16 @@ public class ChallengeConverter {
                 .likes(challenge.getCountLikes())
                 .like(like)
                 .period(challenge.getPeriod())
-                .totalGoalDay(challenge.getTotalGoalDay())
-                .build();
+                .totalGoalDay(challenge.getTotalGoalDay());
+
+        achieveRate.ifPresent(rate -> {
+            float roundedRate = Math.round(rate * 100) / 100.0f;
+            builder.achieveRate(roundedRate);
+        });
+
+        return builder.build();
     }
+
 
     public static List<String> toStringChallengeNotes(List<ChallengeNote> challengeNotes) {
 
@@ -111,7 +119,7 @@ public class ChallengeConverter {
                 .challengeId(challenge.getId())
                 .title(challenge.getTitle())
                 .imageUrl(challenge.getMainImageUrl())
-                .achieveRate(Math.round(achieveRate * 10) / 10.0f) // 소수점 아래 한자리까지만 보이도록
+                .achieveRate(Math.round(achieveRate * 100) / 100.0f) // 소수점 아래 한자리까지만 보이도록
                 .build();
     }
 }

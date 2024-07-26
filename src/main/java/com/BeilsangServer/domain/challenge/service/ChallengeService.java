@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -123,7 +124,16 @@ public class ChallengeService {
         // 챌린지 호스트 이름 찾기
         String hostName = getHostName(challengeId);
 
-        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName, like);
+        Optional<Float> achieveRate = Optional.empty();
+        // 멤버가 챌린지에 참여 중인지 확인
+        Optional<ChallengeMember> challengeMember = challengeMemberRepository.findByMember_idAndChallenge_Id(memberId, challengeId);
+        if (challengeMember.isPresent()) {
+            int successDays = challengeMember.get().getSuccessDays();
+            // 참여 중이라면 달성률 계산
+            achieveRate = Optional.of((float) successDays / challenge.getTotalGoalDay() * 100);
+        }
+
+        return ChallengeConverter.toChallengeDTO(challenge, dDay, hostName, like, achieveRate);
     }
 
     /***
