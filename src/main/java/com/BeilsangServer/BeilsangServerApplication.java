@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableFeignClients
 @EnableJpaAuditing
-//@OpenAPIDefinition(servers = {@Server(url = "https://beilsang.com", description = "비일상 서버")})
+@OpenAPIDefinition(servers = {@Server(url = "https://beilsang.com", description = "비일상 서버")})
 public class BeilsangServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BeilsangServerApplication.class, args);
