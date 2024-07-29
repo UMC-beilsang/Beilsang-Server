@@ -32,15 +32,13 @@ public class ChallengeResponseDTO {
         private Category category;
         private String details;
         private Integer joinPoint;
-        private Integer dDay;
-        // 챌린지 유의사항
-        private List<String> challengeNotes;
-        // 찜 개수
-        private Integer likes;
-        // 찜 여부
+        private Integer dDay; // 챌린지 유의사항
+        private List<String> challengeNotes; // 찜 개수
+        private Integer likes; // 찜 여부
         private boolean like;
         private ChallengePeriod period;
         private Integer totalGoalDay;
+        private Float achieveRate;
     }
 
     @Builder
