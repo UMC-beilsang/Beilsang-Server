@@ -150,6 +150,7 @@ public class MemberService {
 
         member.update(memberUpdateDto);
 
+        memberRepository.save(member);
 
         return MemberConverter.toProfileDTO(member);
     }
