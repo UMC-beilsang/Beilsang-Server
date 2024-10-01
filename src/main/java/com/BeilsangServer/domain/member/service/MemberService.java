@@ -96,6 +96,7 @@ public class MemberService {
         // 현재 보유 포인트 : 회원 테이블에서 가져오기
         Integer points = member.getPoint();
 
+
         // 피드,, 는 찾기,,,, : 최근 4개 피드만 반환
         List<Feed> feeds = feedRepository.findTop4ByChallengeMember_IdInOrderByCreatedAtDesc(challengeMemberIds);
         FeedDTO.previewFeedListDto feedDto = feedConverter.toPreviewFeedListDto(feeds);
