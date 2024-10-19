@@ -1,8 +1,7 @@
 spring:
+  profiles:
+    active: prod
   datasource:
-    url: ${URL}
-    username: ${USERNAME}
-    password: ${PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   main:
