@@ -1,10 +1,9 @@
 spring:
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: ${URL}
     username: ${USERNAME}
     password: ${PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
-
   main:
     allow-bean-definition-overriding: true
 
@@ -49,5 +48,3 @@ apple:
   client-id : ${APPLE_CLIENT_ID}
   key-id : ${APPLE_KEY_ID}
   team-id : ${APPLE_TEAM_ID}
-
-
